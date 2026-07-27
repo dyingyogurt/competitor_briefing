@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """自动采集：App Store 版本、榜单、评论。
-TapTap / 官网 / 社媒 因反爬或登录态，当前用 manual_overrides.json 人工补全。"""
+七麦数据 / TapTap / 官网 / 社媒 因反爬或登录态，当前用 manual_overrides.json 人工补全。"""
 
 import json
+import re
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone, timedelta
 from collections import Counter
+from html.parser import HTMLParser
 from config import COMPETITORS, CHART_FEEDS, REVIEW_PAGES
 from sentiment_collector import collect_bilibili_sentiment
 
 
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+USER_AGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+)
 CN_TZ = timezone(timedelta(hours=8))
 
 
@@ -25,8 +30,142 @@ def _request_json(url, timeout=20):
         return json.loads(resp.read().decode("utf-8", "ignore"))
 
 
+class AppStorePageReviewParser(HTMLParser):
+    """解析 App Store App 详情页中的精选评论（RSS 为空时的兜底）。"""
+
+    def __init__(self):
+        super().__init__()
+        self.reviews = []
+        self._in_review = False
+        self._current = None
+        self._stack = []
+        self._capture_text = False
+        self._text_tag = None
+        self._buf = []
+
+    def _find_review_id(self, attrs):
+        for k, v in attrs:
+            if k == "aria-labelledby" and v.startswith("review-") and v.endswith("-title"):
+                return v[7:-6]
+        return None
+
+    def _get_attr(self, attrs, name):
+        for k, v in attrs:
+            if k == name:
+                return v
+        return None
+
+    def handle_starttag(self, tag, attrs):
+        rid = self._find_review_id(attrs)
+        if rid:
+            self._in_review = True
+            self._current = {
+                "id": rid,
+                "title": "",
+                "rating": None,
+                "author": "",
+                "date": "",
+                "body": "",
+            }
+            self.reviews.append(self._current)
+            self._stack = [tag]
+            return
+
+        if self._in_review:
+            self._stack.append(tag)
+            if tag == "ol":
+                al = self._get_attr(attrs, "aria-label")
+                if al and "星" in al:
+                    m = re.search(r"(\d+)", al)
+                    if m:
+                        self._current["rating"] = int(m.group(1))
+            if tag in ("h3", "p", "time"):
+                self._capture_text = True
+                self._text_tag = tag
+                self._buf = []
+
+    def handle_data(self, data):
+        if self._capture_text:
+            self._buf.append(data)
+
+    def handle_endtag(self, tag):
+        if not self._in_review:
+            return
+
+        if self._stack and self._stack[-1] == tag:
+            self._stack.pop()
+        else:
+            try:
+                idx = len(self._stack) - 1 - self._stack[::-1].index(tag)
+                self._stack = self._stack[:idx]
+            except ValueError:
+                pass
+
+        if self._capture_text and self._text_tag == tag:
+            text = "".join(self._buf).strip()
+            if tag == "h3":
+                self._current["title"] = text
+            elif tag == "time":
+                self._current["date"] = text
+            elif tag == "p":
+                if len(text) > len(self._current["body"]):
+                    self._current["body"] = text
+            self._capture_text = False
+            self._text_tag = None
+
+        if self._in_review and not self._stack:
+            self._in_review = False
+            self._current = None
+
+    def get_reviews(self):
+        return [r for r in self.reviews if r.get("rating") and r.get("title")]
+
+
+def _fetch_app_page_reviews(itunes_id):
+    """RSS 无数据时，抓取 App Store 详情页上的精选评论作为兜底。"""
+    lookup_url = f"https://itunes.apple.com/cn/lookup?id={itunes_id}&country=CN"
+    try:
+        data = _request_json(lookup_url)
+        results = data.get("results", [])
+        if not results:
+            return []
+        app_url = results[0].get("trackViewUrl")
+        if not app_url:
+            return []
+    except Exception:
+        return []
+
+    try:
+        req = urllib.request.Request(app_url, headers={
+            "User-Agent": USER_AGENT,
+            "Accept-Language": "zh-CN,zh;q=0.9",
+        })
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            html = resp.read().decode("utf-8", "ignore")
+    except Exception:
+        return []
+
+    parser = AppStorePageReviewParser()
+    parser.feed(html)
+    reviews = []
+    for r in parser.get_reviews():
+        date_raw = r.get("date", "")
+        iso = ""
+        if re.match(r"\d{4}/\d{2}/\d{2}", date_raw):
+            iso = f"{date_raw[:4]}-{date_raw[5:7]}-{date_raw[8:10]}T00:00:00Z"
+        reviews.append({
+            "author": r.get("author", ""),
+            "rating": r.get("rating", 0),
+            "version": "",
+            "title": r.get("title", ""),
+            "content": r.get("body", ""),
+            "updated": iso,
+        })
+    return reviews
+
+
 def fetch_app_details(itunes_id):
-    """通过 iTunes Lookup API 获取版本、更新说明、开发商等。"""
+    """通过 iTunes Lookup API 获取版本、更新说明、开发商、评分等。"""
     url = f"https://itunes.apple.com/cn/lookup?id={itunes_id}&country=CN"
     try:
         data = _request_json(url)
@@ -42,6 +181,8 @@ def fetch_app_details(itunes_id):
             "seller": r.get("sellerName"),
             "app_url": r.get("trackViewUrl"),
             "genres": r.get("genres", []),
+            "rating": r.get("averageUserRatingForCurrentVersion") or r.get("averageUserRating"),
+            "rating_count": r.get("userRatingCountForCurrentVersion") or r.get("userRatingCount"),
         }
     except Exception as e:
         return {"error": f"iTunes API 请求失败: {type(e).__name__}: {e}"}
@@ -67,10 +208,11 @@ def fetch_chart_rank(itunes_id):
 
 
 def fetch_reviews(itunes_id, pages=REVIEW_PAGES):
-    """获取 App Store 近期评论与评分分布。"""
+    """获取 App Store 评论。RSS 无数据时，自动兜底抓取详情页精选评论。"""
     reviews = []
-    api_status = "ok"  # ok / empty / error
+    api_status = "ok"  # ok / empty / error / page_fallback
     api_error = None
+    source = "rss"
 
     for page in range(1, pages + 1):
         url = (
@@ -96,8 +238,15 @@ def fetch_reviews(itunes_id, pages=REVIEW_PAGES):
         except Exception as e:
             api_status = "error"
             api_error = f"{type(e).__name__}: {e}"
-            # 继续返回已获取的评论
             pass
+
+    # RSS 为空或失败时，兜底抓取 App Store 页面精选评论
+    if not reviews and api_status in ("empty", "error"):
+        page_reviews = _fetch_app_page_reviews(itunes_id)
+        if page_reviews:
+            reviews = page_reviews
+            api_status = "page_fallback"
+            source = "app_store_page"
 
     if not reviews:
         return {
@@ -107,13 +256,14 @@ def fetch_reviews(itunes_id, pages=REVIEW_PAGES):
             "latest": [],
             "api_status": api_status,
             "api_error": api_error,
+            "source": source,
         }
 
     ratings = [r["rating"] for r in reviews]
     dist = Counter(ratings)
     avg = round(sum(ratings) / len(ratings), 2) if ratings else None
 
-    # 最近 7 天内
+    # 最近 7 天内（页面兜底评的日期通常较旧，过滤后可能为 0）
     now_cn = datetime.now(CN_TZ)
     week_ago = now_cn - timedelta(days=7)
     recent = []
@@ -126,12 +276,10 @@ def fetch_reviews(itunes_id, pages=REVIEW_PAGES):
         if t >= week_ago:
             recent.append(r)
 
-    # 简单关键词情绪
     positive = sum(1 for r in reviews if r["rating"] >= 4)
     neutral = sum(1 for r in reviews if r["rating"] == 3)
     negative = sum(1 for r in reviews if r["rating"] <= 2)
 
-    # 差评里高频出现的负面词（扩展词库以覆盖更多玩家吐槽）
     negative_words = [
         "垃圾", "坑钱", "骗氪", "逼氪", "重氪", "氪金", "圈钱", "骗钱", "吃相", "割韭菜",
         "bug", "卡顿", "闪退", "掉线", "卡死", "延迟", "黑屏",
@@ -162,6 +310,9 @@ def fetch_reviews(itunes_id, pages=REVIEW_PAGES):
         "negative_keywords": dict(sorted(neg_keyword_count.items(), key=lambda x: -x[1])),
         "negative_mentions": len(neg_reviews),
         "negative_samples": neg_reviews[:3],
+        "api_status": api_status,
+        "api_error": api_error,
+        "source": source,
     }
 
 

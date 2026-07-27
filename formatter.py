@@ -43,6 +43,8 @@ def _render_competitor(item, idx):
     lines.append(f"- **当前版本**：{store.get('version', '—')}")
     lines.append(f"- **更新日期**：{store.get('release_date', '—')}")
     lines.append(f"- **开发商**：{store.get('seller', '—')}")
+    if store.get("rating") is not None:
+        lines.append(f"- **App Store 总评分**：{store['rating']} 分（{store.get('rating_count', '—')} 个评分）")
     notes = store.get("release_notes") or "暂无更新说明"
     lines.append("- **更新内容**：")
     for line in notes.splitlines():
@@ -60,7 +62,10 @@ def _render_competitor(item, idx):
     lines.append("")
 
     # 评论
-    lines.append("### 💬 App Store 玩家舆论（近 7 天 / 最新 100 条）")
+    source_note = ""
+    if rev.get("source") == "app_store_page":
+        source_note = "（App Store RSS 近期评论为空，以下为页面精选评论兜底）"
+    lines.append(f"### 💬 App Store 玩家舆论{source_note}")
     if rev.get("count", 0):
         lines.append(f"- **样本数**：{rev['count']} 条，近 7 天 {rev.get('recent_7d_count', 0)} 条")
         lines.append(f"- **平均评分**：{rev.get('avg_rating', '—')}")
