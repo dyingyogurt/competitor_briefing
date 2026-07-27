@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Portable Python interpreter (auto-downloaded)
+/python/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Generated outputs
+/output/
+/edge-extension/history/
+/data/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.zip
+*.tar.gz
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db

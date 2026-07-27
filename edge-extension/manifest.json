@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "一将成名竞品日报",
+  "version": "1.1",
+  "description": "每日自动生成竞品日报，打开浏览器时提醒，点击图标即可查看。",
+  "action": {
+    "default_title": "查看今日简报",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "notifications"
+  ],
+  "host_permissions": [],
+  "web_accessible_resources": [
+    {
+      "resources": ["history/*.html", "viewer.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

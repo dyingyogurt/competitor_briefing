@@ -1,0 +1,2040 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""把采集结果格式化为 Markdown 简报。"""
+
+import glob
+import json
+import os
+import re
+from datetime import datetime, timezone, timedelta
+
+
+CN_TZ = timezone(timedelta(hours=8))
+
+
+def _rank_text(rank):
+    if rank is None:
+        return "未进入 Top100（Apple 公开 RSS 仅提供前 100 名）"
+    if isinstance(rank, int):
+        change = ""
+        if rank <= 10:
+            change = "🔥"
+        return f"第 {rank} 名 {change}"
+    return str(rank)
+
+
+def _render_competitor(item, idx):
+    name = item["name"]
+    full = item["full_name"]
+    store = item["app_store"]
+    rank = item["chart_rank"]
+    rev = item["reviews"]
+    manual = item.get("manual", {})
+
+    lines = [f"## {idx}. {name}（{full}）", ""]
+
+    if "error" in store:
+        lines.append(f"⚠️ App Store 数据异常：{store['error']}")
+        lines.append("")
+        return "\n".join(lines)
+
+    # 版本信息
+    lines.append("### 📦 版本更新")
+    lines.append(f"- **当前版本**：{store.get('version', '—')}")
+    lines.append(f"- **更新日期**：{store.get('release_date', '—')}")
+    lines.append(f"- **开发商**：{store.get('seller', '—')}")
+    notes = store.get("release_notes") or "暂无更新说明"
+    lines.append("- **更新内容**：")
+    for line in notes.splitlines():
+        if line.strip():
+            lines.append(f"  - {line.strip()}")
+    lines.append("")
+
+    # 榜单
+    lines.append("### 📊 iOS 榜单异动")
+    if rank:
+        for chart, r in rank.items():
+            lines.append(f"- **{chart}**：{_rank_text(r)}")
+    else:
+        lines.append("- 暂无榜单数据")
+    lines.append("")
+
+    # 评论
+    lines.append("### 💬 App Store 玩家舆论（近 7 天 / 最新 100 条）")
+    if rev.get("count", 0):
+        lines.append(f"- **样本数**：{rev['count']} 条，近 7 天 {rev.get('recent_7d_count', 0)} 条")
+        lines.append(f"- **平均评分**：{rev.get('avg_rating', '—')}")
+        dist = rev.get("rating_dist", {})
+        if dist:
+            stars = "/".join([f"{s}星:{dist.get(s,0)}" for s in range(1, 6)])
+            lines.append(f"- **评分分布**：{stars}")
+        lines.append(f"- **负面/吐槽提及**：{rev.get('negative_mentions', 0)} 条")
+        if rev.get("negative_samples"):
+            lines.append("- **典型差评**：")
+            for s in rev["negative_samples"]:
+                title = s.get("title", "")
+                content = s.get("content", "")[:80]
+                lines.append(f"  - ⭐{s.get('rating')}「{title}」{content}")
+    else:
+        status = rev.get("api_status")
+        if status == "empty":
+            lines.append("- App Store 评论接口当前未返回数据（可能是因为中国区 RSS 评论接口暂时不可用）")
+            lines.append("- 建议在 `manual_overrides.json` 中补充 TapTap 评分、玩家吐槽或社媒舆情")
+        elif status == "error":
+            lines.append(f"- App Store 评论获取失败：{rev.get('api_error', '未知错误')}")
+        else:
+            lines.append("- 暂无评论数据")
+    lines.append("")
+
+    # Bilibili 舆情补充
+    bilibili = item.get("bilibili_sentiment")
+    if bilibili and bilibili.get("comment_count"):
+        lines.append("### ▶️ Bilibili 玩家舆情补充")
+        sent = bilibili["sentiment"]
+        lines.append(f"- **采样视频**：{len(bilibili['videos'])} 个，共 {bilibili['comment_count']} 条采样评论")
+        lines.append(f"- **情感分布**：正面 {sent.get('positive', 0)} / 负面 {sent.get('negative', 0)} / 中性 {sent.get('neutral', 0)}")
+        neg_kw = bilibili.get("negative_keywords", {})
+        if neg_kw:
+            lines.append(f"- **负面高频词**：{', '.join([f'{k}({v})' for k, v in list(neg_kw.items())[:5]])}")
+        if bilibili.get("top_comments"):
+            lines.append("- **热门评论**：")
+            for c in bilibili["top_comments"][:3]:
+                content = c.get("content", "")[:70]
+                lines.append(f"  - 👍{c.get('like', 0)}「{content}」")
+        lines.append("")
+
+    # 人工补充（TapTap / 官网 / 社媒）
+    lines.append("### 🔍 其他渠道补充")
+    if manual:
+        if manual.get("taptap_rating"):
+            lines.append(f"- **TapTap 评分**：{manual['taptap_rating']}")
+        if manual.get("taptap_heat"):
+            lines.append(f"- **TapTap 热度**：{manual['taptap_heat']}")
+        if manual.get("marketing"):
+            lines.append(f"- **市场动向**：{manual['marketing']}")
+        if manual.get("events"):
+            lines.append(f"- **重点活动**：{manual['events']}")
+        if manual.get("notes"):
+            lines.append(f"- **备注**：{manual['notes']}")
+    else:
+        lines.append("- 暂无人工补充（可在 manual_overrides.json 中维护）")
+    lines.append("")
+
+    return "\n".join(lines)
+
+
+def generate_briefing(data, output_dir="output", changes=None, prev_date=None):
+    date_str = datetime.now(CN_TZ).strftime("%Y-%m-%d")
+    title = f"三国杀竞品日报｜{date_str}"
+
+    lines = [
+        f"# {title}",
+        "",
+        f"> 数据生成时间：{data['generated_at']}（北京时间）",
+        "> 来源：App Store（版本 / 榜单 / 评论）、Bilibili 玩家舆情、manual_overrides.json",
+        "",
+        "---",
+        "",
+        "## 📌 今日摘要",
+        "",
+        _generate_summary(data, changes=changes, prev_date=prev_date),
+        "",
+        "---",
+        "",
+    ]
+
+    for idx, item in enumerate(data["competitors"], start=1):
+        lines.append(_render_competitor(item, idx))
+        lines.append("---")
+        lines.append("")
+
+    lines.append("## 🎯 启示")
+    lines.append("")
+    lines.append(_generate_insights(data))
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+    lines.append("*本简报由脚本自动生成，仅供参考。*")
+
+    md = "\n".join(lines)
+    os.makedirs(output_dir, exist_ok=True)
+    path = os.path.join(output_dir, f"daily_briefing_{date_str}.md")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(md)
+    return path, md
+
+
+def _generate_summary(data, changes=None, prev_date=None):
+    bullets = []
+    for c in data["competitors"]:
+        name = c["name"]
+        store = c.get("app_store", {})
+        if "error" in store:
+            bullets.append(f"- **{name}**：App Store 数据异常，需人工检查")
+            continue
+        version = store.get("version", "—")
+        release = store.get("release_date", "—")
+        rank_info = c.get("chart_rank", {})
+        top_rank = None
+        top_chart = None
+        for chart, r in rank_info.items():
+            if isinstance(r, int):
+                if top_rank is None or r < top_rank:
+                    top_rank = r
+                    top_chart = chart
+        rank_str = f"iOS Top100 最高第 {top_rank} 名（{top_chart}）" if top_rank else "未进入 iOS Top100"
+        avg = c.get("reviews", {}).get("avg_rating")
+        rating_str = f"App Store 近100条均分 {avg}" if avg else "暂无评论"
+
+        extra = []
+        if changes:
+            ch = changes.get(c.get("key", {}), {})
+            if ch.get("version_changed"):
+                extra.append("🆕 版本较昨日更新")
+            rank_ch = ch.get("rank_changes", {})
+            if rank_ch:
+                parts = []
+                for chart2, det in rank_ch.items():
+                    delta = det.get("delta")
+                    if delta is not None:
+                        arrow = "↑" if delta > 0 else "↓"
+                        parts.append(f"{chart2}: {arrow}{abs(delta)}")
+                    else:
+                        parts.append(f"{chart2}: 新上榜/掉榜")
+                extra.append("📈 榜单异动：" + "，".join(parts))
+
+        line = f"- **{name}**：版本 {version}（{release}），{rank_str}，{rating_str}。"
+        if extra:
+            line += " " + "；".join(extra)
+        bullets.append(line)
+
+    if prev_date and not any(ch.get("rank_changes") or ch.get("version_changed")
+                              for ch in (changes or {}).values()):
+        bullets.append(f"- 较 {prev_date} 暂无显著版本或榜单异动")
+
+    return "\n".join(bullets)
+
+
+def _product_negative_count(item):
+    """汇总 App Store + Bilibili 负面提及数。"""
+    rev = item.get("reviews", {})
+    sent = (item.get("bilibili_sentiment") or {}).get("sentiment", {})
+    return rev.get("negative_mentions", 0) + sent.get("negative", 0)
+
+
+NEGATIVE_KEYWORD_CATEGORIES = {
+    "氪金/付费": ["氪金", "逼氪", "重氪", "坑钱", "骗氪", "圈钱", "骗钱", "吃相", "割韭菜", "贵", "不值", "保底", "爆率低", "抽不到"],
+    "数值平衡": ["阴间", "超模", "下水道", "天牢", "弱", "废", "打不过", "数值崩", "不平衡", "畸形", "离谱"],
+    "体验/稳定性": ["bug", "卡顿", "闪退", "掉线", "卡死", "延迟", "黑屏"],
+    "社区/环境": ["人机", "演员", "环境差", "退游", "弃坑", "卸载", "差评", "后悔", "上当", "失望", "垃圾", "烂", "恶心", "坑"],
+}
+
+
+def _get_product_negative_keywords(item, top_n=3):
+    """合并 App Store + Bilibili 的负面高频词。"""
+    rev_kw = item.get("reviews", {}).get("negative_keywords", {})
+    bilibili_kw = (item.get("bilibili_sentiment") or {}).get("negative_keywords", {})
+    merged = {}
+    for k, v in {**rev_kw, **bilibili_kw}.items():
+        merged[k] = merged.get(k, 0) + v
+    return sorted(merged.items(), key=lambda x: -x[1])[:top_n]
+
+
+def _classify_negative_keywords(keywords):
+    """根据负面高频词归属到具体类别，并返回类别 + 代表性关键词。"""
+    if not keywords:
+        return "玩家满意度", []
+    scores = {cat: 0 for cat in NEGATIVE_KEYWORD_CATEGORIES}
+    for kw, count in keywords:
+        for cat, words in NEGATIVE_KEYWORD_CATEGORIES.items():
+            if any(w in kw for w in words):
+                scores[cat] += count
+    sorted_scores = sorted(scores.items(), key=lambda x: -x[1])
+    top_cats = [cat for cat, score in sorted_scores if score > 0][:2]
+    category = "、".join(top_cats) if top_cats else "玩家满意度"
+    return category, [kw for kw, _ in keywords]
+
+
+def _generate_insights(data):
+    """基于负面高频词生成具体归因的启示。"""
+    parts = []
+    for c in data["competitors"]:
+        name = c["name"]
+        neg = _product_negative_count(c)
+        if neg < 5:
+            continue
+
+        top_kw = _get_product_negative_keywords(c, top_n=3)
+        category, kw_list = _classify_negative_keywords(top_kw)
+        kw_text = "、".join([f"{k}（{v}次）" for k, v in top_kw]) if top_kw else "未提取到明确关键词"
+
+        if name == "三国杀一将成名":
+            parts.append(
+                f"- **{name}** 自身负面反馈较多（{neg} 条），玩家主要围绕 **{category}** 发声，"
+                f"高频词包括 {kw_text}。建议相关团队重点关注社区情绪，评估是否需要公告回应或针对性调整。"
+            )
+        else:
+            parts.append(
+                f"- **{name}** 近期负面声音较多（{neg} 条），集中在 **{category}**，"
+                f"玩家高频吐槽 {kw_text}。三国杀一将成名可提前排查是否存在同类问题，并在宣发/运营中规避敏感点。"
+            )
+
+    if not parts:
+        parts.append("- 今日数据相对平稳，建议持续观察榜单与版本节奏。")
+    return "\n".join(parts)
+
+
+def _per_product_insight(item):
+    """为单个竞品生成一条洞察，用于放在该游戏概览卡片前。"""
+    name = item["name"]
+    neg = _product_negative_count(item)
+    if neg < 5:
+        return f"舆情相对平稳，建议持续关注榜单与版本节奏。"
+
+    top_kw = _get_product_negative_keywords(item, top_n=3)
+    category, _ = _classify_negative_keywords(top_kw)
+    kw_text = "、".join([f"{k}（{v}次）" for k, v in top_kw]) if top_kw else "未提取到明确关键词"
+
+    if name == "三国杀一将成名":
+        return (
+            f"负面反馈较多（{neg} 条），集中在 **{category}**，"
+            f"高频词：{kw_text}。建议关注社区情绪并及时回应。"
+        )
+    return (
+        f"负面反馈较多（{neg} 条），集中在 **{category}**，"
+        f"高频词：{kw_text}。可提前排查同类问题并在宣发/运营中规避。"
+    )
+
+
+def _generate_highlights(data, changes=None, prev_date=None):
+    """生成今日重点关注条目，用于顶部高优提示。"""
+    highlights = []
+    today = datetime.now(CN_TZ).date()
+
+    for item in data["competitors"]:
+        name = item["name"]
+        key = item.get("key", name)
+        store = item.get("app_store", {})
+        rev = item.get("reviews", {})
+        neg = _product_negative_count(item)
+        avg = rev.get("avg_rating")
+        change = (changes or {}).get(key, {})
+
+        # 负面舆情
+        if neg >= 30:
+            highlights.append({"level": "danger", "text": f"**{name}** 负面舆情较高（{neg} 条），建议重点关注。"})
+        elif neg >= 10:
+            highlights.append({"level": "warning", "text": f"**{name}** 出现一定负面声音（{neg} 条），可留意避免同类节奏。"})
+
+        # 版本更新（最近 3 天或历史对比有变更）
+        version = store.get("version")
+        release_date = store.get("release_date")
+        version_changed = False
+        try:
+            release = datetime.strptime(release_date, "%Y-%m-%d").date()
+            days_since = (today - release).days
+            version_changed = days_since <= 3 or change.get("version_changed")
+        except Exception:
+            version_changed = change.get("version_changed", False)
+        if version_changed and version:
+            highlights.append({"level": "info", "text": f"**{name}** 更新至版本 {version}（{release_date}）。"})
+
+        # 评分极低
+        if avg is not None and avg <= 2.0:
+            highlights.append({"level": "danger", "text": f"**{name}** App Store 均分较低（{avg}），玩家满意度明显下降。"})
+
+        # 榜单异动
+        for chart, rc in change.get("rank_changes", {}).items():
+            delta = rc.get("delta")
+            if isinstance(delta, int):
+                if delta >= 10:
+                    highlights.append({"level": "info", "text": f"**{name}** 在 {chart} 上升 {delta} 名（#{rc['from']} → #{rc['to']}）。"})
+                elif delta <= -10:
+                    highlights.append({"level": "warning", "text": f"**{name}** 在 {chart} 下滑 {abs(delta)} 名（#{rc['from']} → #{rc['to']}）。"})
+            elif delta is None:
+                if rc["to"] is not None:
+                    highlights.append({"level": "info", "text": f"**{name}** 在 {chart} 进入 Top100（#{rc['to']}）。"})
+
+    if not highlights:
+        highlights.append({"level": "ok", "text": "今日竞品数据相对平稳，暂无显著异动。"})
+    return highlights
+
+
+def _rank_text_html(rank):
+    if rank is None:
+        return "未进入 Top100（Apple 公开 RSS 仅提供前 100 名）"
+    if isinstance(rank, int):
+        badge = "<span class='badge hot'>Top10</span>" if rank <= 10 else ""
+        return f"第 {rank} 名 {badge}"
+    return str(rank)
+
+
+def _update_notes_html(notes):
+    if not notes or not notes.strip():
+        return "<p class='empty'>暂无更新说明</p>"
+    lines = [line.strip() for line in notes.splitlines() if line.strip()]
+    if not lines:
+        return "<p class='empty'>暂无更新说明</p>"
+
+    MAX_VISIBLE = 5
+    if len(lines) <= MAX_VISIBLE:
+        return "<ul class='update-list'>" + "".join(f"<li>{line}</li>" for line in lines) + "</ul>"
+
+    visible = "".join(f"<li>{line}</li>" for line in lines[:MAX_VISIBLE])
+    hidden = "".join(f"<li>{line}</li>" for line in lines[MAX_VISIBLE:])
+    return f"""
+    <ul class='update-list'>{visible}</ul>
+    <details class='update-details'>
+        <summary>展开全部 {len(lines)} 条更新说明</summary>
+        <ul class='update-list'>{hidden}</ul>
+    </details>
+    """
+
+
+def _rank_card_html(chart_name, rank):
+    if rank is None:
+        return f"""
+        <div class="rank-card rank-missing">
+            <div class="rank-title">{chart_name}</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        """
+    if isinstance(rank, int):
+        tag = "<div class='rank-tag hot'>Hot</div>" if rank <= 10 else ""
+        number_class = "rank-number" if rank > 10 else "rank-number hot-number"
+        return f"""
+        <div class="rank-card rank-ok">
+            <div class="rank-title">{chart_name}</div>
+            <div class="{number_class}">#{rank}</div>
+            {tag}
+        </div>
+        """
+    return f"""
+    <div class="rank-card rank-error">
+        <div class="rank-title">{chart_name}</div>
+        <div class="rank-number">{rank}</div>
+    </div>
+    """
+
+
+def _overview_version_card(store):
+    version = store.get("version", "—")
+    release = store.get("release_date", "—")
+    notes = store.get("release_notes", "") or ""
+    first_line = notes.strip().splitlines()[0] if notes.strip() else "暂无详细说明"
+    # 截断到一行
+    summary = first_line[:40] + "…" if len(first_line) > 40 else first_line
+    return f"""
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📦</span><span class="overview-title">版本更新</span></div>
+        <div class="overview-value">v{version}</div>
+        <div class="overview-summary">{release}<br>{summary}</div>
+    </div>
+    """
+
+
+def _overview_rank_card(rank):
+    if not rank:
+        return """
+        <div class="overview-card">
+            <div class="overview-header"><span class="overview-icon">📊</span><span class="overview-title">iOS 榜单</span></div>
+            <div class="overview-value">—</div>
+            <div class="overview-summary">暂无榜单数据</div>
+        </div>
+        """
+    ranked = [r for r in rank.values() if isinstance(r, int)]
+    best_rank = min(ranked) if ranked else None
+    value = f"#{best_rank}" if best_rank is not None else "未上榜"
+
+    items = []
+    for chart, r in rank.items():
+        short = chart.replace('iOS ', '').replace('榜', '')
+        if r is None:
+            items.append(f"{short} 未上榜")
+        elif isinstance(r, int):
+            items.append(f"{short} #{r}")
+        else:
+            items.append(f"{short} {r}")
+    summary = " / ".join(items)
+    return f"""
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📊</span><span class="overview-title">iOS 榜单</span></div>
+        <div class="overview-value">{value}</div>
+        <div class="overview-summary">{summary}</div>
+    </div>
+    """
+
+
+def _overview_appstore_card(rev):
+    if not rev.get("count"):
+        return """
+        <div class="overview-card">
+            <div class="overview-header"><span class="overview-icon">💬</span><span class="overview-title">App Store</span></div>
+            <div class="overview-value">—</div>
+            <div class="overview-summary">暂无评论数据</div>
+        </div>
+        """
+    avg = rev.get("avg_rating", "—")
+    neg = rev.get("negative_mentions", 0)
+    kw = rev.get("negative_keywords", {})
+    kw_text = "、".join([k for k, _ in list(kw.items())[:3]]) if kw else "暂无明确关键词"
+    return f"""
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">💬</span><span class="overview-title">App Store</span></div>
+        <div class="overview-value">⭐ {avg}</div>
+        <div class="overview-summary">负面吐槽 {neg} 条<br>高频词：{kw_text}</div>
+    </div>
+    """
+
+
+def _overview_bilibili_card(bilibili):
+    if not bilibili or not bilibili.get("comment_count"):
+        return """
+        <div class="overview-card">
+            <div class="overview-header"><span class="overview-icon">▶️</span><span class="overview-title">Bilibili</span></div>
+            <div class="overview-value">—</div>
+            <div class="overview-summary">暂无 Bilibili 数据</div>
+        </div>
+        """
+    sent = bilibili["sentiment"]
+    total = sum(sent.values())
+    pos = sent.get("positive", 0)
+    neg = sent.get("negative", 0)
+    neu = sent.get("neutral", 0)
+    pos_pct = round(pos / total * 100, 1) if total else 0
+    neg_pct = round(neg / total * 100, 1) if total else 0
+    neu_pct = round(neu / total * 100, 1) if total else 0
+    kw = bilibili.get("negative_keywords", {})
+    kw_text = "、".join([k for k, _ in list(kw.items())[:2]]) if kw else "暂无"
+    return f"""
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">▶️</span><span class="overview-title">Bilibili</span></div>
+        <div class="overview-mini-sentiment">
+            <div class="mini-sentiment-bar" title="正面 {pos} / 中性 {neu} / 负面 {neg}">
+                <div class="mini-segment mini-positive" style="width: {pos_pct}%"></div>
+                <div class="mini-segment mini-neutral" style="width: {neu_pct}%"></div>
+                <div class="mini-segment mini-negative" style="width: {neg_pct}%"></div>
+            </div>
+            <div class="mini-sentiment-label">正 {pos_pct}% · 中 {neu_pct}% · 负 {neg_pct}%</div>
+        </div>
+        <div class="overview-summary">{bilibili['comment_count']} 条采样评论，高频负面词：{kw_text}</div>
+    </div>
+    """
+
+
+def _sentiment_bar_html(sentiment):
+    total = sum(sentiment.values())
+    if total == 0:
+        return "<p class='empty'>暂无情感分布数据</p>"
+    pos = sentiment.get('positive', 0)
+    neg = sentiment.get('negative', 0)
+    neu = sentiment.get('neutral', 0)
+    pos_pct = round(pos / total * 100, 1)
+    neg_pct = round(neg / total * 100, 1)
+    neu_pct = round(neu / total * 100, 1)
+    return f"""
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 {pos} / 中性 {neu} / 负面 {neg}">
+            <div class="sentiment-segment sentiment-positive" style="width: {pos_pct}%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: {neu_pct}%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: {neg_pct}%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 {pos} ({pos_pct}%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 {neu} ({neu_pct}%)</span>
+            <span><span class="dot dot-negative"></span> 负面 {neg} ({neg_pct}%)</span>
+        </div>
+    </div>
+    """
+
+
+def _keywords_html(keywords, label="负面高频词"):
+    if not keywords:
+        return ""
+    chips = " ".join(
+        f'<span class="keyword-chip">{k} <small>{v}</small></span>'
+        for k, v in list(keywords.items())[:8]
+    )
+    return f'<div class="keywords-wrap"><strong>{label}：</strong>{chips}</div>'
+
+
+def _appstore_comments_html(rev, limit=5):
+    samples = rev.get("negative_samples", [])
+    if not samples:
+        return "<p class='empty'>暂无典型差评</p>"
+    bubbles = []
+    for s in samples[:limit]:
+        title = s.get("title", "")
+        content = s.get("content", "")[:120]
+        rating = s.get("rating", "")
+        bubbles.append(
+            f'<div class="comment-bubble"><span class="comment-rating">⭐{rating}</span> <strong>{title}</strong> {content}</div>'
+        )
+    return "".join(bubbles)
+
+
+def _bilibili_comments_html(bilibili, limit=5):
+    comments = bilibili.get("top_comments", [])
+    if not comments:
+        return "<p class='empty'>暂无热门评论</p>"
+    bubbles = []
+    for c in comments[:limit]:
+        content = c.get("content", "")[:140]
+        like = c.get("like", 0)
+        bubbles.append(
+            f'<div class="comment-bubble"><span class="comment-like">👍 {like}</span> {content}</div>'
+        )
+    return "".join(bubbles)
+
+
+def _bilibili_video_list_html(bilibili):
+    videos = bilibili.get("videos", [])
+    if not videos:
+        return ""
+    items = []
+    for v in videos:
+        title = (v.get("title") or "无标题").replace('"', '&quot;')
+        author = v.get("author") or "未知作者"
+        link = v.get("link") or "#"
+        fetched = v.get("comments_fetched", 0)
+        items.append(f"""
+        <a href="{link}" target="_blank" class="video-item" title="{title}">
+            <div class="video-title">{title}</div>
+            <div class="video-author">@{author} · 已采 {fetched} 条</div>
+        </a>
+        """)
+    return f"""
+    <details class='video-details'>
+        <summary>查看 {len(videos)} 个采样视频</summary>
+        <div class='video-list'>{"".join(items)}</div>
+    </details>
+    """
+
+
+def _detail_version_section(store):
+    version = store.get("version", "—")
+    release = store.get("release_date", "—")
+    seller = store.get("seller") or ""
+    notes_html = _update_notes_html(store.get("release_notes", ""))
+    return f"""
+    <div class="detail-section">
+        <h3>📦 版本更新</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="version-line">
+                    <span class="version-badge">v{version}</span>
+                    <span class="date-label">{release}</span>
+                </div>
+                <p class="seller">{seller}</p>
+            </div>
+            <div class="detail-col-right">
+                {notes_html}
+            </div>
+        </div>
+    </div>
+    """
+
+
+def _detail_rank_section(rank_cards):
+    return f"""
+    <div class="detail-section">
+        <h3>📊 iOS 榜单</h3>
+        <div class="rank-grid">
+            {rank_cards}
+        </div>
+    </div>
+    """
+
+
+def _detail_appstore_section(rev, store):
+    if not rev.get("count"):
+        return f"""
+        <div class="detail-section">
+            <h3>💬 App Store 玩家舆论</h3>
+            <p class="empty">暂无评论数据</p>
+        </div>
+        """
+    url = store.get("app_url") or "#"
+    avg = rev.get("avg_rating", "—")
+    count = rev["count"]
+    recent_7d = rev.get("recent_7d_count", 0)
+    sent = rev.get("sentiment", {"positive": 0, "neutral": 0, "negative": 0})
+    return f"""
+    <div class="detail-section">
+        <h3>💬 App Store 玩家舆论</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">{count}</div><div class="metric-label">样本数</div></div>
+                    <div class="metric"><div class="metric-value">{avg}</div><div class="metric-label">平均评分</div></div>
+                    <div class="metric"><div class="metric-value">{recent_7d}</div><div class="metric-label">近 7 天</div></div>
+                </div>
+                <a class="store-link" href="{url}" target="_blank">打开 App Store →</a>
+            </div>
+            <div class="detail-col-right">
+                {_sentiment_bar_html(sent)}
+                {_keywords_html(rev.get("negative_keywords"), "负面高频词")}
+                <h4 class="sub-section-title">代表评论</h4>
+                {_appstore_comments_html(rev)}
+            </div>
+        </div>
+    </div>
+    """
+
+
+def _detail_bilibili_section(bilibili):
+    if not bilibili or not bilibili.get("comment_count"):
+        return """
+        <div class="detail-section">
+            <h3>▶️ Bilibili 玩家舆情补充</h3>
+            <p class="empty">暂无 Bilibili 数据</p>
+        </div>
+        """
+    sent = bilibili["sentiment"]
+    video_count = len(bilibili.get("videos", []))
+    comment_count = bilibili["comment_count"]
+    return f"""
+    <div class="detail-section">
+        <h3>▶️ Bilibili 玩家舆情补充</h3>
+            <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">{video_count}</div><div class="metric-label">采样视频</div></div>
+                    <div class="metric"><div class="metric-value">{comment_count}</div><div class="metric-label">采样评论数</div></div>
+                </div>
+            </div>
+            <div class="detail-col-right">
+                {_sentiment_bar_html(sent)}
+                {_keywords_html(bilibili.get("negative_keywords"), "负面高频词")}
+
+                <h4 class="sub-section-title">代表评论</h4>
+                {_bilibili_comments_html(bilibili)}
+                {_bilibili_video_list_html(bilibili)}
+            </div>
+        </div>
+    </div>
+    """
+
+
+def _detail_manual_section(manual_html):
+    if not manual_html:
+        return ""
+    return f"""
+    <div class="detail-section">
+        <h3>🔍 其他渠道补充</h3>
+        {manual_html}
+    </div>
+    """
+
+
+def _render_competitor_html(item, idx):
+    name = item["name"]
+    full = item["full_name"]
+    store = item["app_store"]
+    rank = item["chart_rank"]
+    rev = item["reviews"]
+    manual = item.get("manual", {})
+    bilibili = item.get("bilibili_sentiment")
+
+    if "error" in store:
+        return f"""
+        <section class="competitor">
+            <div class="competitor-header">
+                <div class="competitor-rank">{idx}</div>
+                <h2>{name} <span class="subtitle">{full}</span></h2>
+            </div>
+            <div class="error-card">
+                <span class="error-icon">⚠️</span>
+                <span>App Store 数据异常：{store['error']}</span>
+            </div>
+        </section>
+        """
+
+    # 榜单卡片
+    rank_cards = ""
+    if rank:
+        for chart_name, r in rank.items():
+            rank_cards += _rank_card_html(chart_name, r)
+    else:
+        rank_cards = "<p class='empty'>暂无榜单数据</p>"
+
+    # App Store 评论
+    reviews_html = ""
+    if rev.get("count", 0):
+        rating_dist = rev.get("rating_dist", {})
+        rating_bar = ""
+        for star in range(5, 0, -1):
+            count = rating_dist.get(star, 0)
+            pct = round(count / rev['count'] * 100, 1) if rev['count'] else 0
+            rating_bar += f"""
+            <div class="rating-row">
+                <span class="star-label">{'⭐' * star}</span>
+                <div class="rating-track"><div class="rating-fill" style="width: {pct}%"></div></div>
+                <span class="count-label">{count}</span>
+            </div>
+            """
+        neg_samples = ""
+        if rev.get("negative_samples"):
+            samples = []
+            for s in rev["negative_samples"]:
+                title = s.get("title", "")
+                content = s.get("content", "")[:100]
+                samples.append(f'<div class="comment-bubble"><span class="comment-rating">⭐{s.get("rating", "")}</span> <strong>{title}</strong> {content}</div>')
+            neg_samples = "".join(samples)
+
+        rev_sent = rev.get("sentiment", {"positive": 0, "neutral": 0, "negative": 0})
+        reviews_summary = _summarize_comment_section(
+            "App Store 评论区",
+            rev['count'],
+            rev_sent.get("positive", 0),
+            rev_sent.get("negative", 0),
+            rev_sent.get("neutral", 0),
+            avg_rating=rev.get('avg_rating'),
+            top_keywords=rev.get('negative_keywords'),
+        )
+
+        reviews_html = f"""
+        <div class="info-card wide">
+            <h3>💬 App Store 玩家舆论</h3>
+            <div class="metrics-row">
+                <div class="metric"><div class="metric-value">{rev['count']}</div><div class="metric-label">样本数</div></div>
+                <div class="metric"><div class="metric-value">{rev.get('recent_7d_count', 0)}</div><div class="metric-label">近 7 天</div></div>
+                <div class="metric"><div class="metric-value">{rev.get('avg_rating', '—')}</div><div class="metric-label">平均评分</div></div>
+            </div>
+            <p class="comment-summary">{reviews_summary}</p>
+            <div class="rating-distribution">
+                {rating_bar}
+            </div>
+            <p class="negative-count">负面/吐槽提及：<strong>{rev.get('negative_mentions', 0)} 条</strong></p>
+            {neg_samples}
+        </div>
+        """
+    else:
+        status = rev.get("api_status")
+        if status == "empty":
+            reviews_html = """
+            <div class="info-card wide">
+                <h3>💬 App Store 玩家舆论</h3>
+                <div class="notice">
+                    <p>App Store 评论接口当前未返回数据（中国区 RSS 评论接口可能暂时不可用）。</p>
+                    <p>建议在 <code>manual_overrides.json</code> 中补充 TapTap 评分、玩家吐槽或社媒舆情。</p>
+                </div>
+            </div>
+            """
+        elif status == "error":
+            reviews_html = f"""
+            <div class="info-card wide">
+                <h3>💬 App Store 玩家舆论</h3>
+                <div class="error-card"><span>App Store 评论获取失败：{rev.get('api_error', '未知错误')}</span></div>
+            </div>
+            """
+        else:
+            reviews_html = """
+            <div class="info-card wide">
+                <h3>💬 App Store 玩家舆论</h3>
+                <p class="empty">暂无评论数据</p>
+            </div>
+            """
+
+    # Bilibili 舆情
+    bilibili_html = ""
+    if bilibili and bilibili.get("comment_count"):
+        sent = bilibili["sentiment"]
+        neg_kw = bilibili.get("negative_keywords", {})
+        bilibili_summary = _summarize_comment_section(
+            "Bilibili 评论区",
+            bilibili['comment_count'],
+            sent.get("positive", 0),
+            sent.get("negative", 0),
+            sent.get("neutral", 0),
+            top_keywords=neg_kw,
+        )
+
+        top_comments = ""
+        if bilibili.get("top_comments"):
+            comments = []
+            for c in bilibili["top_comments"][:3]:
+                content = c.get("content", "")[:90]
+                comments.append(f'<div class="comment-bubble"><span class="comment-like">👍 {c.get("like", 0)}</span> {content}</div>')
+            top_comments = "".join(comments)
+
+        videos = bilibili.get("videos", [])
+        video_items = []
+        for v in videos:
+            title = (v.get("title") or "无标题").replace('"', '&quot;')
+            author = v.get("author") or "未知作者"
+            link = v.get("link") or "#"
+            fetched = v.get("comments_fetched", 0)
+            video_items.append(f"""
+            <a href="{link}" target="_blank" class="video-item" title="{title}">
+                <div class="video-title">{title}</div>
+                <div class="video-author">@{author} · 已采 {fetched} 条</div>
+            </a>
+            """)
+        videos_html = ""
+        if video_items:
+            videos_html = f"""
+            <details class='video-details'>
+                <summary>查看 {len(videos)} 个采样视频</summary>
+                <div class='video-list'>{"".join(video_items)}</div>
+            </details>
+            """
+
+        bilibili_html = f"""
+        <div class="info-card wide">
+            <h3>▶️ Bilibili 玩家舆情补充</h3>
+            <div class="metrics-row">
+                <div class="metric"><div class="metric-value">{len(bilibili['videos'])}</div><div class="metric-label">采样视频</div></div>
+                <div class="metric"><div class="metric-value">{bilibili['comment_count']}</div><div class="metric-label">采样评论数</div></div>
+            </div>
+            {_sentiment_bar_html(sent)}
+            <p class="comment-summary">{bilibili_summary}</p>
+            {videos_html}
+            {top_comments}
+        </div>
+        """
+    else:
+        bilibili_html = """
+        <div class="info-card wide">
+            <h3>▶️ Bilibili 玩家舆情补充</h3>
+            <p class="empty">暂无 Bilibili 数据</p>
+        </div>
+        """
+
+    # 人工补充（有数据才渲染，空则不显示）
+    manual_items = []
+    if manual:
+        if manual.get("taptap_rating"):
+            manual_items.append(f'<div class="metric small"><div class="metric-value">{manual["taptap_rating"]}</div><div class="metric-label">TapTap 评分</div></div>')
+        if manual.get("taptap_heat"):
+            manual_items.append(f'<div class="metric small"><div class="metric-value">{manual["taptap_heat"]}</div><div class="metric-label">TapTap 热度</div></div>')
+        if manual.get("marketing"):
+            manual_items.append(f'<div class="manual-item"><strong>市场动向：</strong>{manual["marketing"]}</div>')
+        if manual.get("events"):
+            manual_items.append(f'<div class="manual-item"><strong>重点活动：</strong>{manual["events"]}</div>')
+        if manual.get("notes"):
+            manual_items.append(f'<div class="manual-item"><strong>备注：</strong>{manual["notes"]}</div>')
+    manual_body = "".join(manual_items)
+
+    # 舆情明显异动时给启示框加红色警示（负面提及 ≥ 50 视为明显异动）
+    neg_count = _product_negative_count(item)
+    insight_class = "competitor-insight alert" if neg_count >= 50 else "competitor-insight"
+
+    insight = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', _per_product_insight(item))
+    overview_html = f"""
+    <div class="overview-grid">
+        {_overview_version_card(store)}
+        {_overview_rank_card(rank)}
+        {_overview_appstore_card(rev)}
+        {_overview_bilibili_card(bilibili)}
+    </div>
+    """
+
+    release_date = store.get('release_date', '—')
+    return f"""
+    <section class="competitor" id="{name}">
+        <div class="competitor-header">
+            <div class="competitor-rank">{idx}</div>
+            <div class="competitor-title">
+                <h2>{name}</h2>
+                <div class="subtitle">上次更新：{release_date}</div>
+            </div>
+        </div>
+
+        <div class="{insight_class}">
+            <span class="insight-icon">💡</span>
+            <span class="insight-text">{insight}</span>
+        </div>
+
+        {overview_html}
+
+        <details class="competitor-details">
+            <summary class="expand-btn"><span data-name="{name}"></span></summary>
+            <div class="competitor-detail-body">
+                {_detail_version_section(store)}
+                {_detail_rank_section(rank_cards)}
+                {_detail_appstore_section(rev, store)}
+                {_detail_bilibili_section(bilibili)}
+                {_detail_manual_section(manual_body)}
+            </div>
+        </details>
+    </section>
+    """
+
+
+def _summarize_comment_section(source_label, total, positive, negative, neutral, avg_rating=None, top_keywords=None):
+    """生成一段自然语言评论区总结。"""
+    if total == 0:
+        return f"{source_label}：未采集到有效评论。"
+    parts = [f"{source_label}共采集 {total} 条样本"]
+    if avg_rating is not None:
+        parts.append(f"，平均评分 {avg_rating}")
+    parts.append(f"。情绪分布：正面 {positive} 条、负面 {negative} 条、中性 {neutral} 条")
+    if negative > positive and negative > neutral:
+        parts.append("，整体偏负面")
+    elif positive > negative and positive > neutral:
+        parts.append("，整体偏正面")
+    else:
+        parts.append("，整体中性")
+    if top_keywords:
+        kw_items = [f"{k}（{v}次）" for k, v in list(top_keywords.items())[:5]]
+        parts.append(f"。负面高频词：{'、'.join(kw_items)}")
+    return "".join(parts) + "。"
+
+
+def _insight_label_html(item):
+    """为摘要卡片生成简短标签。"""
+    parts = []
+    rev = item.get("reviews", {})
+    sent = (item.get("bilibili_sentiment") or {}).get("sentiment", {})
+    neg = rev.get("negative_mentions", 0) + sent.get("negative", 0)
+    if neg >= 3:
+        parts.append(f'<span class="pill warning">负面 {neg}</span>')
+    else:
+        parts.append('<span class="pill ok">舆情平稳</span>')
+    version = item.get("app_store", {}).get("version", "")
+    if version:
+        parts.append(f'<span class="pill info">v{version}</span>')
+    return " ".join(parts)
+
+
+def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev_date=None):
+    """生成供 Edge 扩展读取的 HTML 简报。"""
+    import re
+
+    date_str = datetime.now(CN_TZ).strftime("%Y-%m-%d")
+    title = f"三国杀竞品日报｜{date_str}"
+
+    def _md_bold(text):
+        return re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+
+    competitors_html = ""
+    for idx, item in enumerate(data["competitors"], start=1):
+        competitors_html += _render_competitor_html(item, idx)
+
+    html = f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <style>
+        :root {{
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --accent-light: #eff6ff;
+            --border: #e5e7eb;
+            --hot: #ef4444;
+            --hot-bg: #fef2f2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }}
+        * {{ box-sizing: border-box; }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }}
+        .container {{
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 8px 14px 24px;
+        }}
+
+        /* Header */
+        header {{
+            text-align: left;
+            padding: 12px 0 10px;
+        }}
+        header .date {{
+            font-size: 1rem;
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }}
+        header .meta {{
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }}
+
+        /* Section titles */
+        .section-title {{
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 32px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+
+        /* Competitor insight */
+        .competitor-insight {{
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin: 12px 0;
+            color: #1e3a8a;
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }}
+        .competitor-insight.alert {{
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+            border-color: #fecaca;
+            color: #991b1b;
+        }}
+        .insight-icon {{
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }}
+        .insight-text strong {{
+            font-weight: 700;
+        }}
+
+        /* Competitor */
+        .competitor {{
+            background: var(--card);
+            border-radius: 18px;
+            padding: 20px;
+            margin: 18px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }}
+        .competitor-header {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            z-index: 20;
+            border-radius: 18px 18px 0 0;
+            margin: -20px -20px 0;
+            padding: 20px 20px 14px;
+        }}
+
+        /* Overview grid */
+        .overview-grid {{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 14px 0 2px;
+        }}
+        .overview-card {{
+            aspect-ratio: 1 / 1;
+            min-width: 0;
+            min-height: 0;
+            background: #fafbfc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+        }}
+        .overview-card:hover {{
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            border-color: var(--accent);
+        }}
+        .overview-header {{
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-weight: 600;
+        }}
+        .overview-icon {{
+            font-size: 1rem;
+        }}
+        .overview-value {{
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.2;
+            margin: 8px 0;
+        }}
+        .overview-summary {{
+            font-size: 0.78rem;
+            color: var(--muted);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }}
+        .overview-mini-sentiment {{
+            margin: 4px 0;
+        }}
+        .mini-sentiment-bar {{
+            display: flex;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e5e7eb;
+            margin-bottom: 6px;
+        }}
+        .mini-segment {{
+            height: 100%;
+        }}
+        .mini-positive {{ background: var(--success); }}
+        .mini-neutral {{ background: #9ca3af; }}
+        .mini-negative {{ background: var(--hot); }}
+        .mini-sentiment-label {{
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-align: center;
+        }}
+
+        /* Expand details */
+        .competitor-details {{
+            display: flex;
+            flex-direction: column;
+            margin-top: 12px;
+        }}
+        .expand-btn {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            order: 2;
+            width: 100%;
+            padding: 10px;
+            margin-top: 12px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            transition: background 0.15s;
+        }}
+        .expand-btn::-webkit-details-marker {{
+            display: none;
+        }}
+        .expand-btn:hover {{
+            background: #dbeafe;
+        }}
+        .expand-btn span::before {{
+            content: "展开查看 " attr(data-name) " 的详细数据";
+        }}
+        .expand-btn span::after {{
+            content: "▼";
+            font-size: 0.7rem;
+            margin-left: 4px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }}
+        .competitor-details[open] .expand-btn span::before {{
+            content: "收起";
+        }}
+        .competitor-details[open] .expand-btn span::after {{
+            transform: rotate(180deg);
+        }}
+        .competitor-detail-body {{
+            display: flex;
+            flex-direction: column;
+            order: 1;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }}
+
+        /* Detail section */
+        .detail-section {{
+            background: #fafbfc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+        }}
+        .detail-section h3 {{
+            margin: 0 0 12px;
+            font-size: 0.95rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }}
+        .sub-section-title {{
+            font-size: 0.88rem;
+            color: var(--text);
+            margin: 14px 0 8px;
+            font-weight: 700;
+        }}
+        .detail-row {{
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }}
+        .detail-col-left {{
+            flex: 0 0 260px;
+            min-width: 0;
+        }}
+        .detail-col-right {{
+            flex: 1 1 auto;
+            min-width: 0;
+        }}
+        .metrics-row {{
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }}
+        .metrics-row.compact {{
+            flex-wrap: nowrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }}
+        .metrics-row.compact .metric {{
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 8px 10px;
+        }}
+        .metrics-row.compact .metric-value {{
+            font-size: 1.2rem;
+        }}
+        .metric {{
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            text-align: center;
+            min-width: 70px;
+        }}
+        .metric-value {{
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1.2;
+        }}
+        .metric-label {{
+            font-size: 0.7rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }}
+        .store-link {{
+            display: inline-block;
+            margin-top: 2px;
+            color: var(--accent);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+        }}
+        .store-link:hover {{
+            text-decoration: underline;
+        }}
+        .keywords-wrap {{
+            margin: 8px 0 10px;
+            line-height: 1.6;
+        }}
+        .keyword-chip {{
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: var(--hot-bg);
+            color: #7f1d1d;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            margin: 2px 4px 2px 0;
+        }}
+        .keyword-chip small {{
+            color: #b91c1c;
+            font-weight: 700;
+        }}
+        .competitor-rank {{
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }}
+        .competitor-title h2 {{
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--text);
+        }}
+        .competitor-title .subtitle {{
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-weight: 400;
+        }}
+
+        /* Info grid */
+        .info-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }}
+        .info-card {{
+            background: #fafbfc;
+            border-radius: 14px;
+            padding: 18px;
+            border: 1px solid var(--border);
+        }}
+        .info-card.wide {{
+            grid-column: 1 / -1;
+        }}
+        .info-card h3 {{
+            margin: 0 0 14px;
+            font-size: 0.95rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }}
+        .empty {{
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin: 8px 0;
+        }}
+
+        /* Version */
+        .version-line {{
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }}
+        .version-badge {{
+            background: var(--accent);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }}
+        .date-label {{
+            color: var(--muted);
+            font-size: 0.85rem;
+        }}
+        .seller {{
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin: 2px 0 8px;
+        }}
+        .update-list {{
+            padding-left: 16px;
+            margin: 6px 0 0;
+            color: #374151;
+            font-size: 0.88rem;
+        }}
+        .update-list li {{
+            margin: 4px 0;
+        }}
+        .update-details {{
+            margin-top: 8px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+        }}
+        .update-details summary {{
+            color: var(--accent);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }}
+        .update-details summary:hover {{
+            color: #1d4ed8;
+        }}
+        .update-details[open] summary {{
+            margin-bottom: 8px;
+        }}
+        .update-details .update-list {{
+            margin-top: 0;
+        }}
+
+        /* Rank cards */
+        .rank-grid {{
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }}
+        .rank-card {{
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }}
+        .rank-title {{
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }}
+        .rank-number {{
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.2;
+        }}
+        .rank-number.hot-number {{
+            color: var(--hot);
+        }}
+        .rank-tag {{
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            color: var(--muted);
+        }}
+        .rank-tag.hot {{
+            background: var(--hot);
+            color: white;
+            font-weight: 700;
+        }}
+        .rank-missing .rank-number {{
+            color: var(--muted);
+        }}
+
+        /* Rating distribution */
+        .rating-distribution {{
+            max-width: 320px;
+            margin-bottom: 10px;
+        }}
+        .rating-row {{
+            display: grid;
+            grid-template-columns: 80px 1fr 36px;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            font-size: 0.85rem;
+        }}
+        .star-label {{ text-align: right; color: #f59e0b; }}
+        .rating-track {{
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+        }}
+        .rating-fill {{
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            height: 100%;
+            border-radius: 999px;
+            min-width: 2px;
+        }}
+        .count-label {{
+            color: var(--muted);
+            font-size: 0.8rem;
+        }}
+        .negative-count {{
+            color: #7f1d1d;
+            background: var(--hot-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }}
+
+        /* Sentiment bar */
+        .sentiment-bar-wrap {{
+            margin: 6px 0 10px;
+        }}
+        .sentiment-bar {{
+            display: flex;
+            height: 12px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e5e7eb;
+        }}
+        .sentiment-segment {{
+            height: 100%;
+            transition: width 0.4s ease;
+        }}
+        .sentiment-positive {{ background: var(--success); }}
+        .sentiment-neutral {{ background: #9ca3af; }}
+        .sentiment-negative {{ background: var(--hot); }}
+        .sentiment-legend {{
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            flex-wrap: wrap;
+        }}
+        .dot {{
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }}
+        .dot-positive {{ background: var(--success); }}
+        .dot-neutral {{ background: #9ca3af; }}
+        .dot-negative {{ background: var(--hot); }}
+
+        /* Comments */
+        .comment-bubble {{
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin: 6px 0;
+            font-size: 0.85rem;
+            color: #374151;
+        }}
+        .comment-rating, .comment-like {{
+            color: var(--warning);
+            font-weight: 700;
+            margin-right: 6px;
+        }}
+        .keywords {{
+            font-size: 0.85rem;
+            color: #7f1d1d;
+            background: var(--hot-bg);
+            padding: 6px 10px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }}
+        .comment-summary {{
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: #374151;
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            padding: 8px 12px;
+            border-radius: 0 8px 8px 0;
+            margin: 8px 0 10px;
+        }}
+        .video-details {{
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 8px 0 10px;
+        }}
+        .video-details summary {{
+            color: var(--accent);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }}
+        .video-details summary:hover {{
+            color: #1d4ed8;
+        }}
+        .video-details[open] summary {{
+            margin-bottom: 10px;
+        }}
+        .video-list {{
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin: 12px 0 16px;
+        }}
+        .video-item {{
+            display: block;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        }}
+        .video-item:hover {{
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+            transform: translateY(-1px);
+        }}
+        .video-title {{
+            font-size: 0.88rem;
+            color: var(--text);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }}
+        .video-author {{
+            font-size: 0.72rem;
+            color: var(--muted);
+        }}
+        .video-author::before {{
+            content: "▶ ";
+            color: var(--accent);
+        }}
+
+        /* Manual items */
+        .manual-item {{
+            margin: 6px 0;
+            font-size: 0.88rem;
+            color: #374151;
+        }}
+        .manual-item strong {{
+            color: var(--text);
+        }}
+
+        /* Error / notice */
+        .error-card {{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--hot-bg);
+            color: #991b1b;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+        }}
+        .error-icon {{
+            font-size: 1.3rem;
+        }}
+        .notice {{
+            background: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 14px 16px;
+            border-radius: 8px;
+            color: #1e3a8a;
+            font-size: 0.9rem;
+        }}
+        .notice p {{
+            margin: 6px 0;
+        }}
+        code {{
+            background: #fff;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }}
+
+        /* Footer */
+        footer {{
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }}
+
+        /* Responsive */
+        @media (max-width: 980px) {{
+            .overview-grid {{
+                grid-template-columns: repeat(2, 1fr);
+            }}
+            .detail-row {{
+                flex-direction: column;
+                gap: 16px;
+            }}
+            .detail-col-left, .detail-col-right {{
+                flex: 1 1 auto;
+                width: 100%;
+            }}
+            .rank-grid {{
+                grid-template-columns: repeat(2, 1fr);
+            }}
+        }}
+        @media (max-width: 640px) {{
+            header h1 {{ font-size: 1.5rem; }}
+            .info-grid {{ grid-template-columns: 1fr; }}
+            .overview-grid {{
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }}
+            .overview-card {{
+                padding: 12px;
+                border-radius: 12px;
+            }}
+            .overview-value {{
+                font-size: 1.15rem;
+            }}
+            .competitor {{ padding: 18px; }}
+            .competitor-header {{
+                margin: -18px -18px 0;
+                padding: 18px 18px 14px;
+                border-radius: 20px 20px 0 0;
+            }}
+            .detail-row {{ flex-direction: column; gap: 14px; }}
+            .detail-col-left, .detail-col-right {{ width: 100%; }}
+            .rank-grid {{ grid-template-columns: repeat(2, 1fr); }}
+            .metrics-row {{ gap: 8px; flex-wrap: wrap; }}
+            .metrics-row.compact {{ flex-wrap: wrap; }}
+            .metric {{ padding: 8px 12px; }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="date">{date_str}</div>
+            <div class="meta">生成时间：{data['generated_at']}（北京时间）</div>
+            <div class="meta">来源：App Store · Bilibili · manual_overrides.json</div>
+        </header>
+
+        {competitors_html}
+
+        <footer>
+            本简报由脚本自动生成，仅供参考。
+        </footer>
+    </div>
+</body>
+</html>"""
+
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 保存历史副本（每日只保留最后一次更新）
+    history_dir = os.path.join(output_dir, "history")
+    os.makedirs(history_dir, exist_ok=True)
+    history_path = os.path.join(history_dir, f"briefing_{date_str}.html")
+    with open(history_path, "w", encoding="utf-8") as f:
+        f.write(html)
+
+    # 更新历史索引，只保留最近 30 天
+    history_dates = _update_history_index(history_dir)
+
+    # 写入带标签选项卡的浏览外壳
+    viewer_html = _build_viewer_html(history_dates)
+    path = os.path.join(output_dir, "briefing.html")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(viewer_html)
+    return path
+
+
+def _update_history_index(history_dir, keep_days=30):
+    """扫描历史简报文件，生成索引并清理超过保留天数的内容。"""
+    files = glob.glob(os.path.join(history_dir, "briefing_*.html"))
+    dates = []
+    for f in files:
+        name = os.path.basename(f)
+        m = re.match(r"briefing_(\d{4}-\d{2}-\d{2})\.html", name)
+        if m:
+            dates.append(m.group(1))
+    dates = sorted(set(dates), reverse=True)
+    # 删除超出保留期限的文件
+    for d in dates[keep_days:]:
+        try:
+            os.remove(os.path.join(history_dir, f"briefing_{d}.html"))
+        except OSError:
+            pass
+    dates = dates[:keep_days]
+    index_path = os.path.join(history_dir, "index.json")
+    with open(index_path, "w", encoding="utf-8") as f:
+        json.dump(dates, f, ensure_ascii=False, indent=2)
+    return dates
+
+
+def _build_viewer_html(history_dates):
+    """生成左侧日报切换 + 右侧游戏索引的浏览外壳。"""
+    dates_json = json.dumps(history_dates, ensure_ascii=False)
+    default_src = f"history/briefing_{history_dates[0]}.html" if history_dates else "about:blank"
+    return f"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一将成名竞品日报</title>
+    <style>
+        :root {{
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --accent-light: #eff6ff;
+            --border: #e5e7eb;
+        }}
+        * {{ box-sizing: border-box; }}
+        html, body {{
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }}
+        .app-layout {{
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }}
+        .left-nav {{
+            width: 160px;
+            flex-shrink: 0;
+            background: var(--card);
+            border-right: 1px solid var(--border);
+            padding: 16px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }}
+        .brand {{
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--accent);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }}
+        .nav-btn {{
+            width: 100%;
+            text-align: left;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }}
+        .nav-btn:hover {{ background: var(--accent-light); }}
+        .nav-btn.active {{
+            background: var(--accent-light);
+            color: var(--accent);
+        }}
+        .history-select {{
+            display: none;
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            background: var(--card);
+            color: var(--text);
+        }}
+        .main-area {{
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }}
+        .viewer-wrap {{
+            flex: 1;
+            padding: 10px;
+            overflow: auto;
+        }}
+        iframe {{
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+            background: var(--card);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }}
+        .right-index {{
+            width: 150px;
+            flex-shrink: 0;
+            background: var(--card);
+            border-left: 1px solid var(--border);
+            padding: 16px;
+            overflow-y: auto;
+        }}
+        .index-title {{
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 10px;
+        }}
+        .index-btn {{
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            border: none;
+            border-radius: 6px;
+            background: #f8fafc;
+            color: var(--text);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }}
+        .index-btn:hover {{
+            background: var(--accent-light);
+            color: var(--accent);
+        }}
+        .empty-state {{
+            display: none;
+            padding: 48px 20px;
+            text-align: center;
+            color: var(--muted);
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }}
+        @media (max-width: 900px) {{
+            .right-index {{ display: none; }}
+        }}
+        @media (max-width: 640px) {{
+            .app-layout {{ flex-direction: column; }}
+            .left-nav {{
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 12px;
+            }}
+            .brand {{ width: 100%; margin-bottom: 4px; }}
+            .nav-btn {{ width: auto; }}
+            .history-select {{ width: auto; min-width: 120px; }}
+            .main-area {{ height: calc(100vh - 130px); }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="left-nav">
+            <div class="brand">三国杀：一将成名<br>竞品日报</div>
+            <button class="nav-btn active" data-mode="today">每日日报</button>
+            <button class="nav-btn" data-mode="history">历史日报</button>
+            <select class="history-select" id="history-select"></select>
+        </aside>
+        <div class="main-area">
+            <div class="viewer-wrap">
+                <div class="empty-state" id="empty-state">暂无历史日报，请运行双击运行.bat 生成。</div>
+                <iframe id="viewer" src="{default_src}"></iframe>
+            </div>
+            <aside class="right-index" id="right-index">
+                <div class="index-title">游戏索引</div>
+                <div id="index-list"></div>
+            </aside>
+        </div>
+    </div>
+    <div id="history-data" data-dates='{dates_json}' style="display:none"></div>
+    <script src="viewer.js"></script>
+</body>
+</html>"""
+
+
+if __name__ == "__main__":
+    import json
+    from collector import collect_all
+
+    d = collect_all()
+    path, md = generate_briefing(d)
+    print(f"已生成 Markdown：{path}")
+    html_path = generate_briefing_html(d)
+    print(f"已生成 HTML：{html_path}")

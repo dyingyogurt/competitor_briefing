@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>使用说明 - 一将成名竞品日报</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --border: #e5e7eb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 28px 18px;
+    }
+    header {
+      text-align: center;
+      padding-bottom: 20px;
+    }
+    header h1 {
+      margin: 0 0 4px;
+      font-size: 1.5rem;
+      color: var(--text);
+    }
+    header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 1rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .card p, .card li {
+      color: #374151;
+      margin: 6px 0;
+      font-size: 0.9rem;
+    }
+    .card ol, .card ul {
+      padding-left: 0;
+      margin: 0;
+      list-style: none;
+    }
+    .card ul {
+      padding-left: 18px;
+      list-style: disc;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .step:last-child { margin-bottom: 0; }
+    .step-num {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--accent-light, #eff6ff);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+    .step-txt {
+      flex: 1;
+    }
+    code {
+      background: #f3f4f6;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 0.88em;
+    }
+    .footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      padding: 12px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>一将成名竞品日报</h1>
+      <p>自动监控 App Store 与 Bilibili 玩家舆情</p>
+    </header>
+
+    <div class="card">
+      <h2>查看简报</h2>
+      <ol>
+        <li class="step"><span class="step-num">1</span><span class="step-txt">点击 Edge 工具栏的插件图标</span></li>
+        <li class="step"><span class="step-num">2</span><span class="step-txt">在弹出面板中点击 <strong>查看今日简报</strong></span></li>
+        <li class="step"><span class="step-num">3</span><span class="step-txt">左侧切换 <strong>每日日报</strong> / <strong>历史日报</strong>，右侧点击游戏名可快速定位</span></li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>立即生成简报</h2>
+      <p>打开项目文件夹，双击运行 <code>双击运行.bat</code>，完成后刷新扩展页面即可查看。</p>
+    </div>
+
+    <div class="card">
+      <h2>每日自动生成</h2>
+      <ol>
+        <li class="step"><span class="step-num">1</span><span class="step-txt">点击扩展面板右上角的 <strong>复制任务路径</strong></span></li>
+        <li class="step"><span class="step-num">2</span><span class="step-txt">在文件资源管理器地址栏粘贴并回车</span></li>
+        <li class="step"><span class="step-num">3</span><span class="step-txt">右键 <code>定时任务-创建.bat</code>，选择 <strong>以管理员身份运行</strong></span></li>
+      </ol>
+      <p>默认每天 10:00 自动生成。如需调整时间，请编辑 <code>setup_for_team.bat</code> 中的 <code>triggerTime</code> 后重新运行。</p>
+    </div>
+
+    <div class="card">
+      <h2>补充数据</h2>
+      <p>编辑项目中的 <code>manual_overrides.json</code>，可补充版本亮点、市场动向、重点活动、备注等信息。下次运行脚本时会自动合并到日报中。</p>
+    </div>
+
+    <div class="card">
+      <h2>数据说明</h2>
+      <ul>
+        <li><strong>iOS 榜单：</strong>只显示 Top100，之外显示「未上榜」；</li>
+        <li><strong>App Store 评论：</strong>中国区 RSS 接口不稳定，可能无数据；</li>
+        <li><strong>Bilibili 舆情：</strong>采样部分热门视频及评论，数值仅供参考。</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      本简报由脚本自动生成，仅供参考。
+    </div>
+  </div>
+</body>
+</html>

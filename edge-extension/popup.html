@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>一将成名竞品日报</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="icon.png" alt="" class="icon">
+      <div>
+        <h1>一将成名竞品日报</h1>
+        <p class="subtitle">App Store + Bilibili 舆情监控</p>
+      </div>
+    </header>
+
+    <button id="view-btn" class="btn primary">查看今日简报</button>
+    <button id="usage-btn" class="btn secondary">使用说明</button>
+
+    <div class="divider"></div>
+
+    <div class="schedule-section">
+      <p class="schedule-summary">每天 10:00 自动生成 · 运行 <code>双击运行.bat</code> 可立即更新</p>
+      <button id="schedule-toggle" class="toggle-link">展开操作步骤 ▼</button>
+      <div id="schedule-steps" class="collapsed">
+        <ol class="steps">
+          <li>点击 复制任务路径</li>
+          <li>在文件资源管理器地址栏粘贴并回车</li>
+          <li>右键 <strong>定时任务-创建.bat</strong> → 以管理员身份运行</li>
+        </ol>
+        <button id="copy-path-btn" class="btn small">复制任务路径</button>
+      </div>
+    </div>
+
+    <div id="msg" class="msg"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
