@@ -81,13 +81,19 @@ def _clean_html(text):
     return re.sub(r"<[^>]+>", "", text).strip()
 
 
-def search_videos(keyword, max_results=5):
-    """搜索 Bilibili 视频，返回视频列表。"""
+def search_videos(keyword, max_results=5, pubtime_begin_s=None, pubtime_end_s=None):
+    """搜索 Bilibili 视频，返回视频列表。
+
+    当提供 pubtime_begin_s / pubtime_end_s 时，只搜索该时间区间内发布的视频
+    （单位：秒，Unix 时间戳）。
+    """
     encoded = urllib.parse.quote(keyword)
     url = (
         f"https://api.bilibili.com/x/web-interface/search/type"
         f"?keyword={encoded}&search_type=video&page=1"
     )
+    if pubtime_begin_s is not None and pubtime_end_s is not None:
+        url += f"&pubtime_begin_s={pubtime_begin_s}&pubtime_end_s={pubtime_end_s}"
     try:
         data = _request_json(url, "https://search.bilibili.com/")
         if data.get("code") != 0:
@@ -166,8 +172,19 @@ def analyze_sentiment(comments):
 
 
 def collect_bilibili_sentiment(keyword, max_videos=3, max_comments_per_video=5):
-    """针对关键词采集 Bilibili 舆情。"""
-    videos = search_videos(keyword, max_results=max_videos)
+    """针对关键词采集 Bilibili 舆情。默认只采集前一天（北京时间）发布的热门视频。"""
+    now = datetime.now(CN_TZ)
+    today = datetime(now.year, now.month, now.day, tzinfo=CN_TZ)
+    yesterday = today - timedelta(days=1)
+    pubtime_begin_s = int(yesterday.timestamp())
+    pubtime_end_s = int(today.timestamp()) - 1
+
+    videos = search_videos(
+        keyword,
+        max_results=max_videos,
+        pubtime_begin_s=pubtime_begin_s,
+        pubtime_end_s=pubtime_end_s,
+    )
     all_comments = []
     sources = []
 
