@@ -23,6 +23,38 @@ def _rank_text(rank):
     return str(rank)
 
 
+def _render_sampling_note():
+    """生成 Markdown 数据取样说明。"""
+    return [
+        "## 📋 数据取样说明",
+        "",
+        "- **App Store 版本 / 评分**：通过 iTunes Lookup API（中国区）获取，包含最新版本号、更新日期、开发商、总评分及评分人数。",
+        "- **iOS 榜单**：使用 Apple 公开 RSS 榜单（总畅销 / 总免费 / 游戏畅销 / 游戏免费），仅覆盖 Top100；超过 100 名显示「未进入 Top100」。",
+        "- **App Store 评论**：优先抓取 RSS 最新评论（每页约 50 条，最多 2 页，共约 100 条）；当 RSS 无数据时，自动抓取 App Store 详情页「精选评论」作为兜底（通常 4 条，非实时）。",
+        "- **Bilibili 舆情**：搜索竞品关键词，仅采集**前一天 0:00–23:59（北京时间）**发布的热门视频；取综合排序前 10 个视频，每个视频取热门评论前 20 条进行情感统计。",
+        "- **情感统计规则**：评论命中正面词表记为正面，命中负面词表记为负面，否则为中性；典型差评从负面样本中按顺序展示。",
+        "- **历史异动**：每天保存版本号和榜单排名快照；异动标准为版本号变化，或榜单变化绝对值 ≥ 5 位 / 进出榜。",
+        "- **人工补充**：`manual_overrides.json` 中的 TapTap 评分、热度、市场动向、重点活动、备注等会直接展示在报告中。",
+        "",
+    ]
+
+
+def _sampling_note_html():
+    """生成 HTML 版取样说明。"""
+    return """<details class="sampling-note">
+  <summary>📋 数据取样说明</summary>
+  <ul>
+    <li><strong>App Store 版本 / 评分</strong>：通过 iTunes Lookup API（中国区）获取，包含最新版本号、更新日期、开发商、总评分及评分人数。</li>
+    <li><strong>iOS 榜单</strong>：使用 Apple 公开 RSS 榜单（总畅销 / 总免费 / 游戏畅销 / 游戏免费），仅覆盖 Top100。</li>
+    <li><strong>App Store 评论</strong>：优先抓取 RSS 最新评论（每页约 50 条，最多 2 页）；RSS 无数据时，自动抓取 App Store 详情页「精选评论」兜底（通常 4 条，非实时）。</li>
+    <li><strong>Bilibili 舆情</strong>：搜索竞品关键词，仅采集<strong>前一天 0:00–23:59（北京时间）</strong>发布的热门视频；取综合排序前 10 个视频，每个视频取热门评论前 20 条。</li>
+    <li><strong>情感统计</strong>：评论命中正面词表为正面，命中负面词表为负面，否则为中性。</li>
+    <li><strong>历史异动</strong>：每天保存快照；异动标准为版本号变化，或榜单变化绝对值 ≥ 5 位 / 进出榜。</li>
+    <li><strong>人工补充</strong>：<code>manual_overrides.json</code> 中的 TapTap 评分、热度、市场动向、重点活动、备注等会直接展示。</li>
+  </ul>
+</details>"""
+
+
 def _render_competitor(item, idx):
     name = item["name"]
     full = item["full_name"]
@@ -140,13 +172,16 @@ def generate_briefing(data, output_dir="output", changes=None, prev_date=None):
         "",
         "---",
         "",
+    ]
+    lines.extend(_render_sampling_note())
+    lines.extend([
         "## 📌 今日摘要",
         "",
         _generate_summary(data, changes=changes, prev_date=prev_date),
         "",
         "---",
         "",
-    ]
+    ])
 
     for idx, item in enumerate(data["competitors"], start=1):
         lines.append(_render_competitor(item, idx))
@@ -1018,6 +1053,8 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
     for idx, item in enumerate(data["competitors"], start=1):
         competitors_html += _render_competitor_html(item, idx)
 
+    sampling_note_html = _sampling_note_html()
+
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -1789,6 +1826,35 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             .metrics-row.compact {{ flex-wrap: wrap; }}
             .metric {{ padding: 8px 12px; }}
         }}
+        .sampling-note {{
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 14px 0 4px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }}
+        .sampling-note summary {{
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+        }}
+        .sampling-note ul {{
+            margin: 10px 0 0;
+            padding-left: 18px;
+        }}
+        .sampling-note li {{
+            margin-bottom: 6px;
+        }}
+        .sampling-note code {{
+            background: #f3f4f6;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+        }}
     </style>
 </head>
 <body>
@@ -1798,6 +1864,8 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             <div class="meta">生成时间：{data['generated_at']}（北京时间）</div>
             <div class="meta">来源：App Store · Bilibili · manual_overrides.json</div>
         </header>
+
+        {sampling_note_html}
 
         {competitors_html}
 
