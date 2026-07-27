@@ -41,7 +41,7 @@ def _render_sampling_note():
 
 def _sampling_note_html():
     """生成 HTML 版取样说明。"""
-    return """<details class="sampling-note">
+    return """<details class="sampling-note" open>
   <summary>📋 数据取样说明</summary>
   <ul>
     <li><strong>App Store 版本 / 评分</strong>：通过 iTunes Lookup API（中国区）获取，包含最新版本号、更新日期、开发商、总评分及评分人数。</li>
