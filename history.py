@@ -30,13 +30,20 @@ def save_history(history):
 
 
 def snapshot(data):
-    """从采集结果生成当天的快照。"""
+    """从采集结果生成当天的快照，用于趋势图和异动对比。"""
     snap = {}
     for c in data["competitors"]:
+        reviews = c.get("reviews", {})
+        bilibili = c.get("bilibili_sentiment") or {}
         snap[c["key"]] = {
             "name": c["name"],
             "version": c.get("app_store", {}).get("version"),
             "ranks": c.get("chart_rank", {}),
+            "app_store_rating": c.get("app_store", {}).get("rating"),
+            "review_avg_rating": reviews.get("avg_rating"),
+            "review_count": reviews.get("count", 0),
+            "bilibili_sentiment": bilibili.get("sentiment", {}),
+            "bilibili_comment_count": bilibili.get("comment_count", 0),
         }
     return snap
 

@@ -11,6 +11,46 @@ function closePopup() {
   window.close();
 }
 
+function getTodayStr() {
+  return new Date().toLocaleDateString('zh-CN', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/\//g, '-');
+}
+
+async function loadStatus() {
+  const dot = document.getElementById('status-dot');
+  const text = document.getElementById('status-text');
+  const today = getTodayStr();
+
+  try {
+    const resp = await fetch('last_run_status.json', { cache: 'no-store' });
+    if (!resp.ok) {
+      throw new Error('未找到状态文件');
+    }
+    const status = await resp.json();
+    if (status.success && status.date === today) {
+      dot.className = 'status-dot success';
+      text.className = 'status-text success';
+      text.textContent = `今日简报已生成 · ${status.checked_at}`;
+    } else if (status.success) {
+      dot.className = 'status-dot';
+      text.className = 'status-text';
+      text.textContent = `最近生成：${status.date} · ${status.message}`;
+    } else {
+      dot.className = 'status-dot error';
+      text.className = 'status-text error';
+      text.textContent = `上次生成失败：${status.message}`;
+    }
+  } catch (e) {
+    dot.className = 'status-dot';
+    text.className = 'status-text';
+    text.textContent = '尚未检测到生成记录，请运行 双击运行.bat';
+  }
+}
+
 document.getElementById('view-btn').addEventListener('click', () => {
   chrome.tabs.create({ url: BRIEFING_URL }, () => {
     if (chrome.runtime.lastError) {
@@ -29,6 +69,38 @@ document.getElementById('usage-btn').addEventListener('click', () => {
   });
 });
 
+document.getElementById('refresh-btn').addEventListener('click', () => {
+  // 刷新所有已打开的简报标签页，让它重新加载最新日报
+  chrome.tabs.query({ url: BRIEFING_URL + '*' }, (tabs) => {
+    tabs.forEach((tab) => {
+      try {
+        chrome.tabs.reload(tab.id, { bypassCache: true });
+      } catch (err) {
+        console.error('[popup] 刷新标签页失败：', err);
+      }
+    });
+    showMsg('简报已刷新');
+    setTimeout(closePopup, 600);
+  });
+});
+
+document.getElementById('export-btn').addEventListener('click', () => {
+  const today = getTodayStr();
+  const fileUrl = chrome.runtime.getURL(`history/briefing_${today}.html`);
+  chrome.downloads.download({
+    url: fileUrl,
+    filename: `竞品日报_${today}.html`,
+    saveAs: true,
+  }, (downloadId) => {
+    if (chrome.runtime.lastError) {
+      showMsg('导出失败：' + chrome.runtime.lastError.message);
+    } else {
+      showMsg('导出已开始');
+      setTimeout(closePopup, 500);
+    }
+  });
+});
+
 document.getElementById('schedule-toggle').addEventListener('click', function () {
   const steps = document.getElementById('schedule-steps');
   const isCollapsed = steps.classList.toggle('collapsed');
@@ -43,3 +115,5 @@ document.getElementById('copy-path-btn').addEventListener('click', async () => {
     showMsg('复制失败：' + err.message);
   }
 });
+
+loadStatus();

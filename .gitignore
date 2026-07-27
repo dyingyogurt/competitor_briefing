@@ -16,6 +16,7 @@ env/
 # Generated outputs
 /output/
 /edge-extension/history/
+edge-extension/last_run_status.json
 /data/
 
 # Logs and temporary files

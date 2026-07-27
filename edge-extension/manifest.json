@@ -21,7 +21,9 @@
     "service_worker": "background.js"
   },
   "permissions": [
-    "notifications"
+    "notifications",
+    "tabs",
+    "downloads"
   ],
   "host_permissions": [],
   "web_accessible_resources": [

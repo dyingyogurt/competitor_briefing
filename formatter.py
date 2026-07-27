@@ -8,6 +8,8 @@ import os
 import re
 from datetime import datetime, timezone, timedelta
 
+from history import load_history
+
 
 CN_TZ = timezone(timedelta(hours=8))
 
@@ -129,7 +131,10 @@ def _render_competitor(item, idx):
         lines.append("### ▶️ Bilibili 玩家舆情补充")
         sent = bilibili["sentiment"]
         lines.append(f"- **采样视频**：{len(bilibili['videos'])} 个，共 {bilibili['comment_count']} 条采样评论")
-        lines.append(f"- **情感分布**：正面 {sent.get('positive', 0)} / 负面 {sent.get('negative', 0)} / 中性 {sent.get('neutral', 0)}")
+        lines.append(
+            f"- **加权情感分布**（按点赞加权，含视频标题）："
+            f"正面 {sent.get('positive', 0)} / 负面 {sent.get('negative', 0)} / 中性 {sent.get('neutral', 0)}"
+        )
         neg_kw = bilibili.get("negative_keywords", {})
         if neg_kw:
             lines.append(f"- **负面高频词**：{', '.join([f'{k}({v})' for k, v in list(neg_kw.items())[:5]])}")
@@ -768,7 +773,148 @@ def _detail_manual_section(manual_html):
     """
 
 
-def _render_competitor_html(item, idx):
+def _trend_data_for_key(key, history, current_item=None, days=30):
+    """从历史快照 + 当日数据中，提取某个竞品最近 N 天的趋势数据。"""
+    dates = []
+    today_str = datetime.now(CN_TZ).strftime("%Y-%m-%d")
+    end = datetime.now(CN_TZ)
+    for i in range(days - 1, -1, -1):
+        dates.append((end - timedelta(days=i)).strftime("%Y-%m-%d"))
+
+    app_store_rating = []
+    review_avg_rating = []
+    bilibili_positive = []
+    bilibili_negative = []
+    game_rank = []
+
+    for d in dates:
+        if current_item and d == today_str and current_item.get("key") == key:
+            snap_store = current_item.get("app_store", {})
+            snap_rev = current_item.get("reviews", {})
+            snap_bili = current_item.get("bilibili_sentiment") or {}
+            app_store_rating.append(snap_store.get("rating"))
+            review_avg_rating.append(snap_rev.get("avg_rating"))
+            b_sent = snap_bili.get("sentiment", {})
+            bilibili_positive.append(b_sent.get("positive"))
+            bilibili_negative.append(b_sent.get("negative"))
+            ranks = current_item.get("chart_rank", {})
+            game_rank.append(ranks.get("iOS 游戏畅销榜"))
+        else:
+            snap = history.get(d, {}).get(key, {})
+            app_store_rating.append(snap.get("app_store_rating"))
+            review_avg_rating.append(snap.get("review_avg_rating"))
+            b_sent = snap.get("bilibili_sentiment", {})
+            bilibili_positive.append(b_sent.get("positive"))
+            bilibili_negative.append(b_sent.get("negative"))
+            ranks = snap.get("ranks", {})
+            game_rank.append(ranks.get("iOS 游戏畅销榜"))
+
+    return {
+        "dates": dates,
+        "app_store_rating": app_store_rating,
+        "review_avg_rating": review_avg_rating,
+        "bilibili_positive": bilibili_positive,
+        "bilibili_negative": bilibili_negative,
+        "game_rank": game_rank,
+    }
+
+
+def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360, height=90):
+    """生成轻量级 SVG 折线图；values 中 None 的点会被跳过。"""
+    clean = [(i, v) for i, v in enumerate(values) if isinstance(v, (int, float))]
+    if not clean:
+        return ""
+
+    xs = [i for i, _ in clean]
+    ys = [v for _, v in clean]
+    if y_max is None:
+        y_max = max(ys) if ys else 1
+    if y_min is None:
+        y_min = min(ys) if ys else 0
+    if y_max == y_min:
+        y_max = y_min + 1
+
+    n = len(values)
+    pad_left, pad_right, pad_top, pad_bottom = 28, 12, 18, 22
+    plot_w = width - pad_left - pad_right
+    plot_h = height - pad_top - pad_bottom
+
+    def px(i, v):
+        x = pad_left + (i / (n - 1)) * plot_w if n > 1 else pad_left + plot_w / 2
+        y = pad_top + plot_h - ((v - y_min) / (y_max - y_min)) * plot_h
+        return round(x, 1), round(y, 1)
+
+    points = []
+    for i, v in clean:
+        x, y = px(i, v)
+        points.append(f"{x},{y}")
+
+    polyline = " ".join(points)
+    last_x, last_y = px(clean[-1][0], clean[-1][1])
+    last_value = clean[-1][1]
+
+    # 生成简单的 Y 轴网格线（3 条）
+    grid_lines = ""
+    for ratio in [0, 0.5, 1]:
+        y_val = y_min + (y_max - y_min) * ratio
+        gy = pad_top + plot_h - ratio * plot_h
+        label = f"{y_val:.1f}" if isinstance(y_val, float) and y_val != int(y_val) else str(int(y_val))
+        grid_lines += f'<line x1="{pad_left}" y1="{gy}" x2="{width - pad_right}" y2="{gy}" stroke="#e5e7eb" stroke-width="1"/>'
+        grid_lines += f'<text x="{pad_left - 4}" y="{gy + 3}" text-anchor="end" font-size="9" fill="#9ca3af">{label}</text>'
+
+    # X 轴只显示首尾日期
+    x_labels = (
+        f'<text x="{pad_left}" y="{height - 4}" text-anchor="start" font-size="9" fill="#9ca3af">{dates[0][5:]}</text>'
+        f'<text x="{width - pad_right}" y="{height - 4}" text-anchor="end" font-size="9" fill="#9ca3af">{dates[-1][5:]}</text>'
+    )
+
+    return f"""
+    <div class="trend-chart">
+        <div class="trend-title">{title}<span class="trend-current">最新 {last_value}</span></div>
+        <svg viewBox="0 0 {width} {height}" preserveAspectRatio="none" style="width:100%;height:{height}px;">
+            {grid_lines}
+            <polyline points="{polyline}" fill="none" stroke="{color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="{last_x}" cy="{last_y}" r="3.5" fill="{color}"/>
+            {x_labels}
+        </svg>
+    </div>
+    """
+
+
+def _trend_section_html(trend, key):
+    """把趋势数据渲染为一组折线图。"""
+    if not trend:
+        return ""
+    charts = []
+    charts.append(_svg_line_chart(
+        trend["dates"], trend["app_store_rating"], "#f59e0b",
+        "App Store 总评分", y_min=1, y_max=5,
+    ))
+    charts.append(_svg_line_chart(
+        trend["dates"], trend["review_avg_rating"], "#2563eb",
+        "评论均分", y_min=1, y_max=5,
+    ))
+    charts.append(_svg_line_chart(
+        trend["dates"], trend["bilibili_positive"], "#10b981",
+        "B站 正面情感（加权）",
+    ))
+    charts.append(_svg_line_chart(
+        trend["dates"], trend["bilibili_negative"], "#ef4444",
+        "B站 负面情感（加权）",
+    ))
+    charts = [c for c in charts if c]
+    if not charts:
+        return ""
+    return f"""
+    <div class="info-card wide trend-section">
+        <h3>📈 近 30 天趋势</h3>
+        <div class="trend-grid">{''.join(charts)}</div>
+    </div>
+    """
+
+
+def _render_competitor_html(item, idx, history=None):
+    history = history or {}
     name = item["name"]
     full = item["full_name"]
     store = item["app_store"]
@@ -776,6 +922,8 @@ def _render_competitor_html(item, idx):
     rev = item["reviews"]
     manual = item.get("manual", {})
     bilibili = item.get("bilibili_sentiment")
+    trend = _trend_data_for_key(item.get("key", ""), history, current_item=item)
+    trend_html = _trend_section_html(trend, item.get("key", ""))
 
     if "error" in store:
         return f"""
@@ -989,6 +1137,8 @@ def _render_competitor_html(item, idx):
 
         {overview_html}
 
+        {trend_html}
+
         <details class="competitor-details">
             <summary class="expand-btn"><span data-name="{name}"></span></summary>
             <div class="competitor-detail-body">
@@ -1049,9 +1199,11 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
     def _md_bold(text):
         return re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
 
+    history = load_history()
+
     competitors_html = ""
     for idx, item in enumerate(data["competitors"], start=1):
-        competitors_html += _render_competitor_html(item, idx)
+        competitors_html += _render_competitor_html(item, idx, history=history)
 
     sampling_note_html = _sampling_note_html()
 
@@ -1854,6 +2006,39 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             padding: 1px 4px;
             border-radius: 4px;
             font-family: Consolas, Monaco, monospace;
+        }}
+        .trend-section {{ margin-top: 6px; }}
+        .trend-grid {{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 10px;
+        }}
+        .trend-chart {{
+            background: #fafbfc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }}
+        .trend-title {{
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }}
+        .trend-current {{
+            font-size: 0.75rem;
+            color: var(--text);
+            background: #ffffff;
+            padding: 2px 6px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }}
+        @media (max-width: 720px) {{
+            .trend-grid {{ grid-template-columns: 1fr; }}
         }}
     </style>
 </head>

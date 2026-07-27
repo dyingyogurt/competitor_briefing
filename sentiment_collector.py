@@ -141,31 +141,49 @@ def fetch_top_comments(aid, max_comments=5):
 
 
 def analyze_sentiment(comments):
-    """对评论列表做简单情感统计。"""
+    """对评论列表做情感统计。
+
+    规则：
+    - 将视频标题和评论内容一起纳入关键词匹配；
+    - 按点赞数加权（点赞为 0 时权重为 1），让高赞热评更有代表性。
+    """
     positive, negative, neutral = 0, 0, 0
+    raw_positive, raw_negative, raw_neutral = 0, 0, 0
     neg_keyword_count = {}
     negative_samples = []
 
     for c in comments:
-        text = c.get("content", "")
+        content = c.get("content", "")
+        title = c.get("video_title", "")
+        text = f"{title} {content}".strip()
+        weight = max(1, int(c.get("like", 0)))
+
         neg_words = [w for w in NEGATIVE_WORDS if w in text]
         pos_words = [w for w in POSITIVE_WORDS if w in text]
 
         if neg_words:
-            negative += 1
+            raw_negative += 1
+            negative += weight
             for w in neg_words:
-                neg_keyword_count[w] = neg_keyword_count.get(w, 0) + 1
-            if len(negative_samples) < 5:
-                negative_samples.append(c)
+                neg_keyword_count[w] = neg_keyword_count.get(w, 0) + weight
+            negative_samples.append(c)
         elif pos_words:
-            positive += 1
+            raw_positive += 1
+            positive += weight
         else:
-            neutral += 1
+            raw_neutral += 1
+            neutral += weight
+
+    # 负面样本按点赞数排序，保留热度最高的 5 条
+    negative_samples = sorted(negative_samples, key=lambda x: -x.get("like", 0))[:5]
 
     return {
         "positive": positive,
         "negative": negative,
         "neutral": neutral,
+        "raw_positive": raw_positive,
+        "raw_negative": raw_negative,
+        "raw_neutral": raw_neutral,
         "negative_keywords": dict(sorted(neg_keyword_count.items(), key=lambda x: -x[1])),
         "negative_samples": negative_samples,
     }
