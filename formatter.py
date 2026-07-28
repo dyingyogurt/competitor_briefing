@@ -871,7 +871,7 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
     return f"""
     <div class="trend-chart">
         <div class="trend-title">{title}<span class="trend-current">最新 {last_value}</span></div>
-        <svg viewBox="0 0 {width} {height}" preserveAspectRatio="none" style="width:100%;height:{height}px;">
+        <svg viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
             {grid_lines}
             <polyline points="{polyline}" fill="none" stroke="{color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
             <circle cx="{last_x}" cy="{last_y}" r="3.5" fill="{color}"/>
