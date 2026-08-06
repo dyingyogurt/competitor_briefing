@@ -6,11 +6,19 @@ on:
     - cron: '0 1 * * *'
   workflow_dispatch:
 
+# 防止多个部署任务冲突
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
       - name: Checkout repository
@@ -41,3 +49,20 @@ jobs:
           git add -f data/history.json
           git diff --cached --quiet || git commit -m "daily: auto generate briefing for $(date +%Y-%m-%d)"
           git push
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # 把 edge-extension 作为 Pages 站点根目录
+          path: edge-extension
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

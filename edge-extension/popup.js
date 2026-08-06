@@ -1,3 +1,4 @@
+const PAGES_BASE = 'https://dyingyogurt.github.io/competitor_briefing';
 const BRIEFING_URL = chrome.runtime.getURL('briefing.html');
 const SCHEDULE_BAT_PATH = 'C:\\Users\\dengyufan\\Documents\\Default Project\\competitor_briefing\\定时任务-创建.bat';
 
@@ -25,29 +26,42 @@ async function loadStatus() {
   const text = document.getElementById('status-text');
   const today = getTodayStr();
 
+  async function tryFetch(url) {
+    const resp = await fetch(url, { cache: 'no-store' });
+    if (!resp.ok) throw new Error('status not ok');
+    return resp.json();
+  }
+
+  let status;
+  let source = '';
   try {
-    const resp = await fetch('last_run_status.json', { cache: 'no-store' });
-    if (!resp.ok) {
-      throw new Error('未找到状态文件');
-    }
-    const status = await resp.json();
-    if (status.success && status.date === today) {
-      dot.className = 'status-dot success';
-      text.className = 'status-text success';
-      text.textContent = `今日简报已生成 · ${status.checked_at}`;
-    } else if (status.success) {
+    status = await tryFetch(PAGES_BASE + '/last_run_status.json');
+    source = 'online';
+  } catch (e) {
+    try {
+      status = await tryFetch('last_run_status.json');
+      source = 'local';
+    } catch (e2) {
       dot.className = 'status-dot';
       text.className = 'status-text';
-      text.textContent = `最近生成：${status.date} · ${status.message}`;
-    } else {
-      dot.className = 'status-dot error';
-      text.className = 'status-text error';
-      text.textContent = `上次生成失败：${status.message}`;
+      text.textContent = '尚未检测到生成记录';
+      return;
     }
-  } catch (e) {
+  }
+
+  const suffix = source === 'online' ? '' : '（本地）';
+  if (status.success && status.date === today) {
+    dot.className = 'status-dot success';
+    text.className = 'status-text success';
+    text.textContent = `今日简报已生成${suffix} · ${status.checked_at}`;
+  } else if (status.success) {
     dot.className = 'status-dot';
     text.className = 'status-text';
-    text.textContent = '尚未检测到生成记录，请运行 双击运行.bat';
+    text.textContent = `最近生成：${status.date}${suffix} · ${status.message}`;
+  } else {
+    dot.className = 'status-dot error';
+    text.className = 'status-text error';
+    text.textContent = `上次生成失败${suffix}：${status.message}`;
   }
 }
 
@@ -86,7 +100,7 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
 
 document.getElementById('export-btn').addEventListener('click', () => {
   const today = getTodayStr();
-  const fileUrl = chrome.runtime.getURL(`history/briefing_${today}.html`);
+  const fileUrl = `${PAGES_BASE}/history/briefing_${today}.html`;
   chrome.downloads.download({
     url: fileUrl,
     filename: `竞品日报_${today}.html`,

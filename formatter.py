@@ -13,6 +13,9 @@ from history import load_history
 
 CN_TZ = timezone(timedelta(hours=8))
 
+# GitHub Pages 站点地址，扩展会从该地址读取线上简报
+PAGES_BASE = "https://dyingyogurt.github.io/competitor_briefing"
+
 
 def _rank_text(rank):
     if rank is None:
@@ -2107,7 +2110,7 @@ def _update_history_index(history_dir, keep_days=30):
 def _build_viewer_html(history_dates):
     """生成左侧日报切换 + 右侧游戏索引的浏览外壳。"""
     dates_json = json.dumps(history_dates, ensure_ascii=False)
-    default_src = f"history/briefing_{history_dates[0]}.html" if history_dates else "about:blank"
+    default_src = f"{PAGES_BASE}/history/briefing_{history_dates[0]}.html" if history_dates else "about:blank"
     return f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "一将成名竞品日报",
-  "version": "1.1",
+  "version": "1.2",
   "description": "每日自动生成竞品日报，打开浏览器时提醒，点击图标即可查看。",
   "action": {
     "default_title": "查看今日简报",
@@ -25,7 +25,12 @@
     "tabs",
     "downloads"
   ],
-  "host_permissions": [],
+  "host_permissions": [
+    "https://dyingyogurt.github.io/competitor_briefing/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; frame-src 'self' https://dyingyogurt.github.io/competitor_briefing/; connect-src 'self' https://dyingyogurt.github.io/competitor_briefing/;"
+  },
   "web_accessible_resources": [
     {
       "resources": ["history/*.html", "viewer.js"],

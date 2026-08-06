@@ -1,3 +1,5 @@
+const PAGES_BASE = 'https://dyingyogurt.github.io/competitor_briefing';
+
 const viewer = document.getElementById('viewer');
 const emptyState = document.getElementById('empty-state');
 const navBtns = document.querySelectorAll('.nav-btn');
@@ -12,6 +14,14 @@ const today = new Date().toLocaleDateString('zh-CN', {
 }).replace(/\//g, '-');
 
 let historyDates = [];
+let useLocal = false;
+
+function resolvePath(relativePath) {
+  if (useLocal) {
+    return relativePath;
+  }
+  return PAGES_BASE + '/' + relativePath;
+}
 
 function setNav(mode) {
   navBtns.forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
@@ -20,7 +30,7 @@ function setNav(mode) {
 function loadDate(date) {
   viewer.style.display = 'block';
   emptyState.style.display = 'none';
-  viewer.src = 'history/briefing_' + date + '.html';
+  viewer.src = resolvePath('history/briefing_' + date + '.html');
 }
 
 function showToday() {
@@ -79,7 +89,8 @@ function buildIndex() {
       indexList.appendChild(btn);
     });
   } catch (e) {
-    indexList.textContent = '无法读取索引';
+    // Pages 站点跨域时无法读取 iframe 内容DOM，这是正常现象
+    indexList.textContent = '线上简报不支持索引';
   }
 }
 
@@ -92,6 +103,37 @@ navBtns.forEach(b => b.addEventListener('click', () => {
 
 historySelect.addEventListener('change', showHistory);
 
+async function fetchIndex() {
+  // 先尝试从 GitHub Pages 读取
+  try {
+    const resp = await fetch(resolvePath('history/index.json'), { cache: 'no-store' });
+    if (resp.ok) {
+      const list = await resp.json();
+      if (Array.isArray(list) && list.length > 0) {
+        return list;
+      }
+    }
+  } catch (e) {
+    console.log('[viewer] Pages 读取失败，尝试本地文件', e);
+  }
+
+  // 兜底：无网络时读取本地文件
+  useLocal = true;
+  try {
+    const resp = await fetch('history/index.json', { cache: 'no-store' });
+    if (resp.ok) {
+      const list = await resp.json();
+      if (Array.isArray(list) && list.length > 0) {
+        return list;
+      }
+    }
+  } catch (e) {
+    console.log('[viewer] 本地 index.json 也读取失败', e);
+  }
+
+  return null;
+}
+
 async function init() {
   // 优先使用页面内嵌的日期作为兜底
   const dataEl = document.getElementById('history-data');
@@ -103,17 +145,9 @@ async function init() {
     }
   }
 
-  // 尝试读取 history/index.json，获取最新历史列表
-  try {
-    const resp = await fetch('history/index.json', { cache: 'no-store' });
-    if (resp.ok) {
-      const list = await resp.json();
-      if (Array.isArray(list) && list.length > 0) {
-        historyDates = list;
-      }
-    }
-  } catch (e) {
-    console.log('[viewer] 读取 history/index.json 失败，使用页面内嵌数据', e);
+  const list = await fetchIndex();
+  if (list) {
+    historyDates = list;
   }
 
   buildHistorySelect();
