@@ -1,4 +1,700 @@
 {
+  "2026-07-23": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": null,
+      "review_avg_rating": null,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 7,
+        "negative": 6,
+        "neutral": 17
+      },
+      "bilibili_comment_count": 30
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": null,
+      "review_avg_rating": null,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 7,
+        "negative": 6,
+        "neutral": 17
+      },
+      "bilibili_comment_count": 30
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": null,
+      "review_avg_rating": null,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 7,
+        "negative": 6,
+        "neutral": 17
+      },
+      "bilibili_comment_count": 30
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": null,
+      "review_avg_rating": null,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 7,
+        "negative": 6,
+        "neutral": 17
+      },
+      "bilibili_comment_count": 30
+    }
+  },
+  "2026-07-27": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 4.75,
+      "review_avg_rating": 4.75,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 4,
+        "negative": 0,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 19
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 4.75,
+      "review_avg_rating": 4.75,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 4,
+        "negative": 0,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 19
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 4.75,
+      "review_avg_rating": 4.75,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 4,
+        "negative": 0,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 19
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 4.75,
+      "review_avg_rating": 4.75,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 4,
+        "negative": 0,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 19
+    }
+  },
+  "2026-07-28": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.54,
+      "review_avg_rating": 1.54,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 7,
+        "negative": 43,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 25
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.54,
+      "review_avg_rating": 1.54,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 7,
+        "negative": 43,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 25
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.54,
+      "review_avg_rating": 1.54,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 7,
+        "negative": 43,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 25
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.54,
+      "review_avg_rating": 1.54,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 7,
+        "negative": 43,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 25
+    }
+  },
+  "2026-07-29": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.4,
+      "review_avg_rating": 1.4,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 5,
+        "negative": 45,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.4,
+      "review_avg_rating": 1.4,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 5,
+        "negative": 45,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.4,
+      "review_avg_rating": 1.4,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 5,
+        "negative": 45,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.4,
+      "review_avg_rating": 1.4,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 5,
+        "negative": 45,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    }
+  },
+  "2026-07-30": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.47,
+      "review_avg_rating": 1.47,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 12,
+        "negative": 88,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 30
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.47,
+      "review_avg_rating": 1.47,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 12,
+        "negative": 88,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 30
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.47,
+      "review_avg_rating": 1.47,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 12,
+        "negative": 88,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 30
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.47,
+      "review_avg_rating": 1.47,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 12,
+        "negative": 88,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 30
+    }
+  },
+  "2026-07-31": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    }
+  },
+  "2026-08-01": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.47,
+      "review_avg_rating": 1.47,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 12,
+        "negative": 88,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 28
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.47,
+      "review_avg_rating": 1.47,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 12,
+        "negative": 88,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 28
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.47,
+      "review_avg_rating": 1.47,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 12,
+        "negative": 88,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 28
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.47,
+      "review_avg_rating": 1.47,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 12,
+        "negative": 88,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 28
+    }
+  },
+  "2026-08-02": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 24
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 24
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 24
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 24
+    }
+  },
+  "2026-08-03": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 23
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 23
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 23
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 23
+    }
+  },
+  "2026-08-04": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.39,
+      "review_avg_rating": 1.39,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 10,
+        "negative": 90,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.39,
+      "review_avg_rating": 1.39,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 10,
+        "negative": 90,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.39,
+      "review_avg_rating": 1.39,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 10,
+        "negative": 90,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.39,
+      "review_avg_rating": 1.39,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 10,
+        "negative": 90,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    }
+  },
+  "2026-08-05": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 28
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 28
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 28
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 1.43,
+      "review_avg_rating": 1.43,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 11,
+        "negative": 89,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 28
+    }
+  },
+  "2026-08-06": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 4.75,
+      "review_avg_rating": 4.75,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 4,
+        "negative": 0,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 4.75,
+      "review_avg_rating": 4.75,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 4,
+        "negative": 0,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 4.75,
+      "review_avg_rating": 4.75,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 4,
+        "negative": 0,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": null,
+      "ranks": {},
+      "app_store_rating": 4.75,
+      "review_avg_rating": 4.75,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 4,
+        "negative": 0,
+        "neutral": 0
+      },
+      "bilibili_comment_count": 27
+    }
+  },
   "2026-08-07": {
     "yjc": {
       "name": "三国杀一将成名",
@@ -9,13 +705,13 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 2.63438,
+      "app_store_rating": 2.63441,
       "review_avg_rating": 4.75,
       "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 160,
+        "positive": 163,
         "negative": 68,
-        "neutral": 246
+        "neutral": 257
       },
       "bilibili_comment_count": 26
     },
@@ -28,13 +724,13 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 4.4562,
-      "review_avg_rating": 2.78,
-      "review_count": 50,
+      "app_store_rating": 4.45307,
+      "review_avg_rating": 3.0,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 28,
+        "positive": 20,
         "negative": 40,
-        "neutral": 21
+        "neutral": 18
       },
       "bilibili_comment_count": 27
     },
@@ -47,7 +743,7 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 3.33997,
+      "app_store_rating": 3.34003,
       "review_avg_rating": 4.0,
       "review_count": 4,
       "bilibili_sentiment": {
@@ -72,9 +768,9 @@
       "bilibili_sentiment": {
         "positive": 29,
         "negative": 0,
-        "neutral": 12
+        "neutral": 17
       },
-      "bilibili_comment_count": 16
+      "bilibili_comment_count": 21
     }
   }
 }
