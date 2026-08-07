@@ -883,7 +883,7 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
     help_html = ""
     if help:
         help_html = (
-            f'<span class="i-help">ⓘ<span class="i-tip">{help}</span></span>'
+            f'<span class="i-help" aria-label="说明">i<span class="i-tip">{help}</span></span>'
         )
 
     # X 轴只显示首尾日期
@@ -2063,10 +2063,11 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             gap: 8px;
         }}
         .trend-title-text {{
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 3px;
+            gap: 4px;
             min-width: 0;
+            white-space: nowrap;
         }}
         .trend-current {{
             font-size: 0.75rem;
@@ -2086,18 +2087,21 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 15px;
-            height: 15px;
-            flex-shrink: 0;
-            margin-left: 3px;
+            align-self: center;
+            width: 14px;
+            height: 14px;
+            flex: 0 0 auto;
             border-radius: 50%;
             background: #e5e7eb;
             color: #6b7280;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
             line-height: 1;
+            font-style: normal;
+            font-family: inherit;
             cursor: help;
             transition: background 0.15s, color 0.15s;
+            text-indent: 0;
         }}
         .i-help:hover {{
             background: var(--accent);
