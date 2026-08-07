@@ -1,0 +1,2009 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三国杀竞品日报｜2026-08-03</title>
+    <style>
+        :root {
+            --bg: #f0f4f8;
+            --card: #ffffff;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --accent-light: #eff6ff;
+            --border: #e5e7eb;
+            --hot: #ef4444;
+            --hot-bg: #fef2f2;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 8px 14px 24px;
+        }
+
+        /* Header */
+        header {
+            text-align: left;
+            padding: 12px 0 10px;
+        }
+        header .date {
+            font-size: 1rem;
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        header .meta {
+            color: var(--muted);
+            font-size: 0.8rem;
+            line-height: 1.5;
+        }
+
+        /* Section titles */
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 32px 0 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Competitor insight */
+        .competitor-insight {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 12px 14px;
+            margin: 12px 0;
+            color: #1e3a8a;
+            font-size: 0.9rem;
+            line-height: 1.55;
+        }
+        .competitor-insight.alert {
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+        .insight-icon {
+            flex-shrink: 0;
+            font-size: 1.1rem;
+        }
+        .insight-text strong {
+            font-weight: 700;
+        }
+
+        /* Competitor */
+        .competitor {
+            background: var(--card);
+            border-radius: 18px;
+            padding: 20px;
+            margin: 18px 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+        .competitor-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+            z-index: 20;
+            border-radius: 18px 18px 0 0;
+            margin: -20px -20px 0;
+            padding: 20px 20px 14px;
+        }
+
+        /* Overview grid */
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin: 14px 0 2px;
+        }
+        .overview-card {
+            aspect-ratio: 1 / 1;
+            min-width: 0;
+            min-height: 0;
+            background: #fafbfc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+        }
+        .overview-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            border-color: var(--accent);
+        }
+        .overview-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-weight: 600;
+        }
+        .overview-icon {
+            font-size: 1rem;
+        }
+        .overview-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.2;
+            margin: 8px 0;
+        }
+        .overview-summary {
+            font-size: 0.78rem;
+            color: var(--muted);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .overview-mini-sentiment {
+            margin: 4px 0;
+        }
+        .mini-sentiment-bar {
+            display: flex;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e5e7eb;
+            margin-bottom: 6px;
+        }
+        .mini-segment {
+            height: 100%;
+        }
+        .mini-positive { background: var(--success); }
+        .mini-neutral { background: #9ca3af; }
+        .mini-negative { background: var(--hot); }
+        .mini-sentiment-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-align: center;
+        }
+
+        /* Expand details */
+        .competitor-details {
+            display: flex;
+            flex-direction: column;
+            margin-top: 12px;
+        }
+        .expand-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            order: 2;
+            width: 100%;
+            padding: 10px;
+            margin-top: 12px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            list-style: none;
+            transition: background 0.15s;
+        }
+        .expand-btn::-webkit-details-marker {
+            display: none;
+        }
+        .expand-btn:hover {
+            background: #dbeafe;
+        }
+        .expand-btn span::before {
+            content: "展开查看 " attr(data-name) " 的详细数据";
+        }
+        .expand-btn span::after {
+            content: "▼";
+            font-size: 0.7rem;
+            margin-left: 4px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .competitor-details[open] .expand-btn span::before {
+            content: "收起";
+        }
+        .competitor-details[open] .expand-btn span::after {
+            transform: rotate(180deg);
+        }
+        .competitor-detail-body {
+            display: flex;
+            flex-direction: column;
+            order: 1;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Detail section */
+        .detail-section {
+            background: #fafbfc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px;
+        }
+        .detail-section h3 {
+            margin: 0 0 12px;
+            font-size: 0.95rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sub-section-title {
+            font-size: 0.88rem;
+            color: var(--text);
+            margin: 14px 0 8px;
+            font-weight: 700;
+        }
+        .detail-row {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .detail-col-left {
+            flex: 0 0 260px;
+            min-width: 0;
+        }
+        .detail-col-right {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .metrics-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .metrics-row.compact {
+            flex-wrap: nowrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .metrics-row.compact .metric {
+            flex: 1 1 auto;
+            min-width: 0;
+            padding: 8px 10px;
+        }
+        .metrics-row.compact .metric-value {
+            font-size: 1.2rem;
+        }
+        .metric {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            text-align: center;
+            min-width: 70px;
+        }
+        .metric-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1.2;
+        }
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+        .store-link {
+            display: inline-block;
+            margin-top: 2px;
+            color: var(--accent);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        .store-link:hover {
+            text-decoration: underline;
+        }
+        .keywords-wrap {
+            margin: 8px 0 10px;
+            line-height: 1.6;
+        }
+        .keyword-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            background: var(--hot-bg);
+            color: #7f1d1d;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            margin: 2px 4px 2px 0;
+        }
+        .keyword-chip small {
+            color: #b91c1c;
+            font-weight: 700;
+        }
+        .competitor-rank {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .competitor-title h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--text);
+        }
+        .competitor-title .subtitle {
+            color: var(--muted);
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+
+        /* Info grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+        .info-card {
+            background: #fafbfc;
+            border-radius: 14px;
+            padding: 18px;
+            border: 1px solid var(--border);
+        }
+        .info-card.wide {
+            grid-column: 1 / -1;
+        }
+        .info-card h3 {
+            margin: 0 0 14px;
+            font-size: 0.95rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .empty {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin: 8px 0;
+        }
+
+        /* Version */
+        .version-line {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
+        }
+        .version-badge {
+            background: var(--accent);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .date-label {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        .seller {
+            color: var(--muted);
+            font-size: 0.8rem;
+            margin: 2px 0 8px;
+        }
+        .update-list {
+            padding-left: 16px;
+            margin: 6px 0 0;
+            color: #374151;
+            font-size: 0.88rem;
+        }
+        .update-list li {
+            margin: 4px 0;
+        }
+        .update-details {
+            margin-top: 8px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+        .update-details summary {
+            color: var(--accent);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+        .update-details summary:hover {
+            color: #1d4ed8;
+        }
+        .update-details[open] summary {
+            margin-bottom: 8px;
+        }
+        .update-details .update-list {
+            margin-top: 0;
+        }
+
+        /* Rank cards */
+        .rank-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .rank-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+        .rank-title {
+            font-size: 0.78rem;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+        .rank-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.2;
+        }
+        .rank-number.hot-number {
+            color: var(--hot);
+        }
+        .rank-tag {
+            display: inline-block;
+            margin-top: 6px;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: #f3f4f6;
+            color: var(--muted);
+        }
+        .rank-tag.hot {
+            background: var(--hot);
+            color: white;
+            font-weight: 700;
+        }
+        .rank-missing .rank-number {
+            color: var(--muted);
+        }
+
+        /* Rating distribution */
+        .rating-distribution {
+            max-width: 320px;
+            margin-bottom: 10px;
+        }
+        .rating-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 36px;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0;
+            font-size: 0.85rem;
+        }
+        .star-label { text-align: right; color: #f59e0b; }
+        .rating-track {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .rating-fill {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            height: 100%;
+            border-radius: 999px;
+            min-width: 2px;
+        }
+        .count-label {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+        .negative-count {
+            color: #7f1d1d;
+            background: var(--hot-bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        /* Sentiment bar */
+        .sentiment-bar-wrap {
+            margin: 6px 0 10px;
+        }
+        .sentiment-bar {
+            display: flex;
+            height: 12px;
+            border-radius: 999px;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+        .sentiment-segment {
+            height: 100%;
+            transition: width 0.4s ease;
+        }
+        .sentiment-positive { background: var(--success); }
+        .sentiment-neutral { background: #9ca3af; }
+        .sentiment-negative { background: var(--hot); }
+        .sentiment-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--muted);
+            flex-wrap: wrap;
+        }
+        .dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
+        .dot-positive { background: var(--success); }
+        .dot-neutral { background: #9ca3af; }
+        .dot-negative { background: var(--hot); }
+
+        /* Comments */
+        .comment-bubble {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin: 6px 0;
+            font-size: 0.85rem;
+            color: #374151;
+        }
+        .comment-rating, .comment-like {
+            color: var(--warning);
+            font-weight: 700;
+            margin-right: 6px;
+        }
+        .keywords {
+            font-size: 0.85rem;
+            color: #7f1d1d;
+            background: var(--hot-bg);
+            padding: 6px 10px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .comment-summary {
+            font-size: 0.88rem;
+            line-height: 1.6;
+            color: #374151;
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            padding: 8px 12px;
+            border-radius: 0 8px 8px 0;
+            margin: 8px 0 10px;
+        }
+        .video-details {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            margin: 8px 0 10px;
+        }
+        .video-details summary {
+            color: var(--accent);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+        }
+        .video-details summary:hover {
+            color: #1d4ed8;
+        }
+        .video-details[open] summary {
+            margin-bottom: 10px;
+        }
+        .video-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin: 12px 0 16px;
+        }
+        .video-item {
+            display: block;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+        }
+        .video-item:hover {
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+            transform: translateY(-1px);
+        }
+        .video-title {
+            font-size: 0.88rem;
+            color: var(--text);
+            line-height: 1.45;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+        .video-author {
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+        .video-author::before {
+            content: "▶ ";
+            color: var(--accent);
+        }
+
+        /* Manual items */
+        .manual-item {
+            margin: 6px 0;
+            font-size: 0.88rem;
+            color: #374151;
+        }
+        .manual-item strong {
+            color: var(--text);
+        }
+
+        /* Error / notice */
+        .error-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--hot-bg);
+            color: #991b1b;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-size: 0.92rem;
+        }
+        .error-icon {
+            font-size: 1.3rem;
+        }
+        .notice {
+            background: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 14px 16px;
+            border-radius: 8px;
+            color: #1e3a8a;
+            font-size: 0.9rem;
+        }
+        .notice p {
+            margin: 6px 0;
+        }
+        code {
+            background: #fff;
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 0.9em;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-top: 40px;
+            padding-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 980px) {
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .detail-row {
+                flex-direction: column;
+                gap: 16px;
+            }
+            .detail-col-left, .detail-col-right {
+                flex: 1 1 auto;
+                width: 100%;
+            }
+            .rank-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 640px) {
+            header h1 { font-size: 1.5rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .overview-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+            .overview-card {
+                padding: 12px;
+                border-radius: 12px;
+            }
+            .overview-value {
+                font-size: 1.15rem;
+            }
+            .competitor { padding: 18px; }
+            .competitor-header {
+                margin: -18px -18px 0;
+                padding: 18px 18px 14px;
+                border-radius: 20px 20px 0 0;
+            }
+            .detail-row { flex-direction: column; gap: 14px; }
+            .detail-col-left, .detail-col-right { width: 100%; }
+            .rank-grid { grid-template-columns: repeat(2, 1fr); }
+            .metrics-row { gap: 8px; flex-wrap: wrap; }
+            .metrics-row.compact { flex-wrap: wrap; }
+            .metric { padding: 8px 12px; }
+        }
+        .sampling-note {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 14px 0 4px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+        .sampling-note summary {
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+        }
+        .sampling-note ul {
+            margin: 10px 0 0;
+            padding-left: 18px;
+        }
+        .sampling-note li {
+            margin-bottom: 6px;
+        }
+        .sampling-note code {
+            background: #f3f4f6;
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+        }
+        .trend-section { margin-top: 6px; }
+        .trend-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-top: 10px;
+        }
+        .trend-chart {
+            background: #fafbfc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .trend-title {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .trend-current {
+            font-size: 0.75rem;
+            color: var(--text);
+            background: #ffffff;
+            padding: 2px 6px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        @media (max-width: 720px) {
+            .trend-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="date">2026-08-03</div>
+            <div class="meta">生成时间：2026-08-03 10:00:47（北京时间）</div>
+            <div class="meta">来源：App Store · Bilibili · manual_overrides.json</div>
+        </header>
+
+        <details class="sampling-note" open>
+  <summary>📋 数据取样说明</summary>
+  <ul>
+    <li><strong>App Store 版本 / 评分</strong>：通过 iTunes Lookup API（中国区）获取，包含最新版本号、更新日期、开发商、总评分及评分人数。</li>
+    <li><strong>iOS 榜单</strong>：使用 Apple 公开 RSS 榜单（总畅销 / 总免费 / 游戏畅销 / 游戏免费），仅覆盖 Top100。</li>
+    <li><strong>App Store 评论</strong>：优先抓取 RSS 最新评论（每页约 50 条，最多 2 页）；RSS 无数据时，自动抓取 App Store 详情页「精选评论」兜底（通常 4 条，非实时）。</li>
+    <li><strong>Bilibili 舆情</strong>：搜索竞品关键词，仅采集<strong>前一天 0:00–23:59（北京时间）</strong>发布的热门视频；取综合排序前 10 个视频，每个视频取热门评论前 20 条。</li>
+    <li><strong>情感统计</strong>：评论命中正面词表为正面，命中负面词表为负面，否则为中性。</li>
+    <li><strong>历史异动</strong>：每天保存快照；异动标准为版本号变化，或榜单变化绝对值 ≥ 5 位 / 进出榜。</li>
+    <li><strong>人工补充</strong>：<code>manual_overrides.json</code> 中的 TapTap 评分、热度、市场动向、重点活动、备注等会直接展示。</li>
+  </ul>
+</details>
+
+        
+    <section class="competitor" id="三国杀一将成名">
+        <div class="competitor-header">
+            <div class="competitor-rank">1</div>
+            <div class="competitor-title">
+                <h2>三国杀一将成名</h2>
+                <div class="subtitle">上次更新：2026-07-02</div>
+            </div>
+        </div>
+
+        <div class="competitor-insight alert">
+            <span class="insight-icon">💡</span>
+            <span class="insight-text">负面反馈较多（124 条），集中在 <strong>氪金/付费、社区/环境</strong>，高频词：贵（29次）、差评（10次）、垃圾（7次）。建议关注社区情绪并及时回应。</span>
+        </div>
+
+        
+    <div class="overview-grid">
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📦</span><span class="overview-title">版本更新</span></div>
+        <div class="overview-value">v6.4.0.0</div>
+        <div class="overview-summary">2026-07-02<br>【7.11创玩节】开启！免费送SSS「谋徐盛」！武将置换福利来袭！全新玩法神威大…</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📊</span><span class="overview-title">iOS 榜单</span></div>
+        <div class="overview-value">未上榜</div>
+        <div class="overview-summary">总畅销 未上榜 / 总免费 未上榜 / 游戏畅销 未上榜 / 游戏免费 未上榜</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">💬</span><span class="overview-title">App Store</span></div>
+        <div class="overview-value">⭐ 1.43</div>
+        <div class="overview-summary">负面吐槽 92 条<br>高频词：差评、垃圾、恶心</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">▶️</span><span class="overview-title">Bilibili</span></div>
+        <div class="overview-mini-sentiment">
+            <div class="mini-sentiment-bar" title="正面 102 / 中性 50 / 负面 32">
+                <div class="mini-segment mini-positive" style="width: 55.4%"></div>
+                <div class="mini-segment mini-neutral" style="width: 27.2%"></div>
+                <div class="mini-segment mini-negative" style="width: 17.4%"></div>
+            </div>
+            <div class="mini-sentiment-label">正 55.4% · 中 27.2% · 负 17.4%</div>
+        </div>
+        <div class="overview-summary">23 条采样评论，高频负面词：贵、阴间</div>
+    </div>
+    
+    </div>
+    
+
+        
+    <div class="info-card wide trend-section">
+        <h3>📈 近 30 天趋势</h3>
+        <div class="trend-grid">
+    <div class="trend-chart">
+        <div class="trend-title">App Store 总评分<span class="trend-current">最新 2.63101</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">1</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">3</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">5</text>
+            <polyline points="270.8,47.6 281.8,47.6 292.8,47.6 303.9,47.6 314.9,47.6 325.9,47.6 337.0,47.6 348.0,47.6" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="47.6" r="3.5" fill="#f59e0b"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">评论均分<span class="trend-current">最新 1.43</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">1</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">3</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">5</text>
+            <polyline points="270.8,21.1 281.8,61.2 292.8,63.0 303.9,62.1 314.9,62.6 325.9,62.1 337.0,62.6 348.0,62.6" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="62.6" r="3.5" fill="#2563eb"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">B站 正面情感（加权）<span class="trend-current">最新 102</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">0</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">192.5</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">385</text>
+            <polyline points="270.8,52.7 281.8,64.1 292.8,18.0 303.9,38.1 314.9,48.4 325.9,52.4 337.0,52.9 348.0,54.8" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="54.8" r="3.5" fill="#10b981"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">B站 负面情感（加权）<span class="trend-current">最新 32</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">0</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">102</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">204</text>
+            <polyline points="270.8,34.2 281.8,18.0 292.8,50.4 303.9,45.7 314.9,46.7 325.9,24.4 337.0,64.6 348.0,60.2" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="60.2" r="3.5" fill="#ef4444"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    </div>
+    </div>
+    
+
+        <details class="competitor-details">
+            <summary class="expand-btn"><span data-name="三国杀一将成名"></span></summary>
+            <div class="competitor-detail-body">
+                
+    <div class="detail-section">
+        <h3>📦 版本更新</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="version-line">
+                    <span class="version-badge">v6.4.0.0</span>
+                    <span class="date-label">2026-07-02</span>
+                </div>
+                <p class="seller">Hangzhou Yoka Network Technology Co., Ltd.</p>
+            </div>
+            <div class="detail-col-right">
+                
+    <ul class='update-list'><li>【7.11创玩节】开启！免费送SSS「谋徐盛」！武将置换福利来袭！全新玩法神威大乱斗上线！新手送150抽+SSS武将「谋黄盖」！</li><li>-重点福利玩法：</li><li>【送谋徐盛】7.2~7.13，现在上线参与创玩节预热活动轻松获取SSS武将谋徐盛！完成一将成名共创投稿再送谋徐盛史诗皮肤！</li><li>【武将置换】7.11~7.19，纳贤、祈福、宝玉三个类别将池140+武将可免费用已有武将等价置换未拥有武将！</li><li>【神威大乱斗】7.11~7.19，全新2v2娱乐玩法开启，全局特殊效果+随机神威技能，全民将池畅玩无限！</li></ul>
+    <details class='update-details'>
+        <summary>展开全部 24 条更新说明</summary>
+        <ul class='update-list'><li>【神话再临】神刘备+神关羽技能加强！7.2日上线即玩！</li><li>【神貂蝉共创】7.11~7.19，一将成名2026武将原创设计大赛投稿开启，神貂蝉命题首发、鲍三娘重置等待你执笔！</li><li>【七日活跃】7.11~7.19，参与活跃任务领自选传说皮肤！祈福灯、招募令等丰厚奖励！</li><li>【天书乱斗】肉鸽技能组合PVE玩法天书乱斗7.3日暑期返场！</li><li>-其他活动：</li><li>【斗地主限时武将】7.2~7.19，SP蒲元限时加入斗地主玩法！</li><li>【限定鲜花特效】7.2~7.19，创玩节庆典专属彩蛋鲜花效果上线！</li><li>【双倍充值】7.11，创玩节当日重置双倍充值权益！</li><li>-新武将：</li><li>【晦书轮回*神曹丕】——白日轮转，黑夜倾轧，名之神首发！</li><li>【穰苴之风*谋徐盛】——以少御多，计退曹丕，东吴芜湖侯上线！</li><li>【尖峰致溃*谋张任】——东汉末年益州牧刘璋麾下大将</li><li>【贞骨陨玉*李昭仪】——蜀汉后主刘禅九嫔之一昭仪</li><li>-新皮肤：</li><li>【权倾龙廷*谋贾诩】双形态限定</li><li>【日月同辉*神曹丕】传说</li><li>【烈火将魂*谋徐盛】史诗——一将成名共创投稿福利</li><li>【慧剑孤心*李昭仪】史诗</li><li>「星法正」、「星孙尚香」、「羊祜」原画重制上线</li></ul>
+    </details>
+    
+            </div>
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>📊 iOS 榜单</h3>
+        <div class="rank-grid">
+            
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 总畅销榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 总免费榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 游戏畅销榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 游戏免费榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>💬 App Store 玩家舆论</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">100</div><div class="metric-label">样本数</div></div>
+                    <div class="metric"><div class="metric-value">1.43</div><div class="metric-label">平均评分</div></div>
+                    <div class="metric"><div class="metric-value">17</div><div class="metric-label">近 7 天</div></div>
+                </div>
+                <a class="store-link" href="https://apps.apple.com/cn/app/%E4%B8%89%E5%9B%BD%E6%9D%80-%E4%B8%80%E5%B0%86%E6%88%90%E5%90%8D/id1389650592?uo=4" target="_blank">打开 App Store →</a>
+            </div>
+            <div class="detail-col-right">
+                
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 11 / 中性 0 / 负面 89">
+            <div class="sentiment-segment sentiment-positive" style="width: 11.0%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: 0.0%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: 89.0%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 11 (11.0%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 0 (0.0%)</span>
+            <span><span class="dot dot-negative"></span> 负面 89 (89.0%)</span>
+        </div>
+    </div>
+    
+                <div class="keywords-wrap"><strong>负面高频词：</strong><span class="keyword-chip">差评 <small>10</small></span> <span class="keyword-chip">垃圾 <small>7</small></span> <span class="keyword-chip">恶心 <small>4</small></span> <span class="keyword-chip">坑 <small>4</small></span> <span class="keyword-chip">保底 <small>3</small></span> <span class="keyword-chip">骗氪 <small>2</small></span> <span class="keyword-chip">卸载 <small>1</small></span> <span class="keyword-chip">难玩 <small>1</small></span></div>
+                <h4 class="sub-section-title">代表评论</h4>
+                <div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>．</strong> 太好玩了，差评</div><div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>1</strong> 今天心情好，来打个差评</div><div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>游戏环境不行</strong> 这游戏脑子不好的多也就算了，眼瞎的还多</div>
+            </div>
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>▶️ Bilibili 玩家舆情补充</h3>
+            <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">10</div><div class="metric-label">采样视频</div></div>
+                    <div class="metric"><div class="metric-value">23</div><div class="metric-label">采样评论数</div></div>
+                </div>
+            </div>
+            <div class="detail-col-right">
+                
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 102 / 中性 50 / 负面 32">
+            <div class="sentiment-segment sentiment-positive" style="width: 55.4%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: 27.2%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: 17.4%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 102 (55.4%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 50 (27.2%)</span>
+            <span><span class="dot dot-negative"></span> 负面 32 (17.4%)</span>
+        </div>
+    </div>
+    
+                <div class="keywords-wrap"><strong>负面高频词：</strong><span class="keyword-chip">贵 <small>29</small></span> <span class="keyword-chip">阴间 <small>2</small></span> <span class="keyword-chip">烂 <small>1</small></span></div>
+
+                <h4 class="sub-section-title">代表评论</h4>
+                <div class="comment-bubble"><span class="comment-like">👍 41</span> 说起兑换劵，问了吗？</div><div class="comment-bubble"><span class="comment-like">👍 38</span> 董卓现在就是信息差 等到时候都会打了 开局就跑了 谁给你爽</div><div class="comment-bubble"><span class="comment-like">👍 29</span> 讲个笑话，武诸葛卖的比董卓贵</div><div class="comment-bubble"><span class="comment-like">👍 17</span> 在新杀环境大膨胀的趋势之下，反而是辅助忠比爆忠吃香的多了[笑哭]。。毕竟爆将再怎么样也需要进回合才有用，辅助开局就有用[颂乐人偶_眯眼笑][颂乐人偶_眯眼笑]
+
+前五全是辅助，前十有八个辅助</div><div class="comment-bubble"><span class="comment-like">👍 12</span> 变无定河边骨了[笑哭]</div>
+                
+    <details class='video-details'>
+        <summary>查看 10 个采样视频</summary>
+        <div class='video-list'>
+        <a href="https://www.bilibili.com/video/BV1Mb3R6wE3j" target="_blank" class="video-item" title="8月重磅福利！三国杀一将成名！无限资源，无限福利，三连找我拿资源">
+            <div class="video-title">8月重磅福利！三国杀一将成名！无限资源，无限福利，三连找我拿资源</div>
+            <div class="video-author">@今天你是否快乐 · 已采 0 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1VV3X6eEV6" target="_blank" class="video-item" title="【三国杀一将成名】两版于毒评价，一个大加血时代最后的爆将，一个大过牌时代还在最大过4。">
+            <div class="video-title">【三国杀一将成名】两版于毒评价，一个大加血时代最后的爆将，一个大过牌时代还在最大过4。</div>
+            <div class="video-author">@gosongs · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1sk3m6uEuV" target="_blank" class="video-item" title="三国杀一将成名8月2日活动精策精测视频">
+            <div class="video-title">三国杀一将成名8月2日活动精策精测视频</div>
+            <div class="video-author">@三国杀陈秀儿 · 已采 1 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1yU3Q6DENt" target="_blank" class="video-item" title="【三国杀一将成名】（公益版）无限内购+内置GM后台菜单，任你爽，无偿免费分享速拿～">
+            <div class="video-title">【三国杀一将成名】（公益版）无限内购+内置GM后台菜单，任你爽，无偿免费分享速拿～</div>
+            <div class="video-author">@苏邵孤U带3L飞 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV19j3R6gEGz" target="_blank" class="video-item" title="三国杀一将成名魏 蜀 吴 群 神的阴间武将  #三国杀一将成名">
+            <div class="video-title">三国杀一将成名魏 蜀 吴 群 神的阴间武将  #三国杀一将成名</div>
+            <div class="video-author">@影神之刃三国杀 · 已采 2 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1Wk3m6uE37" target="_blank" class="video-item" title="三国杀史上最强地主框！两个老头和一个书生毁了斗地主？">
+            <div class="video-title">三国杀史上最强地主框！两个老头和一个书生毁了斗地主？</div>
+            <div class="video-author">@宇宙之心y · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1Yz3d6VE1e" target="_blank" class="video-item" title="三国杀策划是真没脑子！武将能这样加强！全位置胜率第一？">
+            <div class="video-title">三国杀策划是真没脑子！武将能这样加强！全位置胜率第一？</div>
+            <div class="video-author">@不榖呀 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV19R3X6vEMA" target="_blank" class="video-item" title="三国杀7月军八忠臣胜率top10 李昭仪断层第一忠臣 太傅第一变倒一">
+            <div class="video-title">三国杀7月军八忠臣胜率top10 李昭仪断层第一忠臣 太傅第一变倒一</div>
+            <div class="video-author">@墨雪寒书SAGIRI · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1sQ3964Es3" target="_blank" class="video-item" title="三国杀一将成名 GM后台【破解】无限内购 随便刷，一键三连 免费分享！">
+            <div class="video-title">三国杀一将成名 GM后台【破解】无限内购 随便刷，一键三连 免费分享！</div>
+            <div class="video-author">@地瓜干大帅哥 · 已采 2 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1713X6kEoF" target="_blank" class="video-item" title="（一将成名）本周活动总结，这期活动拿了三个超强武将，我个人感觉还是很不错的，嘻嘻，希望以后能把我神庞统加强一下">
+            <div class="video-title">（一将成名）本周活动总结，这期活动拿了三个超强武将，我个人感觉还是很不错的，嘻嘻，希望以后能把我神庞统加强一下</div>
+            <div class="video-author">@最好的回忆sgs · 已采 3 条</div>
+        </a>
+        </div>
+    </details>
+    
+            </div>
+        </div>
+    </div>
+    
+                
+            </div>
+        </details>
+    </section>
+    
+    <section class="competitor" id="名将杀">
+        <div class="competitor-header">
+            <div class="competitor-rank">2</div>
+            <div class="competitor-title">
+                <h2>名将杀</h2>
+                <div class="subtitle">上次更新：2026-07-01</div>
+            </div>
+        </div>
+
+        <div class="competitor-insight alert">
+            <span class="insight-icon">💡</span>
+            <span class="insight-text">负面反馈较多（75 条），集中在 <strong>社区/环境、氪金/付费</strong>，高频词：垃圾（14次）、恶心（13次）、氪金（12次）。可提前排查同类问题并在宣发/运营中规避。</span>
+        </div>
+
+        
+    <div class="overview-grid">
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📦</span><span class="overview-title">版本更新</span></div>
+        <div class="overview-value">v1.0.6</div>
+        <div class="overview-summary">2026-07-01<br>版本更新内容：</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📊</span><span class="overview-title">iOS 榜单</span></div>
+        <div class="overview-value">未上榜</div>
+        <div class="overview-summary">总畅销 未上榜 / 总免费 未上榜 / 游戏畅销 未上榜 / 游戏免费 未上榜</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">💬</span><span class="overview-title">App Store</span></div>
+        <div class="overview-value">⭐ 2.72</div>
+        <div class="overview-summary">负面吐槽 69 条<br>高频词：垃圾、恶心、氪金</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">▶️</span><span class="overview-title">Bilibili</span></div>
+        <div class="overview-mini-sentiment">
+            <div class="mini-sentiment-bar" title="正面 7 / 中性 55 / 负面 6">
+                <div class="mini-segment mini-positive" style="width: 10.3%"></div>
+                <div class="mini-segment mini-neutral" style="width: 80.9%"></div>
+                <div class="mini-segment mini-negative" style="width: 8.8%"></div>
+            </div>
+            <div class="mini-sentiment-label">正 10.3% · 中 80.9% · 负 8.8%</div>
+        </div>
+        <div class="overview-summary">18 条采样评论，高频负面词：打不过、暗改</div>
+    </div>
+    
+    </div>
+    
+
+        
+    <div class="info-card wide trend-section">
+        <h3>📈 近 30 天趋势</h3>
+        <div class="trend-grid">
+    <div class="trend-chart">
+        <div class="trend-title">App Store 总评分<span class="trend-current">最新 4.45066</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">1</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">3</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">5</text>
+            <polyline points="270.8,24.9 281.8,24.9 292.8,24.9 303.9,24.9 314.9,24.9 325.9,24.9 337.0,24.9 348.0,24.9" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="24.9" r="3.5" fill="#f59e0b"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">评论均分<span class="trend-current">最新 2.72</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">1</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">3</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">5</text>
+            <polyline points="270.8,39.9 281.8,45.4 292.8,43.0 303.9,46.5 314.9,46.5 325.9,46.6 337.0,46.5 348.0,46.5" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="46.5" r="3.5" fill="#2563eb"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">B站 正面情感（加权）<span class="trend-current">最新 7</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">0</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">29.5</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">59</text>
+            <polyline points="270.8,61.2 281.8,61.2 292.8,52.7 303.9,56.1 314.9,18.0 325.9,65.5 337.0,29.0 348.0,62.1" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="62.1" r="3.5" fill="#10b981"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">B站 负面情感（加权）<span class="trend-current">最新 6</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">0</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">64</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">128</text>
+            <polyline points="270.8,44.2 281.8,37.1 292.8,21.1 303.9,36.0 314.9,18.0 325.9,50.0 337.0,61.0 348.0,65.7" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="65.7" r="3.5" fill="#ef4444"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    </div>
+    </div>
+    
+
+        <details class="competitor-details">
+            <summary class="expand-btn"><span data-name="名将杀"></span></summary>
+            <div class="competitor-detail-body">
+                
+    <div class="detail-section">
+        <h3>📦 版本更新</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="version-line">
+                    <span class="version-badge">v1.0.6</span>
+                    <span class="date-label">2026-07-01</span>
+                </div>
+                <p class="seller">Giant Network Technology Co., Ltd.</p>
+            </div>
+            <div class="detail-col-right">
+                <ul class='update-list'><li>版本更新内容：</li><li>1. 优化，提升游戏流畅性</li><li>2. 提升iOS26及以上系统用户体验</li></ul>
+            </div>
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>📊 iOS 榜单</h3>
+        <div class="rank-grid">
+            
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 总畅销榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 总免费榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 游戏畅销榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 游戏免费榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>💬 App Store 玩家舆论</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">100</div><div class="metric-label">样本数</div></div>
+                    <div class="metric"><div class="metric-value">2.72</div><div class="metric-label">平均评分</div></div>
+                    <div class="metric"><div class="metric-value">7</div><div class="metric-label">近 7 天</div></div>
+                </div>
+                <a class="store-link" href="https://apps.apple.com/cn/app/%E5%90%8D%E5%B0%86%E6%9D%80/id6746475501?uo=4" target="_blank">打开 App Store →</a>
+            </div>
+            <div class="detail-col-right">
+                
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 38 / 中性 10 / 负面 52">
+            <div class="sentiment-segment sentiment-positive" style="width: 38.0%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: 10.0%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: 52.0%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 38 (38.0%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 10 (10.0%)</span>
+            <span><span class="dot dot-negative"></span> 负面 52 (52.0%)</span>
+        </div>
+    </div>
+    
+                <div class="keywords-wrap"><strong>负面高频词：</strong><span class="keyword-chip">垃圾 <small>14</small></span> <span class="keyword-chip">恶心 <small>13</small></span> <span class="keyword-chip">氪金 <small>12</small></span> <span class="keyword-chip">人机 <small>7</small></span> <span class="keyword-chip">bug <small>5</small></span> <span class="keyword-chip">烂 <small>4</small></span> <span class="keyword-chip">坑 <small>3</small></span> <span class="keyword-chip">阴间 <small>3</small></span></div>
+                <h4 class="sub-section-title">代表评论</h4>
+                <div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>策划不玩游戏的</strong> 瞎几八改斗地主，恼谈策划嘴还硬</div><div class="comment-bubble"><span class="comment-rating">⭐2</span> <strong>垃圾游戏 进去就是看别人暴打自己</strong> 全是超标挂 判定也恶心 进去选完角色然后就是看别人怎么暴打自己</div><div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>游戏平衡机制非常不公平</strong> 游戏平衡机制非常垃圾 大家不要玩</div>
+            </div>
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>▶️ Bilibili 玩家舆情补充</h3>
+            <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">10</div><div class="metric-label">采样视频</div></div>
+                    <div class="metric"><div class="metric-value">18</div><div class="metric-label">采样评论数</div></div>
+                </div>
+            </div>
+            <div class="detail-col-right">
+                
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 7 / 中性 55 / 负面 6">
+            <div class="sentiment-segment sentiment-positive" style="width: 10.3%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: 80.9%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: 8.8%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 7 (10.3%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 55 (80.9%)</span>
+            <span><span class="dot dot-negative"></span> 负面 6 (8.8%)</span>
+        </div>
+    </div>
+    
+                <div class="keywords-wrap"><strong>负面高频词：</strong><span class="keyword-chip">打不过 <small>4</small></span> <span class="keyword-chip">暗改 <small>2</small></span></div>
+
+                <h4 class="sub-section-title">代表评论</h4>
+                <div class="comment-bubble"><span class="comment-like">👍 11</span> 现在不如直接开扫荡，又和老千里一样无聊了[妙啊]</div><div class="comment-bubble"><span class="comment-like">👍 9</span> 借用一个王者up的一句话。一个游戏最好是t2为大多数，t3t1为极少数，但是目前游戏情况为，t1为大多数，倒逼t2正常的设计的英雄为劣币的情况</div><div class="comment-bubble"><span class="comment-like">👍 8</span> 他不是没有变身是被你抢回合了，他想先输出再变身的，但是他好像忘记你是偃师了</div><div class="comment-bubble"><span class="comment-like">👍 7</span> 玩过偃师变左慈，没想到还有人玩到左慈变偃师的哈哈哈</div><div class="comment-bubble"><span class="comment-like">👍 6</span> 偃师是个22将斗地主将，军八强度还不如韩非左慈，经常爆傀儡6-10张牌没两张草花被踢死，22这种有队友辅助递牌还好些，斗地主节奏没那么快还能活一轮凑下梅花，军八真的就是3血脆皮爆傀儡变白板两个梅花才能变身还是太难受了</div>
+                
+    <details class='video-details'>
+        <summary>查看 10 个采样视频</summary>
+        <div class='video-list'>
+        <a href="https://www.bilibili.com/video/BV1u33U6JEQ7" target="_blank" class="video-item" title="【名将杀——千里单骑·无尽模式】锐评西楚武将赠礼">
+            <div class="video-title">【名将杀——千里单骑·无尽模式】锐评西楚武将赠礼</div>
+            <div class="video-author">@巍风八面 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1Lw3D6PECJ" target="_blank" class="video-item" title="左慈化身偃师！大战白起、偃师">
+            <div class="video-title">左慈化身偃师！大战白起、偃师</div>
+            <div class="video-author">@太阳烧坏了 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1XQ3D6fEza" target="_blank" class="video-item" title="【名将杀·武将深度解析】偃师：百变伪装，三命反打">
+            <div class="video-title">【名将杀·武将深度解析】偃师：百变伪装，三命反打</div>
+            <div class="video-author">@谨夏挽歌- · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV16P3R6EE55" target="_blank" class="video-item" title="名将杀偃师武将介绍：我是左慈，我是陈胜，三命三搏的偃师">
+            <div class="video-title">名将杀偃师武将介绍：我是左慈，我是陈胜，三命三搏的偃师</div>
+            <div class="video-author">@沫沫的时空巴士 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1o13X6rEpJ" target="_blank" class="video-item" title="这样的左慈你见过吗">
+            <div class="video-title">这样的左慈你见过吗</div>
+            <div class="video-author">@名将杀语落风华 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1VE3o62E8S" target="_blank" class="video-item" title="小安的名将杀新手实况58-武将“公孙瓒”练习">
+            <div class="video-title">小安的名将杀新手实况58-武将“公孙瓒”练习</div>
+            <div class="video-author">@安辰平 · 已采 0 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV17u3o6XE4j" target="_blank" class="video-item" title="白起的强度无需置疑">
+            <div class="video-title">白起的强度无需置疑</div>
+            <div class="video-author">@古月落凤 · 已采 0 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1Q73R6zEdG" target="_blank" class="video-item" title="名将杀-为什么陈宫能成为曹操的白月光呢,看完你就懂了">
+            <div class="video-title">名将杀-为什么陈宫能成为曹操的白月光呢,看完你就懂了</div>
+            <div class="video-author">@EGGBOME · 已采 0 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1XQ3D6fEGi" target="_blank" class="video-item" title="【名将杀】八王之乱PVE-平民玩家进游戏能干啥？（气到忘配音）">
+            <div class="video-title">【名将杀】八王之乱PVE-平民玩家进游戏能干啥？（气到忘配音）</div>
+            <div class="video-author">@难道这个名字有人用了 · 已采 1 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1gE3X6cEWr" target="_blank" class="video-item" title="章邯&amp;英布  嬴政一个摸牌白别逗你章邯哥笑了">
+            <div class="video-title">章邯&amp;英布  嬴政一个摸牌白别逗你章邯哥笑了</div>
+            <div class="video-author">@葛饰应为单推人 · 已采 2 条</div>
+        </a>
+        </div>
+    </details>
+    
+            </div>
+        </div>
+    </div>
+    
+                
+            </div>
+        </details>
+    </section>
+    
+    <section class="competitor" id="英雄杀">
+        <div class="competitor-header">
+            <div class="competitor-rank">3</div>
+            <div class="competitor-title">
+                <h2>英雄杀</h2>
+                <div class="subtitle">上次更新：2026-07-31</div>
+            </div>
+        </div>
+
+        <div class="competitor-insight alert">
+            <span class="insight-icon">💡</span>
+            <span class="insight-text">负面反馈较多（112 条），集中在 <strong>社区/环境</strong>，高频词：垃圾（28次）、恶心（13次）、人机（11次）。可提前排查同类问题并在宣发/运营中规避。</span>
+        </div>
+
+        
+    <div class="overview-grid">
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📦</span><span class="overview-title">版本更新</span></div>
+        <div class="overview-value">v4.31.0</div>
+        <div class="overview-summary">2026-07-31<br>十五如初，英雄如故！</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📊</span><span class="overview-title">iOS 榜单</span></div>
+        <div class="overview-value">未上榜</div>
+        <div class="overview-summary">总畅销 未上榜 / 总免费 未上榜 / 游戏畅销 未上榜 / 游戏免费 未上榜</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">💬</span><span class="overview-title">App Store</span></div>
+        <div class="overview-value">⭐ 1.22</div>
+        <div class="overview-summary">负面吐槽 95 条<br>高频词：垃圾、恶心、人机</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">▶️</span><span class="overview-title">Bilibili</span></div>
+        <div class="overview-mini-sentiment">
+            <div class="mini-sentiment-bar" title="正面 13 / 中性 29 / 负面 17">
+                <div class="mini-segment mini-positive" style="width: 22.0%"></div>
+                <div class="mini-segment mini-neutral" style="width: 49.2%"></div>
+                <div class="mini-segment mini-negative" style="width: 28.8%"></div>
+            </div>
+            <div class="mini-sentiment-label">正 22.0% · 中 49.2% · 负 28.8%</div>
+        </div>
+        <div class="overview-summary">30 条采样评论，高频负面词：退游、打不过</div>
+    </div>
+    
+    </div>
+    
+
+        
+    <div class="info-card wide trend-section">
+        <h3>📈 近 30 天趋势</h3>
+        <div class="trend-grid">
+    <div class="trend-chart">
+        <div class="trend-title">App Store 总评分<span class="trend-current">最新 3.33934</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">1</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">3</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">5</text>
+            <polyline points="270.8,38.8 281.8,38.8 292.8,38.8 303.9,38.8 314.9,38.8 325.9,38.8 337.0,38.8 348.0,38.8" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="38.8" r="3.5" fill="#f59e0b"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">评论均分<span class="trend-current">最新 1.22</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">1</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">3</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">5</text>
+            <polyline points="270.8,65.0 281.8,65.0 292.8,30.5 303.9,65.5 314.9,65.0 325.9,65.0 337.0,65.1 348.0,65.2" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="65.2" r="3.5" fill="#2563eb"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">B站 正面情感（加权）<span class="trend-current">最新 13</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">0</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">28.5</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">57</text>
+            <polyline points="270.8,61.0 281.8,18.0 292.8,46.1 303.9,55.7 314.9,41.7 325.9,65.4 337.0,57.5 348.0,56.6" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="56.6" r="3.5" fill="#10b981"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">B站 负面情感（加权）<span class="trend-current">最新 17</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">0</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">8.5</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">17</text>
+            <polyline points="270.8,68.0 281.8,35.6 292.8,32.7 303.9,38.6 314.9,62.1 325.9,56.2 337.0,62.1 348.0,18.0" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="18.0" r="3.5" fill="#ef4444"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    </div>
+    </div>
+    
+
+        <details class="competitor-details">
+            <summary class="expand-btn"><span data-name="英雄杀"></span></summary>
+            <div class="competitor-detail-body">
+                
+    <div class="detail-section">
+        <h3>📦 版本更新</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="version-line">
+                    <span class="version-badge">v4.31.0</span>
+                    <span class="date-label">2026-07-31</span>
+                </div>
+                <p class="seller">Shenzhen Tencent Computer Systems Company Limited</p>
+            </div>
+            <div class="detail-col-right">
+                
+    <ul class='update-list'><li>十五如初，英雄如故！</li><li>英雄杀十五周年庆典正式开启，新英雄、新玩法、新联动重磅上线，周年福利同步来袭！</li><li>【全新英雄】</li><li>汉代群英首发亮相，众杰逢时，共展宏图。邀你穿越千年，共赴一场大汉风华的英雄之约！</li><li>【全新玩法】</li></ul>
+    <details class='update-details'>
+        <summary>展开全部 11 条更新说明</summary>
+        <ul class='update-list'><li>全新赛季制 PVE 玩法首赛季「直捣龙城」周年期间上线！搜刮战场、构筑阵容，每局都有新变数，每战皆有新挑战！</li><li>【全新联动】</li><li>周年期间，英雄杀将带领大家走近世界文化遗产——敦煌悬泉置，并推出「丝路传驿」联动主题站及五大系列活动，邀你循迹丝路，感受千年邮驿文明的璀璨回响。</li><li>【周年福利】</li><li>十五周年福利持续加码！累计登录即可解锁五星傲剑，更携手开心麻花送上「开心英雄会」暑期观剧好礼。许愿池、周年市集、周年转盘等福利活动同步开启，诚邀各位英雄前来体验！</li><li>十五载相伴，感谢每一位玩家一路同行。未来，让我们继续并肩，书写属于《英雄杀》的更多传奇！</li></ul>
+    </details>
+    
+            </div>
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>📊 iOS 榜单</h3>
+        <div class="rank-grid">
+            
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 总畅销榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 总免费榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 游戏畅销榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 游戏免费榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>💬 App Store 玩家舆论</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">100</div><div class="metric-label">样本数</div></div>
+                    <div class="metric"><div class="metric-value">1.22</div><div class="metric-label">平均评分</div></div>
+                    <div class="metric"><div class="metric-value">6</div><div class="metric-label">近 7 天</div></div>
+                </div>
+                <a class="store-link" href="https://apps.apple.com/cn/app/%E8%8B%B1%E9%9B%84%E6%9D%80/id483330461?uo=4" target="_blank">打开 App Store →</a>
+            </div>
+            <div class="detail-col-right">
+                
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 4 / 中性 2 / 负面 94">
+            <div class="sentiment-segment sentiment-positive" style="width: 4.0%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: 2.0%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: 94.0%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 4 (4.0%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 2 (2.0%)</span>
+            <span><span class="dot dot-negative"></span> 负面 94 (94.0%)</span>
+        </div>
+    </div>
+    
+                <div class="keywords-wrap"><strong>负面高频词：</strong><span class="keyword-chip">垃圾 <small>28</small></span> <span class="keyword-chip">恶心 <small>13</small></span> <span class="keyword-chip">人机 <small>11</small></span> <span class="keyword-chip">烂 <small>9</small></span> <span class="keyword-chip">坑 <small>7</small></span> <span class="keyword-chip">氪金 <small>5</small></span> <span class="keyword-chip">圈钱 <small>4</small></span> <span class="keyword-chip">差评 <small>3</small></span></div>
+                <h4 class="sub-section-title">代表评论</h4>
+                <div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>上次更新后，手机和平板都频繁闪退</strong> 真是没法玩了</div><div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>本来绝世好游，现在不行了</strong> 弃坑2年多了，哎，可惜了。</div><div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>没素质的人，平台管不管？</strong> 没素质的人，正常打游戏，咒骂家人，平台管不管？</div>
+            </div>
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>▶️ Bilibili 玩家舆情补充</h3>
+            <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">10</div><div class="metric-label">采样视频</div></div>
+                    <div class="metric"><div class="metric-value">30</div><div class="metric-label">采样评论数</div></div>
+                </div>
+            </div>
+            <div class="detail-col-right">
+                
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 13 / 中性 29 / 负面 17">
+            <div class="sentiment-segment sentiment-positive" style="width: 22.0%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: 49.2%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: 28.8%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 13 (22.0%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 29 (49.2%)</span>
+            <span><span class="dot dot-negative"></span> 负面 17 (28.8%)</span>
+        </div>
+    </div>
+    
+                <div class="keywords-wrap"><strong>负面高频词：</strong><span class="keyword-chip">退游 <small>7</small></span> <span class="keyword-chip">打不过 <small>4</small></span> <span class="keyword-chip">bug <small>3</small></span> <span class="keyword-chip">废 <small>3</small></span> <span class="keyword-chip">阴间 <small>3</small></span> <span class="keyword-chip">弱 <small>3</small></span></div>
+
+                <h4 class="sub-section-title">代表评论</h4>
+                <div class="comment-bubble"><span class="comment-like">👍 9</span> 群雄现在婉儿周公加张仲景对面都出不了牌了[doge]</div><div class="comment-bubble"><span class="comment-like">👍 7</span> 这策划搞得我真想退游了，张加周，都不用配婉儿，两个一星的直接吊打商偷坤浪，这都不是数值膨胀了，妈的，刷牌的都起不来，</div><div class="comment-bubble"><span class="comment-like">👍 6</span> 这个主城越看越想笑，像个墓碑一样哈哈哈[呲牙]</div><div class="comment-bubble"><span class="comment-like">👍 4</span> 我是3w+68 战令拿下</div><div class="comment-bubble"><span class="comment-like">👍 3</span> 解忧公主副本里面的常慧怎么给不了装备发动1技能，是bug不给使用技能吗？太废物了，靠摸牌打过去的[笑哭]</div>
+                
+    <details class='video-details'>
+        <summary>查看 10 个采样视频</summary>
+        <div class='video-list'>
+        <a href="https://www.bilibili.com/video/BV1GV3X6eEHC" target="_blank" class="video-item" title="英雄杀：300星主城和决胜千里在哪里？任桓之·绝代双骄皮肤！">
+            <div class="video-title">英雄杀：300星主城和决胜千里在哪里？任桓之·绝代双骄皮肤！</div>
+            <div class="video-author">@小乖兽来啦- · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1kV396pEZz" target="_blank" class="video-item" title="林关西竟然打不过三个一星白板英雄？">
+            <div class="video-title">林关西竟然打不过三个一星白板英雄？</div>
+            <div class="video-author">@英雄杀琼子 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1nf396QEBM" target="_blank" class="video-item" title="两侠一驭一净坛五星时迁加7个强力主辅印攻略解析，时迁4+2探宝数据参考，解忧公主3+2数据参考#英雄杀 #十五如初 #英雄杀十五周年">
+            <div class="video-title">两侠一驭一净坛五星时迁加7个强力主辅印攻略解析，时迁4+2探宝数据参考，解忧公主3+2数据参考#英雄杀 #十五如初 #英雄杀十五周年</div>
+            <div class="video-author">@英雄杀柠檬 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV15K3D6hEEj" target="_blank" class="video-item" title="【解忧公主最细攻略——最性价比毕业招法+技能解析+配印】">
+            <div class="video-title">【解忧公主最细攻略——最性价比毕业招法+技能解析+配印】</div>
+            <div class="video-author">@英雄杀诡道 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1Vg3D6ZEPs" target="_blank" class="video-item" title="周年庆，平民零氪怎么搞">
+            <div class="video-title">周年庆，平民零氪怎么搞</div>
+            <div class="video-author">@牧云的英雄杀 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1Mp3X6tEFr" target="_blank" class="video-item" title="【张仲景个人实战解析】≈黄帝拿牌+徐晃下牌+太平反伤！仅供大家参考！">
+            <div class="video-title">【张仲景个人实战解析】≈黄帝拿牌+徐晃下牌+太平反伤！仅供大家参考！</div>
+            <div class="video-author">@英雄杀诡道 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1qL3m6ZEtk" target="_blank" class="video-item" title="【净坛攻略及数据】充值5千？500罢了！不到300块+不到三万基本拿下！">
+            <div class="video-title">【净坛攻略及数据】充值5千？500罢了！不到300块+不到三万基本拿下！</div>
+            <div class="video-author">@英雄杀诡道 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1T83R6hETz" target="_blank" class="video-item" title="英雄杀｜周年庆毕业新英雄——解忧公主，过牌量很大！">
+            <div class="video-title">英雄杀｜周年庆毕业新英雄——解忧公主，过牌量很大！</div>
+            <div class="video-author">@Nanwu-Sir · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1Dk3d63Edo" target="_blank" class="video-item" title="英雄杀8月周年庆活动可以下手">
+            <div class="video-title">英雄杀8月周年庆活动可以下手</div>
+            <div class="video-author">@b站夜留神 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV13n3R6qEM1" target="_blank" class="video-item" title="英雄杀直捣龙城最后一关，三驭人来回切换很容易出虎">
+            <div class="video-title">英雄杀直捣龙城最后一关，三驭人来回切换很容易出虎</div>
+            <div class="video-author">@伤陨 · 已采 3 条</div>
+        </a>
+        </div>
+    </details>
+    
+            </div>
+        </div>
+    </div>
+    
+                
+            </div>
+        </details>
+    </section>
+    
+    <section class="competitor" id="百将牌">
+        <div class="competitor-header">
+            <div class="competitor-rank">4</div>
+            <div class="competitor-title">
+                <h2>百将牌</h2>
+                <div class="subtitle">上次更新：2026-07-19</div>
+            </div>
+        </div>
+
+        <div class="competitor-insight">
+            <span class="insight-icon">💡</span>
+            <span class="insight-text">负面反馈较多（39 条），集中在 <strong>社区/环境、氪金/付费</strong>，高频词：垃圾（8次）、氪金（7次）、人机（6次）。可提前排查同类问题并在宣发/运营中规避。</span>
+        </div>
+
+        
+    <div class="overview-grid">
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📦</span><span class="overview-title">版本更新</span></div>
+        <div class="overview-value">v1.7.1</div>
+        <div class="overview-summary">2026-07-19<br>三国百将牌已正式上线，三分钟超爽技能打牌！</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">📊</span><span class="overview-title">iOS 榜单</span></div>
+        <div class="overview-value">未上榜</div>
+        <div class="overview-summary">总畅销 未上榜 / 总免费 未上榜 / 游戏畅销 未上榜 / 游戏免费 未上榜</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">💬</span><span class="overview-title">App Store</span></div>
+        <div class="overview-value">⭐ 3.89</div>
+        <div class="overview-summary">负面吐槽 39 条<br>高频词：垃圾、氪金、人机</div>
+    </div>
+    
+        
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">▶️</span><span class="overview-title">Bilibili</span></div>
+        <div class="overview-mini-sentiment">
+            <div class="mini-sentiment-bar" title="正面 1 / 中性 14 / 负面 0">
+                <div class="mini-segment mini-positive" style="width: 6.7%"></div>
+                <div class="mini-segment mini-neutral" style="width: 93.3%"></div>
+                <div class="mini-segment mini-negative" style="width: 0.0%"></div>
+            </div>
+            <div class="mini-sentiment-label">正 6.7% · 中 93.3% · 负 0.0%</div>
+        </div>
+        <div class="overview-summary">11 条采样评论，高频负面词：暂无</div>
+    </div>
+    
+    </div>
+    
+
+        
+    <div class="info-card wide trend-section">
+        <h3>📈 近 30 天趋势</h3>
+        <div class="trend-grid">
+    <div class="trend-chart">
+        <div class="trend-title">App Store 总评分<span class="trend-current">最新 4.44996</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">1</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">3</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">5</text>
+            <polyline points="270.8,25.5 281.8,25.5 292.8,25.6 303.9,25.3 314.9,25.2 325.9,25.1 337.0,24.9 348.0,24.9" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="24.9" r="3.5" fill="#f59e0b"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">评论均分<span class="trend-current">最新 3.89</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">1</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">3</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">5</text>
+            <polyline points="270.8,33.6 281.8,32.4 292.8,33.6 303.9,34.9 314.9,35.4 325.9,36.1 337.0,32.9 348.0,31.9" fill="none" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="31.9" r="3.5" fill="#2563eb"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">B站 正面情感（加权）<span class="trend-current">最新 1</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">0</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">548</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">1096</text>
+            <polyline points="270.8,67.0 281.8,67.7 292.8,26.7 303.9,67.8 314.9,18.0 325.9,68.0 337.0,67.9 348.0,68.0" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="68.0" r="3.5" fill="#10b981"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    
+    <div class="trend-chart">
+        <div class="trend-title">B站 负面情感（加权）<span class="trend-current">最新 0</span></div>
+        <svg viewBox="0 0 360 90" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
+            <line x1="28" y1="68" x2="348" y2="68" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="71" text-anchor="end" font-size="9" fill="#9ca3af">0</text><line x1="28" y1="43.0" x2="348" y2="43.0" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="46.0" text-anchor="end" font-size="9" fill="#9ca3af">1.5</text><line x1="28" y1="18" x2="348" y2="18" stroke="#e5e7eb" stroke-width="1"/><text x="24" y="21" text-anchor="end" font-size="9" fill="#9ca3af">3</text>
+            <polyline points="270.8,68.0 281.8,68.0 292.8,18.0 303.9,68.0 314.9,18.0 325.9,68.0 337.0,68.0 348.0,68.0" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="348.0" cy="68.0" r="3.5" fill="#ef4444"/>
+            <text x="28" y="86" text-anchor="start" font-size="9" fill="#9ca3af">07-05</text><text x="348" y="86" text-anchor="end" font-size="9" fill="#9ca3af">08-03</text>
+        </svg>
+    </div>
+    </div>
+    </div>
+    
+
+        <details class="competitor-details">
+            <summary class="expand-btn"><span data-name="百将牌"></span></summary>
+            <div class="competitor-detail-body">
+                
+    <div class="detail-section">
+        <h3>📦 版本更新</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="version-line">
+                    <span class="version-badge">v1.7.1</span>
+                    <span class="date-label">2026-07-19</span>
+                </div>
+                <p class="seller">Shanghai Hode Information Technology Co.,Ltd.</p>
+            </div>
+            <div class="detail-col-right">
+                
+    <ul class='update-list'><li>三国百将牌已正式上线，三分钟超爽技能打牌！</li><li>【版本更新】</li><li>-全新玩法「2V2排位赛」开启</li><li>-全新武将「孙尚香、董卓、诸葛均、吴苋、吴国太、黄月英、凌统、徐庶、袁术、刘虞」上线</li><li>-新赛季卡册、烽火令更新，收集卡册可领取曹洪限定皮肤「钟鸣鼎食 曹洪」等丰富好礼！还有更多皮肤即将上线！</li></ul>
+    <details class='update-details'>
+        <summary>展开全部 16 条更新说明</summary>
+        <ul class='update-list'><li>-「武将招募系统」全新武将招募系统开启，主公可使用名将令与招贤令招募武将</li><li>【活动上新】</li><li>-全新「薪火相传」活动开启，邀请新玩家即可获得武将「徐庶」！还可获得专属皮肤「仗剑独行 徐庶」。</li><li>【版本福利】</li><li>-「玩法奖励升级」：成长任务、经典战役重置，奖励提升！新老玩家均可参与挑战，领取升级版奖励！</li><li>-「常驻福利升级」：每日对局、九胜挑战赛奖励提升！武将将星等级奖励提升，每个武将达到1000将星共计可获得「金饼*180」，已达到1000将星的武将可直接领取全部奖励！</li><li>-「新人专属礼遇」：新用户下载立得六大名将，首月可得9000金饼和甄姬皮肤！</li><li>-「老玩家感谢礼」：感谢各位主公对共创版本的支持，我们将对参与共创版本测试的玩家，在版本更新后发送「招贤令*100」</li><li>【优化内容】</li><li>-优化美术展示效果</li><li>-提升客户端稳定性</li></ul>
+    </details>
+    
+            </div>
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>📊 iOS 榜单</h3>
+        <div class="rank-grid">
+            
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 总畅销榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 总免费榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 游戏畅销榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        <div class="rank-card rank-missing">
+            <div class="rank-title">iOS 游戏免费榜</div>
+            <div class="rank-number">—</div>
+            <div class="rank-tag">未进 Top100</div>
+        </div>
+        
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>💬 App Store 玩家舆论</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">100</div><div class="metric-label">样本数</div></div>
+                    <div class="metric"><div class="metric-value">3.89</div><div class="metric-label">平均评分</div></div>
+                    <div class="metric"><div class="metric-value">66</div><div class="metric-label">近 7 天</div></div>
+                </div>
+                <a class="store-link" href="https://apps.apple.com/cn/app/%E4%B8%89%E5%9B%BD-%E7%99%BE%E5%B0%86%E7%89%8C-%E4%BA%94%E4%BA%94%E5%BC%80%E7%A0%94%E5%8F%91%E8%B6%85%E7%88%BD%E6%8A%80%E8%83%BD%E6%89%93%E7%89%8C/id6741894810?uo=4" target="_blank">打开 App Store →</a>
+            </div>
+            <div class="detail-col-right">
+                
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 72 / 中性 0 / 负面 28">
+            <div class="sentiment-segment sentiment-positive" style="width: 72.0%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: 0.0%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: 28.0%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 72 (72.0%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 0 (0.0%)</span>
+            <span><span class="dot dot-negative"></span> 负面 28 (28.0%)</span>
+        </div>
+    </div>
+    
+                <div class="keywords-wrap"><strong>负面高频词：</strong><span class="keyword-chip">垃圾 <small>8</small></span> <span class="keyword-chip">氪金 <small>7</small></span> <span class="keyword-chip">人机 <small>6</small></span> <span class="keyword-chip">逼氪 <small>4</small></span> <span class="keyword-chip">烂 <small>4</small></span> <span class="keyword-chip">恶心 <small>3</small></span> <span class="keyword-chip">bug <small>3</small></span> <span class="keyword-chip">骗氪 <small>2</small></span></div>
+                <h4 class="sub-section-title">代表评论</h4>
+                <div class="comment-bubble"><span class="comment-rating">⭐5</span> <strong>这款游戏比想象中好玩！</strong> 一局所花时间不长，不管是打发碎片时间还是休息时间长时间玩都不会无聊。1. 武将技能大多与拿牌或弃牌相关，大一局中牌型会多变，充满未知，很有意思。
+2. 游戏平衡性感觉还不错，容易触发的技能随机性会高一些。不容易触发的，在可以使用时主观性会强</div><div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>辣鸡游戏</strong> 辣鸡游戏 后面英雄抽不到 匹配狂输 每局都有变态的英雄压着你打 两天200万输光 直接卸载了</div><div class="comment-bubble"><span class="comment-rating">⭐1</span> <strong>有真人吗</strong> 一直输</div>
+            </div>
+        </div>
+    </div>
+    
+                
+    <div class="detail-section">
+        <h3>▶️ Bilibili 玩家舆情补充</h3>
+            <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">10</div><div class="metric-label">采样视频</div></div>
+                    <div class="metric"><div class="metric-value">11</div><div class="metric-label">采样评论数</div></div>
+                </div>
+            </div>
+            <div class="detail-col-right">
+                
+    <div class="sentiment-bar-wrap">
+        <div class="sentiment-bar" title="正面 1 / 中性 14 / 负面 0">
+            <div class="sentiment-segment sentiment-positive" style="width: 6.7%"></div>
+            <div class="sentiment-segment sentiment-neutral" style="width: 93.3%"></div>
+            <div class="sentiment-segment sentiment-negative" style="width: 0.0%"></div>
+        </div>
+        <div class="sentiment-legend">
+            <span><span class="dot dot-positive"></span> 正面 1 (6.7%)</span>
+            <span><span class="dot dot-neutral"></span> 中性 14 (93.3%)</span>
+            <span><span class="dot dot-negative"></span> 负面 0 (0.0%)</span>
+        </div>
+    </div>
+    
+                
+
+                <h4 class="sub-section-title">代表评论</h4>
+                <div class="comment-bubble"><span class="comment-like">👍 4</span> 刚发现还搞了分类合集，越来越专业了菜路[吃瓜]</div><div class="comment-bubble"><span class="comment-like">👍 2</span> up什么时候再玩一下，想跟你一起玩</div><div class="comment-bubble"><span class="comment-like">👍 1</span> 喵喵喵，今天撞爱播了一胜一负[doge]</div><div class="comment-bubble"><span class="comment-like">👍 1</span> 菜路，我要后面加锁的灰色语音包🤭😸👻🤡</div><div class="comment-bubble"><span class="comment-like">👍 1</span> 大家一起还是很好玩的呀[星星眼][星星眼][星星眼][星星眼]有空再来咯我们自己玩玩的那种</div>
+                
+    <details class='video-details'>
+        <summary>查看 10 个采样视频</summary>
+        <div class='video-list'>
+        <a href="https://www.bilibili.com/video/BV1no3Q6LEZi" target="_blank" class="video-item" title="大雄将独自面对困难#动漫剪辑">
+            <div class="video-title">大雄将独自面对困难#动漫剪辑</div>
+            <div class="video-author">@花个溜 · 已采 0 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV13G3D64Ett" target="_blank" class="video-item" title="【三国百将牌-庞统】五五开喊你斗地主了，卢本伟参与设计的三国斗地主">
+            <div class="video-title">【三国百将牌-庞统】五五开喊你斗地主了，卢本伟参与设计的三国斗地主</div>
+            <div class="video-author">@阿飞vlog记录开哥 · 已采 2 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV14m396FEnJ" target="_blank" class="video-item" title="【三国百将牌】8.2直播精彩片段">
+            <div class="video-title">【三国百将牌】8.2直播精彩片段</div>
+            <div class="video-author">@百将牌千谋 · 已采 1 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1pD3S6rEsx" target="_blank" class="video-item" title="我配的百将牌语音你一定没听过">
+            <div class="video-title">我配的百将牌语音你一定没听过</div>
+            <div class="video-author">@菜路 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1pD3S6rEvk" target="_blank" class="video-item" title="路知知带粉丝打百将牌之同室操戈">
+            <div class="video-title">路知知带粉丝打百将牌之同室操戈</div>
+            <div class="video-author">@菜路 · 已采 3 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1B4396CEn9" target="_blank" class="video-item" title="【三国百将牌】最克制刘禅的队友出现了，不敢给大牌更不敢放权">
+            <div class="video-title">【三国百将牌】最克制刘禅的队友出现了，不敢给大牌更不敢放权</div>
+            <div class="video-author">@黑黑的允 · 已采 1 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1gj3X6aE2f" target="_blank" class="video-item" title="三国百将牌斗地主15">
+            <div class="video-title">三国百将牌斗地主15</div>
+            <div class="video-author">@七月十五前 · 已采 0 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV17y3X6VEK6" target="_blank" class="video-item" title="三国百将牌斗地主14">
+            <div class="video-title">三国百将牌斗地主14</div>
+            <div class="video-author">@七月十五前 · 已采 0 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV12U396bEWn" target="_blank" class="video-item" title="三国百将牌斗地主20">
+            <div class="video-title">三国百将牌斗地主20</div>
+            <div class="video-author">@七月十五前 · 已采 1 条</div>
+        </a>
+        
+        <a href="https://www.bilibili.com/video/BV1nR3Q62ECn" target="_blank" class="video-item" title="三国百将牌斗地主16">
+            <div class="video-title">三国百将牌斗地主16</div>
+            <div class="video-author">@七月十五前 · 已采 0 条</div>
+        </a>
+        </div>
+    </details>
+    
+            </div>
+        </div>
+    </div>
+    
+                
+            </div>
+        </details>
+    </section>
+    
+
+        <footer>
+            本简报由脚本自动生成，仅供参考。
+        </footer>
+    </div>
+</body>
+</html>
