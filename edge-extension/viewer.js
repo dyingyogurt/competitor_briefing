@@ -104,21 +104,7 @@ navBtns.forEach(b => b.addEventListener('click', () => {
 historySelect.addEventListener('change', showHistory);
 
 async function fetchIndex() {
-  // 先尝试从 GitHub Pages 读取
-  try {
-    const resp = await fetch(resolvePath('history/index.json'), { cache: 'no-store' });
-    if (resp.ok) {
-      const list = await resp.json();
-      if (Array.isArray(list) && list.length > 0) {
-        return list;
-      }
-    }
-  } catch (e) {
-    console.log('[viewer] Pages 读取失败，尝试本地文件', e);
-  }
-
-  // 兜底：无网络时读取本地文件
-  useLocal = true;
+  // 先尝试读取本地文件（扩展自带的）
   try {
     const resp = await fetch('history/index.json', { cache: 'no-store' });
     if (resp.ok) {
@@ -128,7 +114,29 @@ async function fetchIndex() {
       }
     }
   } catch (e) {
-    console.log('[viewer] 本地 index.json 也读取失败', e);
+    console.log('[viewer] 本地 index.json 读取失败', e);
+  }
+
+  // 兜底：从 GitHub Pages 读取（通过 background.js 代理，避免 CORS）
+  try {
+    const resp = await new Promise((resolve, reject) => {
+      chrome.runtime.sendMessage(
+        { type: 'fetchUrl', url: PAGES_BASE + '/history/index.json' },
+        (result) => {
+          if (chrome.runtime.lastError || !result || !result.ok) {
+            reject(new Error(chrome.runtime.lastError?.message || 'fetch failed'));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+    const list = JSON.parse(resp.body);
+    if (Array.isArray(list) && list.length > 0) {
+      return list;
+    }
+  } catch (e) {
+    console.log('[viewer] Pages 读取也失败', e);
   }
 
   return null;

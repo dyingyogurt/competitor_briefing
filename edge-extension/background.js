@@ -63,3 +63,13 @@ chrome.notifications.onClicked.addListener((notificationId) => {
 
 // 注意：插件已配置 default_popup，点击图标会显示 popup.html，
 // 因此 chrome.action.onClicked 不会触发。
+
+// 代理 fetch 请求，绕过 popup/viewer 中的 CORS 限制
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'fetchUrl' && msg.url) {
+    fetch(msg.url, { cache: 'no-store' })
+      .then(resp => resp.text().then(body => sendResponse({ ok: resp.ok, status: resp.status, body })))
+      .catch(err => sendResponse({ ok: false, status: 0, body: '', error: err.message }));
+    return true; // 保持消息通道打开，等待异步响应
+  }
+});

@@ -33,35 +33,27 @@ async function loadStatus() {
   }
 
   let status;
-  let source = '';
   try {
-    status = await tryFetch(PAGES_BASE + '/last_run_status.json');
-    source = 'online';
+    status = await tryFetch('last_run_status.json');
   } catch (e) {
-    try {
-      status = await tryFetch('last_run_status.json');
-      source = 'local';
-    } catch (e2) {
-      dot.className = 'status-dot';
-      text.className = 'status-text';
-      text.textContent = '尚未检测到生成记录';
-      return;
-    }
+    dot.className = 'status-dot';
+    text.className = 'status-text';
+    text.textContent = '尚未检测到生成记录';
+    return;
   }
 
-  const suffix = source === 'online' ? '' : '（本地）';
   if (status.success && status.date === today) {
     dot.className = 'status-dot success';
     text.className = 'status-text success';
-    text.textContent = `今日简报已生成${suffix} · ${status.checked_at}`;
+    text.textContent = `今日简报已生成 · ${status.checked_at}`;
   } else if (status.success) {
     dot.className = 'status-dot';
     text.className = 'status-text';
-    text.textContent = `最近生成：${status.date}${suffix} · ${status.message}`;
+    text.textContent = `最近生成：${status.date} · ${status.message}`;
   } else {
     dot.className = 'status-dot error';
     text.className = 'status-text error';
-    text.textContent = `上次生成失败${suffix}：${status.message}`;
+    text.textContent = `上次生成失败：${status.message}`;
   }
 }
 
