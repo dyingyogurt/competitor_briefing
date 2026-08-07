@@ -822,7 +822,7 @@ def _trend_data_for_key(key, history, current_item=None, days=30):
     }
 
 
-def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360, height=90):
+def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360, height=90, help=None):
     """生成轻量级 SVG 折线图；values 中 None 的点会被跳过。"""
     clean = [(i, v) for i, v in enumerate(values) if isinstance(v, (int, float))]
     if not clean:
@@ -879,6 +879,13 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
         grid_lines += f'<line x1="{pad_left}" y1="{gy}" x2="{width - pad_right}" y2="{gy}" stroke="#e5e7eb" stroke-width="1"/>'
         grid_lines += f'<text x="{pad_left - 4}" y="{gy + 3}" text-anchor="end" font-size="9" fill="#9ca3af">{label}</text>'
 
+    # 可选：标题旁的「ⓘ」说明按钮（悬停显示规则）
+    help_html = ""
+    if help:
+        help_html = (
+            f'<span class="i-help">ⓘ<span class="i-tip">{help}</span></span>'
+        )
+
     # X 轴只显示首尾日期
     x_labels = (
         f'<text x="{pad_left}" y="{height - 4}" text-anchor="start" font-size="9" fill="#9ca3af">{dates[0][5:]}</text>'
@@ -887,7 +894,7 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
 
     return f"""
     <div class="trend-chart">
-        <div class="trend-title">{title}<span class="trend-current">最新 {last_value}</span></div>
+        <div class="trend-title">{title}{help_html}<span class="trend-current">最新 {last_value}</span></div>
         <svg viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
             {grid_lines}
             <polyline points="{polyline}" fill="none" stroke="{color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -914,10 +921,18 @@ def _trend_section_html(trend, key):
     charts.append(_svg_line_chart(
         trend["dates"], trend["bilibili_positive"], "#10b981",
         "B站 正面情感（加权）",
+        help=(
+            "正面分数 = 含正面关键词评论的点赞数之和（点赞为 0 计 1）。"
+            "判定文本 = 视频标题 + 评论内容，命中任一正面词即计正面。"
+        ),
     ))
     charts.append(_svg_line_chart(
         trend["dates"], trend["bilibili_negative"], "#ef4444",
         "B站 负面情感（加权）",
+        help=(
+            "负面分数 = 含负面关键词评论的点赞数之和（点赞为 0 计 1）。"
+            "负面优先：命中任一负面词即判负面，即使同时含正面词。"
+        ),
     ))
     charts = [c for c in charts if c]
     if not charts:
@@ -2059,6 +2074,44 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
         .trend-chart {{ position: relative; }}
         .dot-hit {{ cursor: pointer; }}
+        .i-help {{
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            margin-left: 5px;
+            border-radius: 50%;
+            background: var(--muted);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1;
+            cursor: help;
+            vertical-align: middle;
+        }}
+        .i-help .i-tip {{
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: calc(100% + 6px);
+            transform: translateX(-50%);
+            z-index: 100;
+            width: 280px;
+            padding: 10px 12px;
+            background: #111827;
+            color: #e5e7eb;
+            font-size: 12px;
+            font-weight: 400;
+            line-height: 1.6;
+            text-align: left;
+            border-radius: 8px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, .25);
+            white-space: normal;
+        }}
+        .i-help:hover .i-tip,
+        .i-help:focus .i-tip {{ display: block; }}
     </style>
 </head>
 <body>
