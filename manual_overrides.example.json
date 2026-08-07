@@ -1,5 +1,5 @@
 {
-  "_comment": "人工补充字段。脚本每天运行时自动合并。key 对应 config.py 的 key：yjc=三国杀一将成名, mjs=名将杀, yxs=英雄杀, bjp=百将牌。可补充版本亮点、市场动向、重点活动、备注等。",
+  "_comment": "人工补充字段。复制本文件为 manual_overrides.json 后填写。key 对应 config.py 的 key：yjc=三国杀一将成名, mjs=名将杀, yxs=英雄杀, bjp=百将牌。可补充版本亮点、市场动向、重点活动、备注等。",
   "yjc": {
     "taptap_rating": "",
     "taptap_heat": "",
