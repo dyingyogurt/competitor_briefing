@@ -2085,7 +2085,10 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
 
 
 def _update_history_index(history_dir, keep_days=30):
-    """扫描历史简报文件，生成索引并清理超过保留天数的内容。"""
+    """扫描历史简报文件，生成索引并清理超过保留天数的内容。
+
+    会合并已有 index.json 中的日期，避免云端运行时目录为空导致历史日期丢失。
+    """
     files = glob.glob(os.path.join(history_dir, "briefing_*.html"))
     dates = []
     for f in files:
@@ -2093,15 +2096,27 @@ def _update_history_index(history_dir, keep_days=30):
         m = re.match(r"briefing_(\d{4}-\d{2}-\d{2})\.html", name)
         if m:
             dates.append(m.group(1))
+
+    # 合并已有 index.json 中的日期，防止云端 history 目录不完整时丢历史
+    index_path = os.path.join(history_dir, "index.json")
+    try:
+        with open(index_path, "r", encoding="utf-8") as f:
+            existing = json.load(f)
+        if isinstance(existing, list):
+            dates.extend(existing)
+    except (OSError, json.JSONDecodeError):
+        pass
+
     dates = sorted(set(dates), reverse=True)
-    # 删除超出保留期限的文件
+
+    # 删除超出保留期限的文件（只删本地有对应文件的）
     for d in dates[keep_days:]:
         try:
             os.remove(os.path.join(history_dir, f"briefing_{d}.html"))
         except OSError:
             pass
     dates = dates[:keep_days]
-    index_path = os.path.join(history_dir, "index.json")
+
     with open(index_path, "w", encoding="utf-8") as f:
         json.dump(dates, f, ensure_ascii=False, indent=2)
     return dates
