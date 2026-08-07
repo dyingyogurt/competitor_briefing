@@ -856,20 +856,19 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
     last_x, last_y = px(clean[-1][0], clean[-1][1])
     last_value = clean[-1][1]
 
-    # 为每个数据点生成一个带日期/数值提示的小圆点（悬停可见）
+    # 为每个数据点生成小圆点 + 更大的透明命中区，供 JS 悬停提示使用
     dot_svg = ""
     for i, v in clean:
         x, y = px(i, v)
         d_label = dates[i] if dates else ""
         if isinstance(d_label, str) and len(d_label) == 10:
             d_label = d_label[5:]  # YYYY-MM-DD -> MM-DD
-        tip = f"{d_label} · {v:.2f}" if isinstance(v, float) else f"{d_label} · {v}"
+        tip = f"{d_label}  {v:.2f}" if isinstance(v, float) else f"{d_label}  {v}"
         dot_svg += (
-            f'<circle cx="{x}" cy="{y}" r="2.6" fill="{color}">'
-            f'<title>{tip}</title>'
-            f'</circle>'
+            f'<circle cx="{x}" cy="{y}" r="2.6" fill="{color}"/>'
+            f'<circle class="dot-hit" cx="{x}" cy="{y}" r="9" fill="transparent" data-tip="{tip}"/>'
         )
-    dot_svg += f'<circle cx="{last_x}" cy="{last_y}" r="4" fill="{color}"><title>最新 {last_value:.2f}</title></circle>'
+    dot_svg += f'<circle class="dot-hit" cx="{last_x}" cy="{last_y}" r="9" fill="transparent" data-tip="最后 {last_value:.2f}"/><text x="{last_x}" y="{last_y - 10}" text-anchor="middle" font-size="9" font-weight="600" fill="{color}">{last_value:.2f}</text>'
 
     # 生成简单的 Y 轴网格线（3 条）
     grid_lines = ""
@@ -2058,6 +2057,8 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         @media (max-width: 720px) {{
             .trend-grid {{ grid-template-columns: 1fr; }}
         }}
+        .trend-chart {{ position: relative; }}
+        .dot-hit {{ cursor: pointer; }}
     </style>
 </head>
 <body>
@@ -2076,6 +2077,35 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             本简报由脚本自动生成，仅供参考。
         </footer>
     </div>
+    <script>
+    // 趋势图悬停提示
+    (function () {{
+        function onload() {{
+            var tip = document.createElement('div');
+            tip.id = 'chart-tip';
+            tip.style.cssText = 'position:fixed;display:none;z-index:99999;background:#111827;color:#fff;padding:5px 9px;border-radius:6px;font-size:12px;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.25);white-space:nowrap;';
+            document.body.appendChild(tip);
+            document.querySelectorAll('.dot-hit').forEach(function (d) {{
+                d.addEventListener('mouseenter', function () {{
+                    tip.textContent = d.getAttribute('data-tip');
+                    tip.style.display = 'block';
+                }});
+                d.addEventListener('mousemove', function (e) {{
+                    tip.style.left = (e.clientX + 14) + 'px';
+                    tip.style.top = (e.clientY + 14) + 'px';
+                }});
+                d.addEventListener('mouseleave', function () {{
+                    tip.style.display = 'none';
+                }});
+            }});
+        }}
+        if (document.readyState === 'loading') {{
+            document.addEventListener('DOMContentLoaded', onload);
+        }} else {{
+            onload();
+        }}
+    }})();
+    </script>
 </body>
 </html>"""
 
