@@ -856,6 +856,21 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
     last_x, last_y = px(clean[-1][0], clean[-1][1])
     last_value = clean[-1][1]
 
+    # 为每个数据点生成一个带日期/数值提示的小圆点（悬停可见）
+    dot_svg = ""
+    for i, v in clean:
+        x, y = px(i, v)
+        d_label = dates[i] if dates else ""
+        if isinstance(d_label, str) and len(d_label) == 10:
+            d_label = d_label[5:]  # YYYY-MM-DD -> MM-DD
+        tip = f"{d_label} · {v:.2f}" if isinstance(v, float) else f"{d_label} · {v}"
+        dot_svg += (
+            f'<circle cx="{x}" cy="{y}" r="2.6" fill="{color}">'
+            f'<title>{tip}</title>'
+            f'</circle>'
+        )
+    dot_svg += f'<circle cx="{last_x}" cy="{last_y}" r="4" fill="{color}"><title>最新 {last_value:.2f}</title></circle>'
+
     # 生成简单的 Y 轴网格线（3 条）
     grid_lines = ""
     for ratio in [0, 0.5, 1]:
@@ -877,7 +892,7 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
         <svg viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
             {grid_lines}
             <polyline points="{polyline}" fill="none" stroke="{color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="{last_x}" cy="{last_y}" r="3.5" fill="{color}"/>
+            {dot_svg}
             {x_labels}
         </svg>
     </div>
