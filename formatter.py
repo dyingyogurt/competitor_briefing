@@ -894,7 +894,7 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
 
     return f"""
     <div class="trend-chart">
-        <div class="trend-title">{title}{help_html}<span class="trend-current">最新 {last_value}</span></div>
+        <div class="trend-title"><span class="trend-title-text">{title}{help_html}</span><span class="trend-current">最新 {last_value}</span></div>
         <svg viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;display:block;">
             {grid_lines}
             <polyline points="{polyline}" fill="none" stroke="{color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2060,6 +2060,13 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
+        }}
+        .trend-title-text {{
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            min-width: 0;
         }}
         .trend-current {{
             font-size: 0.75rem;
@@ -2079,24 +2086,28 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 16px;
-            height: 16px;
-            margin-left: 5px;
+            width: 15px;
+            height: 15px;
+            flex-shrink: 0;
+            margin-left: 3px;
             border-radius: 50%;
-            background: var(--muted);
-            color: #fff;
-            font-size: 11px;
+            background: #e5e7eb;
+            color: #6b7280;
+            font-size: 10px;
             font-weight: 700;
             line-height: 1;
             cursor: help;
-            vertical-align: middle;
+            transition: background 0.15s, color 0.15s;
+        }}
+        .i-help:hover {{
+            background: var(--accent);
+            color: #fff;
         }}
         .i-help .i-tip {{
             display: none;
             position: absolute;
-            left: 50%;
+            left: 0;
             top: calc(100% + 6px);
-            transform: translateX(-50%);
             z-index: 100;
             width: 280px;
             padding: 10px 12px;
