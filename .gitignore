@@ -17,7 +17,7 @@ env/
 /output/
 /edge-extension/history/
 edge-extension/last_run_status.json
-manual_overrides.json
+private_notes.json
 /data/
 
 # Logs and temporary files
