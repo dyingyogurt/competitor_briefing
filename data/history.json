@@ -13,9 +13,9 @@
       "review_avg_rating": 1.43,
       "review_count": 100,
       "bilibili_sentiment": {
-        "positive": 167,
+        "positive": 169,
         "negative": 100,
-        "neutral": 251
+        "neutral": 253
       },
       "bilibili_comment_count": 24
     },
@@ -32,11 +32,11 @@
       "review_avg_rating": 2.72,
       "review_count": 100,
       "bilibili_sentiment": {
-        "positive": 25,
-        "negative": 37,
-        "neutral": 21
+        "positive": 18,
+        "negative": 38,
+        "neutral": 16
       },
-      "bilibili_comment_count": 27
+      "bilibili_comment_count": 25
     },
     "yxs": {
       "name": "英雄杀",
@@ -51,11 +51,11 @@
       "review_avg_rating": 1.32,
       "review_count": 100,
       "bilibili_sentiment": {
-        "positive": 32,
+        "positive": 31,
         "negative": 0,
-        "neutral": 23
+        "neutral": 19
       },
-      "bilibili_comment_count": 29
+      "bilibili_comment_count": 30
     },
     "bjp": {
       "name": "百将牌",
