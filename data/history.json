@@ -9,15 +9,15 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 2.63441,
-      "review_avg_rating": 1.43,
-      "review_count": 100,
+      "app_store_rating": 2.63438,
+      "review_avg_rating": 4.75,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 148,
-        "negative": 61,
-        "neutral": 224
+        "positive": 160,
+        "negative": 68,
+        "neutral": 246
       },
-      "bilibili_comment_count": 25
+      "bilibili_comment_count": 26
     },
     "mjs": {
       "name": "名将杀",
@@ -28,15 +28,15 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 4.45573,
-      "review_avg_rating": 2.72,
-      "review_count": 100,
+      "app_store_rating": 4.4562,
+      "review_avg_rating": 2.78,
+      "review_count": 50,
       "bilibili_sentiment": {
-        "positive": 26,
-        "negative": 39,
-        "neutral": 19
+        "positive": 28,
+        "negative": 40,
+        "neutral": 21
       },
-      "bilibili_comment_count": 25
+      "bilibili_comment_count": 27
     },
     "yxs": {
       "name": "英雄杀",
@@ -48,14 +48,14 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 3.33997,
-      "review_avg_rating": 1.32,
-      "review_count": 100,
+      "review_avg_rating": 4.0,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 29,
-        "negative": 1,
-        "neutral": 15
+        "positive": 35,
+        "negative": 0,
+        "neutral": 44
       },
-      "bilibili_comment_count": 28
+      "bilibili_comment_count": 30
     },
     "bjp": {
       "name": "百将牌",
@@ -66,9 +66,9 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 4.46061,
-      "review_avg_rating": 4.11,
-      "review_count": 100,
+      "app_store_rating": 4.45245,
+      "review_avg_rating": 3.75,
+      "review_count": 4,
       "bilibili_sentiment": {
         "positive": 29,
         "negative": 0,
