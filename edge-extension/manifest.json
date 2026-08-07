@@ -28,9 +28,6 @@
   "host_permissions": [
     "https://dyingyogurt.github.io/competitor_briefing/*"
   ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; frame-src 'self' https://dyingyogurt.github.io/competitor_briefing/; connect-src 'self' https://dyingyogurt.github.io/competitor_briefing/;"
-  },
   "web_accessible_resources": [
     {
       "resources": ["history/*.html", "viewer.js"],
