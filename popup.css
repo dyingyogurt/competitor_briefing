@@ -112,13 +112,22 @@ h1 {
   margin-bottom: 12px;
 }
 
-.status-row {
+.status-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+}
+
+.status-main {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
-  font-size: 12px;
-  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
 }
 
 .status-dot {
@@ -137,12 +146,43 @@ h1 {
   background: #ef4444;
 }
 
-.status-text.success {
+.status-main.success .status-text {
   color: #047857;
 }
 
-.status-text.error {
+.status-main.error .status-text {
   color: #b91c1c;
+}
+
+.status-meta {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.status-meta .meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 0;
+}
+
+.status-meta .meta-label {
+  color: var(--muted);
+}
+
+.status-meta .meta-value {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .divider {
