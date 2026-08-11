@@ -879,11 +879,16 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
         grid_lines += f'<line x1="{pad_left}" y1="{gy}" x2="{width - pad_right}" y2="{gy}" stroke="#e5e7eb" stroke-width="1"/>'
         grid_lines += f'<text x="{pad_left - 4}" y="{gy + 3}" text-anchor="end" font-size="9" fill="#9ca3af">{label}</text>'
 
-    # 可选：标题旁的「ⓘ」说明按钮（悬停显示规则）
+    # 可选：标题旁的「i」说明按钮（悬停显示规则）
     help_html = ""
     if help:
+        info_svg = (
+            '<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true">'
+            '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 1 1 0 1.5A.75.75 0 0 1 8 4zm1 8H7V7h2v5z"/>'
+            '</svg>'
+        )
         help_html = (
-            f'<span class="i-help" aria-label="说明">i<span class="i-tip">{help}</span></span>'
+            f'<span class="i-help" aria-label="说明">{info_svg}<span class="i-tip">{help}</span></span>'
         )
 
     # X 轴只显示首尾日期
@@ -2088,20 +2093,18 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             align-items: center;
             justify-content: center;
             align-self: center;
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
             flex: 0 0 auto;
             border-radius: 50%;
             background: #e5e7eb;
             color: #6b7280;
-            font-size: 11px;
-            font-weight: 700;
-            line-height: 1;
-            font-style: normal;
-            font-family: inherit;
             cursor: help;
             transition: background 0.15s, color 0.15s;
-            text-indent: 0;
+        }}
+        .i-help svg {{
+            display: block;
+            pointer-events: none;
         }}
         .i-help:hover {{
             background: var(--accent);
