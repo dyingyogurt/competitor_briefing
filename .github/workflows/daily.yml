@@ -30,6 +30,7 @@ jobs:
         run: |
           git fetch origin gh-pages
           if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            mkdir -p data
             git show origin/gh-pages:data/history.json > data/history.json 2>/dev/null || true
             echo "Loaded existing history.json from gh-pages"
           else
