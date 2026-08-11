@@ -1,5 +1,6 @@
 const PAGES_BASE = 'https://dyingyogurt.github.io/competitor_briefing';
 const BRIEFING_URL = chrome.runtime.getURL('briefing.html');
+const STATUS_URL = `${PAGES_BASE}/last_run_status.json`;
 const SCHEDULE_BAT_PATH = 'C:\\Users\\dengyufan\\Documents\\Default Project\\competitor_briefing\\定时任务-创建.bat';
 
 function showMsg(text) {
@@ -21,40 +22,108 @@ function getTodayStr() {
   }).replace(/\//g, '-');
 }
 
+function fmtDateTime(isoLike) {
+  if (!isoLike) return '--';
+  const d = new Date(isoLike.replace(/-/g, '/'));
+  if (isNaN(d.getTime())) return isoLike;
+  return d.toLocaleString('zh-CN', {
+    timeZone: 'Asia/Shanghai',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+async function fetchJsonLocal(url) {
+  const resp = await fetch(url, { cache: 'no-store' });
+  if (!resp.ok) throw new Error('status not ok');
+  return resp.json();
+}
+
+async function fetchJsonOnline(url) {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage({ type: 'fetchUrl', url }, (res) => {
+      if (chrome.runtime.lastError) return reject(chrome.runtime.lastError);
+      if (!res || !res.ok) return reject(new Error(res?.error || 'network'));
+      try {
+        resolve(JSON.parse(res.body));
+      } catch (e) {
+        reject(e);
+      }
+    });
+  });
+}
+
 async function loadStatus() {
   const dot = document.getElementById('status-dot');
+  const main = document.querySelector('.status-main');
   const text = document.getElementById('status-text');
+  const meta = document.getElementById('status-meta');
   const today = getTodayStr();
 
-  async function tryFetch(url) {
-    const resp = await fetch(url, { cache: 'no-store' });
-    if (!resp.ok) throw new Error('status not ok');
-    return resp.json();
+  let status = null;
+  let source = '';
+
+  // 1) 先读线上最新状态（因为 CI 跑的才是最权威状态）
+  try {
+    status = await fetchJsonOnline(STATUS_URL);
+    source = '线上';
+  } catch (e) {
+    console.log('[popup] 线上状态获取失败，尝试本地：', e.message);
   }
 
-  let status;
+  // 2) 再读本地，若本地更新则用它
   try {
-    status = await tryFetch('last_run_status.json');
+    const local = await fetchJsonLocal('last_run_status.json');
+    if (!status || (local.checked_at && local.checked_at > status.checked_at)) {
+      status = local;
+      source = '本地';
+    }
   } catch (e) {
+    console.log('[popup] 本地状态获取失败：', e.message);
+  }
+
+  if (!status) {
     dot.className = 'status-dot';
-    text.className = 'status-text';
+    main.className = 'status-main';
     text.textContent = '尚未检测到生成记录';
+    meta.innerHTML = '<div class="meta-row"><span class="meta-label">可运行</span><span class="meta-value">双击运行.bat</span></div>';
     return;
   }
 
-  if (status.success && status.date === today) {
+  const isToday = status.date === today;
+  const isSuccess = status.success !== false;
+
+  if (isSuccess && isToday) {
     dot.className = 'status-dot success';
-    text.className = 'status-text success';
-    text.textContent = `今日简报已生成 · ${status.checked_at}`;
-  } else if (status.success) {
+    main.className = 'status-main success';
+    text.textContent = '今日简报已生成';
+  } else if (isSuccess) {
     dot.className = 'status-dot';
-    text.className = 'status-text';
-    text.textContent = `最近生成：${status.date} · ${status.message}`;
+    main.className = 'status-main';
+    text.textContent = `最近生成：${status.date}`;
   } else {
     dot.className = 'status-dot error';
-    text.className = 'status-text error';
-    text.textContent = `上次生成失败：${status.message}`;
+    main.className = 'status-main error';
+    text.textContent = `上次生成失败：${status.message || ''}`;
   }
+
+  const rows = [];
+  rows.push(['来源', source]);
+  rows.push(['生成时间', fmtDateTime(status.checked_at)]);
+  rows.push(['数据日期', status.date || '--']);
+  if (typeof status.competitors_count === 'number') {
+    rows.push(['竞品数量', `${status.competitors_count} 个`]);
+  }
+  if (typeof status.history_days === 'number') {
+    rows.push(['趋势历史', `${status.history_days} 天`]);
+  }
+
+  meta.innerHTML = rows.map(([label, value]) => {
+    const safeValue = String(value).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return `<div class="meta-row"><span class="meta-label">${label}</span><span class="meta-value">${safeValue}</span></div>`;
+  }).join('');
 }
 
 document.getElementById('view-btn').addEventListener('click', () => {
@@ -76,7 +145,6 @@ document.getElementById('usage-btn').addEventListener('click', () => {
 });
 
 document.getElementById('refresh-btn').addEventListener('click', () => {
-  // 刷新所有已打开的简报标签页，让它重新加载最新日报
   chrome.tabs.query({ url: BRIEFING_URL + '*' }, (tabs) => {
     tabs.forEach((tab) => {
       try {

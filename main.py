@@ -10,7 +10,7 @@ import argparse
 import traceback
 from collector import collect_all
 from formatter import generate_briefing, generate_briefing_html
-from history import compare_with_previous, record
+from history import compare_with_previous, record, load_history
 from alert import notify_success, notify_failure
 
 
@@ -36,7 +36,8 @@ def main():
         record(data)
 
         date_str = data.get("generated_at", "")[:10]
-        notify_success(date_str, len(data.get("competitors", [])))
+        history_days = len(load_history())
+        notify_success(date_str, len(data.get("competitors", [])), history_days=history_days)
         print("完成。打开 Edge 新标签页即可查看简报。")
     except Exception as e:
         tb = traceback.format_exc()
