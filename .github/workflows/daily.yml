@@ -19,14 +19,19 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pages: write
-      id-token: write
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repository (main)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Fetch existing history from gh-pages
+        run: |
+          git fetch origin gh-pages:gh-pages || true
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git show origin/gh-pages:data/history.json > data/history.json 2>/dev/null || true
+          fi
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,36 +44,27 @@ jobs:
           # 可选：如果有 webhook，填到仓库 Secrets 里即可自动告警
           COMPETITOR_ALERT_WEBHOOK_URL: ${{ secrets.COMPETITOR_ALERT_WEBHOOK_URL }}
 
-      - name: Commit and push results
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          # .gitignore 里忽略了这些生成目录，但日报产物需要进仓库才能让 Edge 扩展读到
-          git add -f output/
-          git add -f edge-extension/history/
-          git add -f edge-extension/briefing.html
-          git add -f edge-extension/last_run_status.json
-          git add -f data/history.json
-          git diff --cached --quiet || git commit -m "daily: auto generate briefing for $(date +%Y-%m-%d)"
-          git push
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy Pages site to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          # 把 edge-extension 作为 Pages 站点根目录
-          path: edge-extension
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./edge-extension
+          force_orphan: false
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'daily: update Pages site for ${{ github.run_id }}'
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Save data/history.json back to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./data
+          destination_dir: ./data
+          force_orphan: false
+          keep_files: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'daily: update history.json for ${{ github.run_id }}'
