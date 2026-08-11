@@ -1017,11 +1017,11 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 2.63405,
-      "review_avg_rating": 1.46,
-      "review_count": 50,
+      "app_store_rating": 2.63414,
+      "review_avg_rating": 4.75,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 571,
+        "positive": 583,
         "negative": 31,
         "neutral": 95
       },
@@ -1042,7 +1042,7 @@
       "bilibili_sentiment": {
         "positive": 24,
         "negative": 30,
-        "neutral": 332
+        "neutral": 336
       },
       "bilibili_comment_count": 20
     },
@@ -1056,14 +1056,14 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 3.33943,
-      "review_avg_rating": 1.14,
-      "review_count": 50,
+      "review_avg_rating": 4.0,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 24,
-        "negative": 1,
-        "neutral": 20
+        "positive": 23,
+        "negative": 0,
+        "neutral": 19
       },
-      "bilibili_comment_count": 25
+      "bilibili_comment_count": 20
     },
     "bjp": {
       "name": "百将牌",
@@ -1074,15 +1074,15 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 4.50627,
-      "review_avg_rating": 4.66,
+      "app_store_rating": 4.50788,
+      "review_avg_rating": 4.02,
       "review_count": 50,
       "bilibili_sentiment": {
-        "positive": 5,
+        "positive": 6,
         "negative": 0,
         "neutral": 4
       },
-      "bilibili_comment_count": 3
+      "bilibili_comment_count": 4
     }
   }
 }
