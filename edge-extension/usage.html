@@ -6,13 +6,33 @@
   <title>使用说明 - 一将成名竞品日报</title>
   <style>
     :root {
-      --bg: #f5f7fa;
-      --card: #ffffff;
-      --text: #1f2937;
+      --bg: #f6f7f9;
+      --surface: #ffffff;
+      --surface-2: #f8f9fb;
+      --surface-3: #f2f4f7;
+      --text: #111827;
+      --text-secondary: #4b5563;
       --muted: #6b7280;
-      --accent: #2563eb;
-      --accent-light: #eff6ff;
+      --accent: #1e5ad8;
+      --accent-light: #eef4ff;
       --border: #e5e7eb;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.06);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1115;
+        --surface: #1a1d23;
+        --surface-2: #20242c;
+        --surface-3: #252a33;
+        --text: #f3f4f6;
+        --text-secondary: #d1d5db;
+        --muted: #9ca3af;
+        --accent: #4b8df8;
+        --accent-light: #1e293b;
+        --border: #2d3139;
+      }
     }
     * { box-sizing: border-box; }
     body {
@@ -28,13 +48,27 @@
       margin: 0 auto;
       padding: 28px 18px;
     }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-bottom: 16px;
+      transition: color 0.15s;
+    }
+    .back-link:hover {
+      color: var(--accent);
+    }
     header {
       text-align: center;
       padding-bottom: 20px;
     }
     header h1 {
       margin: 0 0 4px;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       color: var(--text);
     }
     header p {
@@ -43,20 +77,27 @@
       margin: 0;
     }
     .card {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 14px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-card);
+      border: 1px solid var(--border);
     }
     .card h2 {
-      margin: 0 0 12px;
+      margin: 0 0 14px;
       font-size: 1rem;
       color: var(--accent);
-      font-weight: 600;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card h2 .card-icon {
+      font-size: 1.1rem;
     }
     .card p, .card li {
-      color: #374151;
+      color: var(--text-secondary);
       margin: 6px 0;
       font-size: 0.9rem;
     }
@@ -73,32 +114,58 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     .step:last-child { margin-bottom: 0; }
     .step-num {
       flex-shrink: 0;
-      width: 22px;
-      height: 22px;
+      width: 28px;
+      height: 28px;
       border-radius: 50%;
-      background: var(--accent-light, #eff6ff);
+      background: var(--accent-light);
       color: var(--accent);
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-top: 1px;
+      margin-top: 0;
     }
     .step-txt {
       flex: 1;
+      padding-top: 3px;
     }
     code {
-      background: #f3f4f6;
+      background: var(--surface-2);
       padding: 1px 5px;
       border-radius: 4px;
       font-family: Consolas, Monaco, monospace;
       font-size: 0.88em;
+    }
+    .action-bar {
+      text-align: center;
+      margin: 24px 0 12px;
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      box-shadow: 0 2px 6px rgba(30, 90, 216, 0.25);
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    }
+    .action-btn:hover {
+      background: #174bb3;
+      box-shadow: 0 4px 10px rgba(30, 90, 216, 0.35);
+    }
+    .action-btn:active {
+      transform: translateY(1px);
     }
     .footer {
       text-align: center;
@@ -106,17 +173,24 @@
       font-size: 0.8rem;
       padding: 12px 0;
     }
+    @media (max-width: 480px) {
+      .container { padding: 20px 14px; }
+      header h1 { font-size: 1.35rem; }
+      .card { padding: 16px; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
+    <a class="back-link" href="javascript:history.back()">← 返回</a>
+
     <header>
       <h1>一将成名竞品日报</h1>
       <p>自动监控 App Store 与 Bilibili 玩家舆情</p>
     </header>
 
     <div class="card">
-      <h2>查看简报</h2>
+      <h2><span class="card-icon">👀</span> 查看简报</h2>
       <ol>
         <li class="step"><span class="step-num">1</span><span class="step-txt">点击 Edge 工具栏的插件图标</span></li>
         <li class="step"><span class="step-num">2</span><span class="step-txt">在弹出面板中点击 <strong>查看今日简报</strong></span></li>
@@ -125,12 +199,12 @@
     </div>
 
     <div class="card">
-      <h2>立即生成简报</h2>
+      <h2><span class="card-icon">⚡</span> 立即生成简报</h2>
       <p>打开项目文件夹，双击运行 <code>双击运行.bat</code>，完成后刷新扩展页面即可查看。</p>
     </div>
 
     <div class="card">
-      <h2>每日自动生成</h2>
+      <h2><span class="card-icon">📅</span> 每日自动生成</h2>
       <ol>
         <li class="step"><span class="step-num">1</span><span class="step-txt">点击扩展面板右上角的 <strong>复制任务路径</strong></span></li>
         <li class="step"><span class="step-num">2</span><span class="step-txt">在文件资源管理器地址栏粘贴并回车</span></li>
@@ -140,17 +214,21 @@
     </div>
 
     <div class="card">
-      <h2>补充数据</h2>
+      <h2><span class="card-icon">📝</span> 补充数据</h2>
       <p>编辑项目中的 <code>manual_overrides.json</code>，可补充版本亮点、市场动向、重点活动、备注等信息。下次运行脚本时会自动合并到日报中。</p>
     </div>
 
     <div class="card">
-      <h2>数据说明</h2>
+      <h2><span class="card-icon">📊</span> 数据说明</h2>
       <ul>
         <li><strong>iOS 榜单：</strong>只显示 Top100，之外显示「未上榜」；</li>
         <li><strong>App Store 评论：</strong>中国区 RSS 接口不稳定，可能无数据；</li>
         <li><strong>Bilibili 舆情：</strong>采样部分热门视频及评论，数值仅供参考。</li>
       </ul>
+    </div>
+
+    <div class="action-bar">
+      <a class="action-btn" href="briefing.html">📊 打开今日简报</a>
     </div>
 
     <div class="footer">

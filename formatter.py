@@ -1194,7 +1194,7 @@ def _render_competitor_html(item, idx, history=None):
         {trend_html}
 
         <details class="competitor-details">
-            <summary class="expand-btn"><span data-name="{name}"></span></summary>
+            <summary class="expand-btn"><span class="expand-text">展开详情</span><span class="expand-arrow">▼</span></summary>
             <div class="competitor-detail-body">
                 {_detail_version_section(store)}
                 {_detail_rank_section(rank_cards)}
@@ -1259,6 +1259,20 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
     for idx, item in enumerate(data["competitors"], start=1):
         competitors_html += _render_competitor_html(item, idx, history=history)
 
+    highlights = _generate_highlights(data, changes=changes, prev_date=prev_date)
+    highlight_items = "".join(
+        f'<div class="highlight-item highlight-{h["level"]}"><span class="highlight-dot"></span><span class="highlight-text">{_md_bold(h["text"])}</span></div>'
+        for h in highlights
+    )
+    highlights_html = f"""
+    <div class="highlights-bar">
+        <div class="highlights-title">今日重点关注</div>
+        <div class="highlights-list">
+            {highlight_items}
+        </div>
+    </div>
+    """
+
     sampling_note_html = _sampling_note_html()
 
     html = f"""<!DOCTYPE html>
@@ -1269,18 +1283,54 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
     <title>{title}</title>
     <style>
         :root {{
-            --bg: #f0f4f8;
-            --card: #ffffff;
-            --text: #1f2937;
+            --bg: #f6f7f9;
+            --surface: #ffffff;
+            --surface-2: #f8f9fb;
+            --surface-3: #f2f4f7;
+            --text: #111827;
+            --text-secondary: #4b5563;
             --muted: #6b7280;
-            --accent: #2563eb;
-            --accent-light: #eff6ff;
+            --accent: #1e5ad8;
+            --accent-light: #eef4ff;
             --border: #e5e7eb;
             --hot: #ef4444;
             --hot-bg: #fef2f2;
             --success: #10b981;
             --warning: #f59e0b;
             --info: #3b82f6;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 22px;
+            --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+        }}
+        @media (prefers-color-scheme: dark) {{
+            :root {{
+                --bg: #0f1115;
+                --surface: #1a1d23;
+                --surface-2: #20242c;
+                --surface-3: #252a33;
+                --text: #f3f4f6;
+                --text-secondary: #d1d5db;
+                --muted: #9ca3af;
+                --accent: #4b8df8;
+                --accent-light: #1e293b;
+                --border: #2d3139;
+                --hot-bg: #3a1c1c;
+            }}
+            body {{ background: var(--bg); color: var(--text); }}
+            .overview-card, .rank-card, .metric, .info-card,
+            .update-details, .video-details, .comment-bubble {{
+                background: var(--surface);
+                border-color: var(--border);
+            }}
+            .competitor-header {{
+                background: color-mix(in srgb, var(--surface) 96%, transparent);
+                border-bottom-color: var(--border);
+            }}
+            .trend-current {{ background: var(--surface); border-color: var(--border); }}
+            code {{ background: var(--surface-2); }}
         }}
         * {{ box-sizing: border-box; }}
         body {{
@@ -1292,27 +1342,82 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             padding: 0;
         }}
         .container {{
-            max-width: 100%;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 8px 14px 24px;
+            padding: 24px 28px 40px;
         }}
 
         /* Header */
         header {{
-            text-align: left;
-            padding: 12px 0 10px;
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 20px;
         }}
         header .date {{
-            font-size: 1rem;
+            font-size: 1.75rem;
             color: var(--text);
-            font-weight: 700;
+            font-weight: 800;
             margin-bottom: 4px;
         }}
         header .meta {{
             color: var(--muted);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             line-height: 1.5;
         }}
+
+        /* Highlights */
+        .highlights-bar {{
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 20px;
+        }}
+        .highlights-title {{
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+        }}
+        .highlights-list {{
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }}
+        .highlight-item {{
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: var(--radius-md);
+            background: var(--surface-2);
+            border-left: 4px solid var(--border);
+        }}
+        .highlight-dot {{
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            flex-shrink: 0;
+            margin-top: 6px;
+            opacity: 0.7;
+        }}
+        .highlight-text {{
+            font-size: 0.9rem;
+            line-height: 1.55;
+            color: var(--text-secondary);
+        }}
+        .highlight-text strong {{ color: var(--text); }}
+        .highlight-danger {{ background: #fee2e2; border-left-color: #ef4444; }}
+        .highlight-warning {{ background: #fef3c7; border-left-color: #f59e0b; }}
+        .highlight-info {{ background: #dbeafe; border-left-color: #3b82f6; }}
+        .highlight-ok {{ background: #d1fae5; border-left-color: #10b981; }}
+        .highlight-danger .highlight-dot {{ color: #ef4444; }}
+        .highlight-warning .highlight-dot {{ color: #f59e0b; }}
+        .highlight-info .highlight-dot {{ color: #3b82f6; }}
+        .highlight-ok .highlight-dot {{ color: #10b981; }}
 
         /* Section titles */
         .section-title {{
@@ -1329,19 +1434,19 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             display: flex;
             align-items: flex-start;
             gap: 8px;
-            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
-            border: 1px solid #bfdbfe;
-            border-radius: 12px;
+            background: var(--accent-light);
+            border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+            border-radius: var(--radius-md);
             padding: 12px 14px;
             margin: 12px 0;
-            color: #1e3a8a;
+            color: var(--accent);
             font-size: 0.9rem;
             line-height: 1.55;
         }}
         .competitor-insight.alert {{
-            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
-            border-color: #fecaca;
-            color: #991b1b;
+            background: var(--hot-bg);
+            border-color: color-mix(in srgb, var(--hot) 22%, transparent);
+            color: var(--hot);
         }}
         .insight-icon {{
             flex-shrink: 0;
@@ -1353,12 +1458,16 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
 
         /* Competitor */
         .competitor {{
-            background: var(--card);
-            border-radius: 18px;
-            padding: 20px;
-            margin: 18px 0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            background: var(--surface);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin: 20px 0;
+            box-shadow: var(--shadow-card);
             border: 1px solid var(--border);
+            transition: box-shadow 0.2s ease;
+        }}
+        .competitor:hover {{
+            box-shadow: var(--shadow-hover);
         }}
         .competitor-header {{
             display: flex;
@@ -1368,29 +1477,28 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
-            background: rgba(255, 255, 255, 0.96);
+            background: color-mix(in srgb, var(--surface) 96%, transparent);
             backdrop-filter: blur(8px);
             z-index: 20;
-            border-radius: 18px 18px 0 0;
-            margin: -20px -20px 0;
-            padding: 20px 20px 14px;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            margin: -24px -24px 0;
+            padding: 20px 24px 14px;
         }}
 
         /* Overview grid */
         .overview-grid {{
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin: 14px 0 2px;
+            gap: 16px;
+            margin: 16px 0 4px;
         }}
         .overview-card {{
-            aspect-ratio: 1 / 1;
             min-width: 0;
-            min-height: 0;
-            background: #fafbfc;
+            min-height: 130px;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 14px;
+            border-radius: var(--radius-md);
+            padding: 18px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -1399,29 +1507,29 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
         .overview-card:hover {{
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-hover);
             border-color: var(--accent);
         }}
         .overview-header {{
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             color: var(--muted);
             font-weight: 600;
         }}
         .overview-icon {{
-            font-size: 1rem;
+            font-size: 1.05rem;
         }}
         .overview-value {{
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 800;
             color: var(--text);
             line-height: 1.2;
             margin: 8px 0;
         }}
         .overview-summary {{
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             color: var(--muted);
             line-height: 1.45;
             display: -webkit-box;
@@ -1437,7 +1545,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             height: 8px;
             border-radius: 999px;
             overflow: hidden;
-            background: #e5e7eb;
+            background: var(--surface-3);
             margin-bottom: 6px;
         }}
         .mini-segment {{
@@ -1447,7 +1555,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .mini-neutral {{ background: #9ca3af; }}
         .mini-negative {{ background: var(--hot); }}
         .mini-sentiment-label {{
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: var(--muted);
             text-align: center;
         }}
@@ -1456,26 +1564,27 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .competitor-details {{
             display: flex;
             flex-direction: column;
-            margin-top: 12px;
+            margin-top: 14px;
         }}
         .expand-btn {{
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
+            align-self: center;
             order: 2;
-            width: 100%;
-            padding: 10px;
-            margin-top: 12px;
+            width: auto;
+            padding: 10px 18px;
+            margin-top: 14px;
             background: var(--accent-light);
             color: var(--accent);
-            border-radius: 10px;
+            border-radius: 999px;
             font-size: 0.88rem;
             font-weight: 600;
             cursor: pointer;
             user-select: none;
             list-style: none;
-            transition: background 0.15s;
+            transition: background 0.15s, transform 0.1s;
         }}
         .expand-btn::-webkit-details-marker {{
             display: none;
@@ -1483,41 +1592,43 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .expand-btn:hover {{
             background: #dbeafe;
         }}
-        .expand-btn span::before {{
-            content: "展开查看 " attr(data-name) " 的详细数据";
+        .expand-btn:active {{
+            transform: translateY(1px);
         }}
-        .expand-btn span::after {{
-            content: "▼";
+        .expand-arrow {{
             font-size: 0.7rem;
             margin-left: 4px;
             display: inline-block;
             transition: transform 0.2s;
         }}
-        .competitor-details[open] .expand-btn span::before {{
-            content: "收起";
-        }}
-        .competitor-details[open] .expand-btn span::after {{
+        .competitor-details[open] .expand-arrow {{
             transform: rotate(180deg);
+        }}
+        .expand-text::after {{
+            content: " ▼";
+        }}
+        .competitor-details[open] .expand-text::after {{
+            content: " ▲";
         }}
         .competitor-detail-body {{
             display: flex;
             flex-direction: column;
             order: 1;
-            gap: 12px;
-            padding-bottom: 12px;
+            gap: 14px;
+            padding-bottom: 14px;
             border-bottom: 1px solid var(--border);
         }}
 
         /* Detail section */
         .detail-section {{
-            background: #fafbfc;
+            background: var(--surface-2);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: var(--radius-lg);
+            padding: 20px;
         }}
         .detail-section h3 {{
             margin: 0 0 12px;
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             color: var(--accent);
             display: flex;
             align-items: center;
@@ -1562,7 +1673,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             font-size: 1.2rem;
         }}
         .metric {{
-            background: white;
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 8px 12px;
@@ -1599,22 +1710,23 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             display: inline-flex;
             align-items: center;
             gap: 3px;
-            background: var(--hot-bg);
-            color: #7f1d1d;
+            background: #fff1f0;
+            color: #c0392b;
             padding: 2px 8px;
             border-radius: 999px;
             font-size: 0.78rem;
             margin: 2px 4px 2px 0;
         }}
         .keyword-chip small {{
-            color: #b91c1c;
+            color: #c0392b;
             font-weight: 700;
+            opacity: 0.85;
         }}
         .competitor-rank {{
             width: 44px;
             height: 44px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            background: linear-gradient(135deg, #4b8df8, #1e5ad8);
             color: white;
             display: flex;
             align-items: center;
@@ -1625,7 +1737,8 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
         .competitor-title h2 {{
             margin: 0;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
+            font-weight: 700;
             color: var(--text);
         }}
         .competitor-title .subtitle {{
@@ -1641,8 +1754,8 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             gap: 16px;
         }}
         .info-card {{
-            background: #fafbfc;
-            border-radius: 14px;
+            background: var(--surface-2);
+            border-radius: var(--radius-md);
             padding: 18px;
             border: 1px solid var(--border);
         }}
@@ -1691,7 +1804,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .update-list {{
             padding-left: 16px;
             margin: 6px 0 0;
-            color: #374151;
+            color: var(--text-secondary);
             font-size: 0.88rem;
         }}
         .update-list li {{
@@ -1699,7 +1812,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
         .update-details {{
             margin-top: 8px;
-            background: white;
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 8px 12px;
@@ -1712,7 +1825,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             user-select: none;
         }}
         .update-details summary:hover {{
-            color: #1d4ed8;
+            filter: brightness(0.9);
         }}
         .update-details[open] summary {{
             margin-bottom: 8px;
@@ -1728,11 +1841,16 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             gap: 10px;
         }}
         .rank-card {{
-            background: white;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: var(--radius-md);
             padding: 12px;
             text-align: center;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }}
+        .rank-card:hover {{
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
         }}
         .rank-title {{
             font-size: 0.78rem;
@@ -1754,7 +1872,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             font-size: 0.7rem;
             padding: 2px 8px;
             border-radius: 999px;
-            background: #f3f4f6;
+            background: var(--surface-3);
             color: var(--muted);
         }}
         .rank-tag.hot {{
@@ -1779,15 +1897,15 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             margin: 6px 0;
             font-size: 0.85rem;
         }}
-        .star-label {{ text-align: right; color: #f59e0b; }}
+        .star-label {{ text-align: right; color: var(--warning); }}
         .rating-track {{
-            background: #e5e7eb;
+            background: var(--surface-3);
             height: 8px;
             border-radius: 999px;
             overflow: hidden;
         }}
         .rating-fill {{
-            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            background: linear-gradient(90deg, #fbbf24, var(--warning));
             height: 100%;
             border-radius: 999px;
             min-width: 2px;
@@ -1797,7 +1915,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             font-size: 0.8rem;
         }}
         .negative-count {{
-            color: #7f1d1d;
+            color: var(--hot);
             background: var(--hot-bg);
             padding: 8px 12px;
             border-radius: 8px;
@@ -1814,7 +1932,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             height: 12px;
             border-radius: 999px;
             overflow: hidden;
-            background: #e5e7eb;
+            background: var(--surface-3);
         }}
         .sentiment-segment {{
             height: 100%;
@@ -1844,13 +1962,13 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
 
         /* Comments */
         .comment-bubble {{
-            background: white;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 10px;
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
             margin: 6px 0;
             font-size: 0.85rem;
-            color: #374151;
+            color: var(--text-secondary);
         }}
         .comment-rating, .comment-like {{
             color: var(--warning);
@@ -1859,7 +1977,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
         .keywords {{
             font-size: 0.85rem;
-            color: #7f1d1d;
+            color: var(--hot);
             background: var(--hot-bg);
             padding: 6px 10px;
             border-radius: 8px;
@@ -1869,17 +1987,17 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .comment-summary {{
             font-size: 0.88rem;
             line-height: 1.6;
-            color: #374151;
-            background: #f8fafc;
+            color: var(--text-secondary);
+            background: var(--surface-2);
             border-left: 4px solid var(--accent);
             padding: 8px 12px;
             border-radius: 0 8px 8px 0;
             margin: 8px 0 10px;
         }}
         .video-details {{
-            background: white;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: var(--radius-md);
             padding: 10px 14px;
             margin: 8px 0 10px;
         }}
@@ -1891,7 +2009,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             user-select: none;
         }}
         .video-details summary:hover {{
-            color: #1d4ed8;
+            filter: brightness(0.9);
         }}
         .video-details[open] summary {{
             margin-bottom: 10px;
@@ -1904,9 +2022,9 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
         .video-item {{
             display: block;
-            background: white;
+            background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: var(--radius-md);
             padding: 10px 12px;
             text-decoration: none;
             color: inherit;
@@ -1914,7 +2032,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
         .video-item:hover {{
             border-color: var(--accent);
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+            box-shadow: 0 2px 8px rgba(30, 90, 216, 0.12);
             transform: translateY(-1px);
         }}
         .video-title {{
@@ -1940,7 +2058,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .manual-item {{
             margin: 6px 0;
             font-size: 0.88rem;
-            color: #374151;
+            color: var(--text-secondary);
         }}
         .manual-item strong {{
             color: var(--text);
@@ -1952,7 +2070,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             align-items: center;
             gap: 10px;
             background: var(--hot-bg);
-            color: #991b1b;
+            color: var(--hot);
             padding: 14px 16px;
             border-radius: 10px;
             font-size: 0.92rem;
@@ -1961,18 +2079,18 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             font-size: 1.3rem;
         }}
         .notice {{
-            background: #eff6ff;
+            background: var(--accent-light);
             border-left: 4px solid var(--accent);
             padding: 14px 16px;
             border-radius: 8px;
-            color: #1e3a8a;
+            color: var(--accent);
             font-size: 0.9rem;
         }}
         .notice p {{
             margin: 6px 0;
         }}
         code {{
-            background: #fff;
+            background: var(--surface-2);
             padding: 1px 5px;
             border-radius: 4px;
             font-family: Consolas, Monaco, monospace;
@@ -1984,84 +2102,12 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             text-align: center;
             color: var(--muted);
             font-size: 0.85rem;
-            margin-top: 40px;
+            margin-top: 44px;
             padding-bottom: 20px;
         }}
 
-        /* Responsive */
-        @media (max-width: 980px) {{
-            .overview-grid {{
-                grid-template-columns: repeat(2, 1fr);
-            }}
-            .detail-row {{
-                flex-direction: column;
-                gap: 16px;
-            }}
-            .detail-col-left, .detail-col-right {{
-                flex: 1 1 auto;
-                width: 100%;
-            }}
-            .rank-grid {{
-                grid-template-columns: repeat(2, 1fr);
-            }}
-        }}
-        @media (max-width: 640px) {{
-            header h1 {{ font-size: 1.5rem; }}
-            .info-grid {{ grid-template-columns: 1fr; }}
-            .overview-grid {{
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }}
-            .overview-card {{
-                padding: 12px;
-                border-radius: 12px;
-            }}
-            .overview-value {{
-                font-size: 1.15rem;
-            }}
-            .competitor {{ padding: 18px; }}
-            .competitor-header {{
-                margin: -18px -18px 0;
-                padding: 18px 18px 14px;
-                border-radius: 20px 20px 0 0;
-            }}
-            .detail-row {{ flex-direction: column; gap: 14px; }}
-            .detail-col-left, .detail-col-right {{ width: 100%; }}
-            .rank-grid {{ grid-template-columns: repeat(2, 1fr); }}
-            .metrics-row {{ gap: 8px; flex-wrap: wrap; }}
-            .metrics-row.compact {{ flex-wrap: wrap; }}
-            .metric {{ padding: 8px 12px; }}
-        }}
-        .sampling-note {{
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px 16px;
-            margin: 14px 0 4px;
-            font-size: 0.85rem;
-            color: var(--muted);
-            line-height: 1.6;
-        }}
-        .sampling-note summary {{
-            font-weight: 700;
-            color: var(--text);
-            cursor: pointer;
-            outline: none;
-        }}
-        .sampling-note ul {{
-            margin: 10px 0 0;
-            padding-left: 18px;
-        }}
-        .sampling-note li {{
-            margin-bottom: 6px;
-        }}
-        .sampling-note code {{
-            background: #f3f4f6;
-            padding: 1px 4px;
-            border-radius: 4px;
-            font-family: Consolas, Monaco, monospace;
-        }}
-        .trend-section {{ margin-top: 6px; }}
+        /* Trend */
+        .trend-section {{ margin-top: 8px; }}
         .trend-grid {{
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -2069,10 +2115,10 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             margin-top: 10px;
         }}
         .trend-chart {{
-            background: #fafbfc;
+            background: var(--surface-2);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 10px 12px;
+            border-radius: 14px;
+            padding: 14px;
         }}
         .trend-title {{
             font-size: 0.78rem;
@@ -2094,13 +2140,10 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .trend-current {{
             font-size: 0.75rem;
             color: var(--text);
-            background: #ffffff;
+            background: var(--surface);
             padding: 2px 6px;
             border-radius: 6px;
             border: 1px solid var(--border);
-        }}
-        @media (max-width: 720px) {{
-            .trend-grid {{ grid-template-columns: 1fr; }}
         }}
         .trend-chart {{ position: relative; }}
         .dot-hit {{ cursor: pointer; }}
@@ -2114,8 +2157,8 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             height: 16px;
             flex: 0 0 auto;
             border-radius: 50%;
-            background: #e5e7eb;
-            color: #6b7280;
+            background: var(--surface-3);
+            color: var(--muted);
             cursor: help;
             transition: background 0.15s, color 0.15s;
         }}
@@ -2147,6 +2190,76 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
         .i-help:hover .i-tip,
         .i-help:focus .i-tip {{ display: block; }}
+
+        /* Sampling note */
+        .sampling-note {{
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            margin: 16px 0 4px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.6;
+            box-shadow: var(--shadow-card);
+        }}
+        .sampling-note summary {{
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            outline: none;
+        }}
+        .sampling-note ul {{
+            margin: 10px 0 0;
+            padding-left: 18px;
+        }}
+        .sampling-note li {{
+            margin-bottom: 6px;
+        }}
+        .sampling-note code {{
+            background: var(--surface-2);
+            padding: 1px 4px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, monospace;
+        }}
+
+        /* Responsive */
+        @media (max-width: 980px) {{
+            .overview-grid {{ grid-template-columns: repeat(2, 1fr); }}
+            .detail-row {{ flex-direction: column; gap: 16px; }}
+            .detail-col-left, .detail-col-right {{ flex: 1 1 auto; width: 100%; }}
+            .rank-grid {{ grid-template-columns: repeat(2, 1fr); }}
+            .trend-grid {{ grid-template-columns: 1fr; }}
+        }}
+        @media (max-width: 640px) {{
+            .container {{ padding: 16px 18px 32px; }}
+            header {{ padding: 16px 18px; }}
+            header .date {{ font-size: 1.5rem; }}
+            .highlights-bar {{ padding: 14px 16px; }}
+            .info-grid {{ grid-template-columns: 1fr; }}
+            .competitor {{ padding: 20px; }}
+            .competitor-header {{
+                margin: -20px -20px 0;
+                padding: 18px 20px 14px;
+                border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            }}
+            .detail-row {{ flex-direction: column; gap: 14px; }}
+            .detail-col-left, .detail-col-right {{ width: 100%; }}
+            .detail-col-left {{ flex: 1 1 auto; }}
+        }}
+        @media (max-width: 480px) {{
+            .container {{ padding: 12px 14px 24px; }}
+            .overview-grid {{
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }}
+            .overview-card {{ min-height: 110px; padding: 14px; }}
+            .overview-value {{ font-size: 1.3rem; }}
+            .rank-grid {{ grid-template-columns: repeat(2, 1fr); }}
+            .metrics-row {{ gap: 8px; }}
+            .metrics-row.compact {{ flex-wrap: wrap; }}
+            .metric {{ padding: 8px 10px; }}
+        }}
     </style>
 </head>
 <body>
@@ -2156,6 +2269,8 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             <div class="meta">生成时间：{data['generated_at']}（北京时间）</div>
             <div class="meta">来源：App Store · Bilibili · manual_overrides.json</div>
         </header>
+
+        {highlights_html}
 
         {sampling_note_html}
 
@@ -2267,13 +2382,36 @@ def _build_viewer_html(history_dates):
     <title>一将成名竞品日报</title>
     <style>
         :root {{
-            --bg: #f0f4f8;
-            --card: #ffffff;
-            --text: #1f2937;
+            --bg: #f6f7f9;
+            --surface: #ffffff;
+            --surface-2: #f8f9fb;
+            --surface-3: #f2f4f7;
+            --text: #111827;
+            --text-secondary: #4b5563;
             --muted: #6b7280;
-            --accent: #2563eb;
-            --accent-light: #eff6ff;
+            --accent: #1e5ad8;
+            --accent-light: #eef4ff;
             --border: #e5e7eb;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 22px;
+            --shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 10px 30px rgba(0,0,0,0.06);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+        }}
+        @media (prefers-color-scheme: dark) {{
+            :root {{
+                --bg: #0f1115;
+                --surface: #1a1d23;
+                --surface-2: #20242c;
+                --surface-3: #252a33;
+                --text: #f3f4f6;
+                --text-secondary: #d1d5db;
+                --muted: #9ca3af;
+                --accent: #4b8df8;
+                --accent-light: #1e293b;
+                --border: #2d3139;
+            }}
         }}
         * {{ box-sizing: border-box; }}
         html, body {{
@@ -2290,93 +2428,122 @@ def _build_viewer_html(history_dates):
             overflow: hidden;
         }}
         .left-nav {{
-            width: 160px;
+            width: 200px;
             flex-shrink: 0;
-            background: var(--card);
+            background: var(--surface);
             border-right: 1px solid var(--border);
-            padding: 16px 14px;
+            padding: 18px 16px;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }}
         .brand {{
-            font-size: 0.88rem;
-            font-weight: 700;
+            font-size: 1rem;
+            font-weight: 800;
             color: var(--accent);
-            line-height: 1.5;
-            margin-bottom: 8px;
+            line-height: 1.4;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }}
+        .brand-icon {{
+            font-size: 1.2rem;
+            flex-shrink: 0;
         }}
         .nav-btn {{
             width: 100%;
             text-align: left;
             padding: 10px 12px;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             background: transparent;
             color: var(--muted);
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: background 0.15s, color 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
         }}
+        .nav-btn .nav-icon {{ font-size: 1rem; }}
         .nav-btn:hover {{ background: var(--accent-light); }}
         .nav-btn.active {{
             background: var(--accent-light);
             color: var(--accent);
         }}
+        .nav-btn.active::before {{
+            content: "";
+            position: absolute;
+            left: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 0 2px 2px 0;
+        }}
         .history-select {{
             display: none;
             width: 100%;
-            padding: 6px 8px;
+            padding: 8px 10px;
+            margin-top: 6px;
             border: 1px solid var(--border);
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             font-size: 0.85rem;
-            background: var(--card);
+            background: var(--surface);
             color: var(--text);
+            cursor: pointer;
         }}
         .main-area {{
             flex: 1;
             display: flex;
             overflow: hidden;
+            padding: 16px;
         }}
         .viewer-wrap {{
             flex: 1;
-            padding: 10px;
+            padding: 0;
             overflow: auto;
         }}
         iframe {{
             width: 100%;
             height: 100%;
             border: none;
-            border-radius: 10px;
-            background: var(--card);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+            box-shadow: var(--shadow-card);
         }}
         .right-index {{
-            width: 150px;
+            width: 180px;
             flex-shrink: 0;
-            background: var(--card);
+            background: var(--surface);
             border-left: 1px solid var(--border);
-            padding: 16px;
+            padding: 18px 16px;
             overflow-y: auto;
         }}
         .index-title {{
-            font-size: 0.8rem;
-            font-weight: 700;
+            font-size: 0.72rem;
+            font-weight: 800;
             color: var(--muted);
-            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
         }}
         .index-btn {{
             display: block;
             width: 100%;
             text-align: left;
-            padding: 8px 10px;
-            margin-bottom: 6px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
             border: none;
-            border-radius: 6px;
-            background: #f8fafc;
-            color: var(--text);
+            border-radius: var(--radius-sm);
+            background: var(--surface-2);
+            color: var(--text-secondary);
             font-size: 0.85rem;
+            font-weight: 500;
             cursor: pointer;
             transition: background 0.15s, color 0.15s;
         }}
@@ -2386,12 +2553,22 @@ def _build_viewer_html(history_dates):
         }}
         .empty-state {{
             display: none;
-            padding: 48px 20px;
+            padding: 64px 24px;
             text-align: center;
             color: var(--muted);
-            background: var(--card);
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-card);
+        }}
+        .empty-state h3 {{
+            margin: 0 0 8px;
+            color: var(--text);
+            font-size: 1rem;
+        }}
+        .empty-state p {{
+            margin: 0;
+            font-size: 0.85rem;
+            line-height: 1.5;
         }}
         @media (max-width: 900px) {{
             .right-index {{ display: none; }}
@@ -2404,26 +2581,39 @@ def _build_viewer_html(history_dates):
                 flex-wrap: wrap;
                 border-right: none;
                 border-bottom: 1px solid var(--border);
-                padding: 12px;
+                padding: 14px;
+                gap: 8px;
             }}
-            .brand {{ width: 100%; margin-bottom: 4px; }}
-            .nav-btn {{ width: auto; }}
-            .history-select {{ width: auto; min-width: 120px; }}
-            .main-area {{ height: calc(100vh - 130px); }}
+            .brand {{ width: 100%; margin-bottom: 4px; font-size: 0.95rem; }}
+            .nav-btn {{
+                width: auto;
+                padding: 8px 12px;
+            }}
+            .nav-btn.active::before {{ display: none; }}
+            .history-select {{ width: auto; min-width: 140px; margin-top: 0; }}
+            .main-area {{ height: calc(100vh - 130px); padding: 10px; }}
+        }}
+        @media (max-width: 480px) {{
+            .left-nav {{ padding: 12px; }}
+            .brand {{ font-size: 0.9rem; }}
+            .main-area {{ height: calc(100vh - 120px); padding: 8px; }}
         }}
     </style>
 </head>
 <body>
     <div class="app-layout">
         <aside class="left-nav">
-            <div class="brand">三国杀：一将成名<br>竞品日报</div>
-            <button class="nav-btn active" data-mode="today">每日日报</button>
-            <button class="nav-btn" data-mode="history">历史日报</button>
+            <div class="brand"><span class="brand-icon">📊</span> 一将成名竞品日报</div>
+            <button class="nav-btn active" data-mode="today"><span class="nav-icon">📅</span> 每日日报</button>
+            <button class="nav-btn" data-mode="history"><span class="nav-icon">📜</span> 历史日报</button>
             <select class="history-select" id="history-select"></select>
         </aside>
         <div class="main-area">
             <div class="viewer-wrap">
-                <div class="empty-state" id="empty-state">暂无历史日报，请运行双击运行.bat 生成。</div>
+                <div class="empty-state" id="empty-state">
+                    <h3>暂无日报</h3>
+                    <p>请运行项目根目录的 <strong>双击运行.bat</strong><br>生成今日简报后再刷新本页。</p>
+                </div>
                 <iframe id="viewer" src="{default_src}"></iframe>
             </div>
             <aside class="right-index" id="right-index">
