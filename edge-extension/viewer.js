@@ -14,7 +14,7 @@ const today = new Date().toLocaleDateString('zh-CN', {
 }).replace(/\//g, '-');
 
 let historyDates = [];
-let useLocal = false;
+const useLocal = ['chrome-extension:', 'file:'].includes(location.protocol);
 
 function resolvePath(relativePath) {
   if (useLocal) {
