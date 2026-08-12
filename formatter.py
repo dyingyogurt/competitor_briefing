@@ -1194,7 +1194,10 @@ def _render_competitor_html(item, idx, history=None):
         {trend_html}
 
         <details class="competitor-details">
-            <summary class="expand-btn"><span class="expand-text">展开详情</span><span class="expand-arrow">▼</span></summary>
+            <summary class="expand-btn">
+                <span class="expand-closed">展开详情 ▼</span>
+                <span class="expand-open">收起 ▲</span>
+            </summary>
             <div class="competitor-detail-body">
                 {_detail_version_section(store)}
                 {_detail_rank_section(rank_cards)}
@@ -1595,21 +1598,9 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .expand-btn:active {{
             transform: translateY(1px);
         }}
-        .expand-arrow {{
-            font-size: 0.7rem;
-            margin-left: 4px;
-            display: inline-block;
-            transition: transform 0.2s;
-        }}
-        .competitor-details[open] .expand-arrow {{
-            transform: rotate(180deg);
-        }}
-        .expand-text::after {{
-            content: " ▼";
-        }}
-        .competitor-details[open] .expand-text::after {{
-            content: " ▲";
-        }}
+        .expand-open {{ display: none; }}
+        .competitor-details[open] .expand-closed {{ display: none; }}
+        .competitor-details[open] .expand-open {{ display: inline; }}
         .competitor-detail-body {{
             display: flex;
             flex-direction: column;
