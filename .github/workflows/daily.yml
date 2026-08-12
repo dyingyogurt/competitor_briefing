@@ -27,6 +27,7 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch existing history from gh-pages
+        id: fetch_history
         run: |
           git fetch origin gh-pages
           if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
@@ -37,16 +38,34 @@ jobs:
             echo "No gh-pages branch yet, starting fresh"
           fi
 
+      - name: Save previous history count
+        run: |
+          if [ -f data/history.json ]; then
+            count=$(python -c "import json; print(len(json.load(open('data/history.json'))))")
+            echo "PREV_HISTORY_COUNT=$count" >> "$GITHUB_ENV"
+            echo "Previous history count: $count"
+          else
+            echo "PREV_HISTORY_COUNT=0" >> "$GITHUB_ENV"
+            echo "No previous history found"
+          fi
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
       - name: Generate daily briefing
+        id: generate
         run: python main.py
         env:
           # 可选：如果有 webhook，填到仓库 Secrets 里即可自动告警
           COMPETITOR_ALERT_WEBHOOK_URL: ${{ secrets.COMPETITOR_ALERT_WEBHOOK_URL }}
+
+      - name: Health check
+        run: python health_check.py
+        env:
+          COMPETITOR_ALERT_WEBHOOK_URL: ${{ secrets.COMPETITOR_ALERT_WEBHOOK_URL }}
+          PREV_HISTORY_COUNT: ${{ env.PREV_HISTORY_COUNT }}
 
       - name: Deploy Pages site to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4

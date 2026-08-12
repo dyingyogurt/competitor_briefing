@@ -891,11 +891,28 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
             f'<span class="i-help" aria-label="说明">{info_svg}<span class="i-tip">{help}</span></span>'
         )
 
-    # X 轴只显示首尾日期
-    x_labels = (
-        f'<text x="{pad_left}" y="{height - 4}" text-anchor="start" font-size="9" fill="#9ca3af">{dates[0][5:]}</text>'
-        f'<text x="{width - pad_right}" y="{height - 4}" text-anchor="end" font-size="9" fill="#9ca3af">{dates[-1][5:]}</text>'
-    )
+    # X 轴日期标签：均匀显示最多 5 个，避免重叠
+    def build_x_labels():
+        m = len(dates)
+        if m == 0:
+            return ""
+        if m == 1:
+            idxs = [0]
+        else:
+            max_labels = 5
+            step = max(1, (m + max_labels - 2) // (max_labels - 1))
+            idxs = list(range(0, m, step))
+            if idxs[-1] != m - 1:
+                idxs.append(m - 1)
+        labels = ""
+        for i in idxs:
+            x, _ = px(i, ys[0] if ys else y_min)
+            label = dates[i][5:] if isinstance(dates[i], str) and len(dates[i]) == 10 else dates[i]
+            anchor = "start" if i == 0 else ("end" if i == m - 1 else "middle")
+            labels += f'<text x="{x}" y="{height - 4}" text-anchor="{anchor}" font-size="9" fill="#9ca3af">{label}</text>'
+        return labels
+
+    x_labels = build_x_labels()
 
     return f"""
     <div class="trend-chart">

@@ -41,6 +41,35 @@ def write_status(success, message, detail=None, competitors_count=None, history_
         json.dump(payload, f, ensure_ascii=False, indent=2)
 
 
+def send_alert(title, text, webhook_url=None):
+    """发送告警消息。未配置 webhook 时只在控制台打印。"""
+    url = (webhook_url or DEFAULT_WEBHOOK).strip()
+    if not url:
+        print(f"[ALERT] 未配置 COMPETITOR_ALERT_WEBHOOK_URL：{title} - {text}")
+        return
+
+    payload = {
+        "title": title,
+        "text": text,
+        "markdown": False,
+    }
+    data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        method="POST",
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+            "Content-Type": "application/json; charset=utf-8",
+        },
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            print(f"[ALERT] 已发送告警，HTTP {resp.status}")
+    except Exception as e:
+        print(f"[ALERT] 告警发送失败：{type(e).__name__}: {e}")
+
+
 def notify_failure(error_message, detail=None):
     """运行失败时写入状态并发送告警。"""
     title = f"竞品日报生成失败｜{_today_str()}"
