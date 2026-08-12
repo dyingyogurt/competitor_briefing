@@ -160,7 +160,7 @@ document.getElementById('refresh-btn').addEventListener('click', () => {
 
 document.getElementById('export-btn').addEventListener('click', () => {
   const today = getTodayStr();
-  const fileUrl = `${PAGES_BASE}/history/briefing_${today}.html`;
+  const fileUrl = chrome.runtime.getURL(`history/briefing_${today}.html`);
   chrome.downloads.download({
     url: fileUrl,
     filename: `竞品日报_${today}.html`,
