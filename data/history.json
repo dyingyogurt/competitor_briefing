@@ -1177,11 +1177,11 @@
       "review_avg_rating": 4.75,
       "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 99,
-        "negative": 12,
-        "neutral": 186
+        "positive": 102,
+        "negative": 1,
+        "neutral": 148
       },
-      "bilibili_comment_count": 22
+      "bilibili_comment_count": 17
     },
     "mjs": {
       "name": "名将杀",
@@ -1196,9 +1196,9 @@
       "review_avg_rating": 5.0,
       "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 12,
+        "positive": 13,
         "negative": 13,
-        "neutral": 118
+        "neutral": 125
       },
       "bilibili_comment_count": 29
     },
@@ -1215,11 +1215,11 @@
       "review_avg_rating": 4.0,
       "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 6,
-        "negative": 15,
-        "neutral": 53
+        "positive": 12,
+        "negative": 14,
+        "neutral": 56
       },
-      "bilibili_comment_count": 25
+      "bilibili_comment_count": 28
     },
     "bjp": {
       "name": "百将牌",
@@ -1236,7 +1236,7 @@
       "bilibili_sentiment": {
         "positive": 0,
         "negative": 4,
-        "neutral": 17
+        "neutral": 18
       },
       "bilibili_comment_count": 17
     }
