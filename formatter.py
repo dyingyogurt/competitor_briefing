@@ -1103,7 +1103,7 @@ def _render_competitor_html(item, idx, history=None):
                 vtitle = html.escape(c.get("video_title", "")[:30]) + ("…" if len(c.get("video_title", "")) > 30 else "")
                 vtitle_full = html.escape(c.get("video_title", ""))
                 vlink = html.escape(c.get("video_link", "#"), quote=True)
-                comments.append(f'<div class="comment-bubble"><span class="comment-like">👍 {like}</span> {content}<a class="comment-source" href="{vlink}" target="_blank" rel="noopener noreferrer" title="{vtitle_full}">出自：{vtitle}</a></div>')
+                comments.append(f'<a class="comment-bubble" href="{vlink}" target="_blank" rel="noopener noreferrer" title="{vtitle_full}"><span class="comment-like">👍 {like}</span> {content}<span class="comment-source-line">出自：{vtitle}</span></a>')
             top_comments = "".join(comments)
 
         videos = bilibili.get("videos", [])
@@ -1958,6 +1958,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
 
         /* Comments */
         .comment-bubble {{
+            display: block;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
@@ -1965,11 +1966,30 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             margin: 6px 0;
             font-size: 0.85rem;
             color: var(--text-secondary);
+            text-decoration: none;
+            transition: border-color 0.15s, box-shadow 0.15s, transform 0.05s;
+        }}
+        a.comment-bubble:hover {{
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(30, 90, 216, 0.12);
+            transform: translateY(-1px);
         }}
         .comment-rating, .comment-like {{
             color: var(--warning);
             font-weight: 700;
             margin-right: 6px;
+        }}
+        .comment-source-line {{
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }}
+        .comment-source-line::before {{
+            content: "▶ ";
+            color: var(--accent);
         }}
         .comment-source {{
             display: inline-flex;
@@ -2160,7 +2180,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             border: 1px solid var(--border);
         }}
         .trend-chart {{ position: relative; }}
-        .dot-hit {{ cursor: pointer; }}
+        .dot-hit {{ cursor: pointer; pointer-events: all; }}
         .i-help {{
             position: relative;
             display: inline-flex;
