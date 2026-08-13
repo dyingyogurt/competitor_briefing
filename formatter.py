@@ -629,10 +629,13 @@ def _bilibili_comments_html(bilibili, limit=5):
         return "<p class='empty'>暂无热门评论</p>"
     bubbles = []
     for c in comments[:limit]:
-        content = c.get("content", "")[:140]
+        content = html.escape(c.get("content", "")[:140])
         like = c.get("like", 0)
+        vtitle = html.escape(c.get("video_title", "")[:30]) + ("…" if len(c.get("video_title", "")) > 30 else "")
+        vtitle_full = html.escape(c.get("video_title", ""))
+        vlink = html.escape(c.get("video_link", "#"), quote=True)
         bubbles.append(
-            f'<div class="comment-bubble"><span class="comment-like">👍 {like}</span> {content}</div>'
+            f'<a class="comment-bubble" href="{vlink}" target="_blank" rel="noopener noreferrer" title="{vtitle_full}"><span class="comment-like">👍 {like}</span> {content}<span class="comment-source-line">出自：{vtitle}</span></a>'
         )
     return "".join(bubbles)
 
@@ -867,9 +870,9 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
         tip = f"{d_label}  {v:.2f}" if isinstance(v, float) else f"{d_label}  {v}"
         dot_svg += (
             f'<circle cx="{x}" cy="{y}" r="2.6" fill="{color}"/>'
-            f'<circle class="dot-hit" cx="{x}" cy="{y}" r="9" fill="transparent" data-tip="{tip}"/>'
+            f'<circle class="dot-hit" cx="{x}" cy="{y}" r="10" fill="rgba(0,0,0,0.01)" data-tip="{tip}" pointer-events="all"><title>{tip}</title></circle>'
         )
-    dot_svg += f'<circle class="dot-hit" cx="{last_x}" cy="{last_y}" r="9" fill="transparent" data-tip="最后 {last_value:.2f}"/><text x="{last_x}" y="{last_y - 10}" text-anchor="middle" font-size="9" font-weight="600" fill="{color}">{last_value:.2f}</text>'
+    dot_svg += f'<circle class="dot-hit" cx="{last_x}" cy="{last_y}" r="10" fill="rgba(0,0,0,0.01)" data-tip="最后 {last_value:.2f}" pointer-events="all"><title>最后 {last_value:.2f}</title></circle><text x="{last_x}" y="{last_y - 10}" text-anchor="middle" font-size="9" font-weight="600" fill="{color}">{last_value:.2f}</text>'
 
     # 生成简单的 Y 轴网格线（3 条）
     grid_lines = ""
@@ -2314,35 +2317,6 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             本简报由脚本自动生成，仅供参考。
         </footer>
     </div>
-    <script>
-    // 趋势图悬停提示
-    (function () {{
-        function onload() {{
-            var tip = document.createElement('div');
-            tip.id = 'chart-tip';
-            tip.style.cssText = 'position:fixed;display:none;z-index:99999;background:#111827;color:#fff;padding:5px 9px;border-radius:6px;font-size:12px;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.25);white-space:nowrap;';
-            document.body.appendChild(tip);
-            document.querySelectorAll('.dot-hit').forEach(function (d) {{
-                d.addEventListener('mouseenter', function () {{
-                    tip.textContent = d.getAttribute('data-tip');
-                    tip.style.display = 'block';
-                }});
-                d.addEventListener('mousemove', function (e) {{
-                    tip.style.left = (e.clientX + 14) + 'px';
-                    tip.style.top = (e.clientY + 14) + 'px';
-                }});
-                d.addEventListener('mouseleave', function () {{
-                    tip.style.display = 'none';
-                }});
-            }});
-        }}
-        if (document.readyState === 'loading') {{
-            document.addEventListener('DOMContentLoaded', onload);
-        }} else {{
-            onload();
-        }}
-    }})();
-    </script>
 </body>
 </html>"""
 

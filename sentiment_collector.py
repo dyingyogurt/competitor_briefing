@@ -194,7 +194,9 @@ def collect_bilibili_sentiment(keyword, max_videos=3, max_comments_per_video=5):
     now = datetime.now(CN_TZ)
     today = datetime(now.year, now.month, now.day, tzinfo=CN_TZ)
     yesterday = today - timedelta(days=1)
-    pubtime_begin_s = int(yesterday.timestamp())
+    # 放宽到最近 3 天，避免某天内新视频太少导致无数据
+    start_day = today - timedelta(days=3)
+    pubtime_begin_s = int(start_day.timestamp())
     pubtime_end_s = int(today.timestamp()) - 1
 
     videos = search_videos(
