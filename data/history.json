@@ -1174,14 +1174,14 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 2.63355,
-      "review_avg_rating": 4.75,
-      "review_count": 4,
+      "review_avg_rating": 1.46,
+      "review_count": 50,
       "bilibili_sentiment": {
-        "positive": 102,
-        "negative": 1,
-        "neutral": 148
+        "positive": 144,
+        "negative": 24,
+        "neutral": 160
       },
-      "bilibili_comment_count": 17
+      "bilibili_comment_count": 30
     },
     "mjs": {
       "name": "名将杀",
@@ -1193,14 +1193,14 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 4.47434,
-      "review_avg_rating": 5.0,
-      "review_count": 4,
+      "review_avg_rating": 3.02,
+      "review_count": 50,
       "bilibili_sentiment": {
-        "positive": 13,
-        "negative": 13,
-        "neutral": 125
+        "positive": 19,
+        "negative": 87,
+        "neutral": 98
       },
-      "bilibili_comment_count": 29
+      "bilibili_comment_count": 30
     },
     "yxs": {
       "name": "英雄杀",
@@ -1212,12 +1212,12 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 3.33939,
-      "review_avg_rating": 4.0,
-      "review_count": 4,
+      "review_avg_rating": 1.18,
+      "review_count": 50,
       "bilibili_sentiment": {
-        "positive": 12,
-        "negative": 14,
-        "neutral": 56
+        "positive": 52,
+        "negative": 5,
+        "neutral": 35
       },
       "bilibili_comment_count": 28
     },
@@ -1231,14 +1231,14 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 4.44604,
-      "review_avg_rating": 3.75,
-      "review_count": 4,
+      "review_avg_rating": 3.72,
+      "review_count": 50,
       "bilibili_sentiment": {
-        "positive": 0,
-        "negative": 4,
-        "neutral": 18
+        "positive": 311,
+        "negative": 8,
+        "neutral": 245
       },
-      "bilibili_comment_count": 17
+      "bilibili_comment_count": 15
     }
   }
 }
