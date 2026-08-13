@@ -3,6 +3,7 @@
 """把采集结果格式化为 Markdown 简报。"""
 
 import glob
+import html
 import json
 import os
 import re
@@ -1097,8 +1098,12 @@ def _render_competitor_html(item, idx, history=None):
         if bilibili.get("top_comments"):
             comments = []
             for c in bilibili["top_comments"][:3]:
-                content = c.get("content", "")[:90]
-                comments.append(f'<div class="comment-bubble"><span class="comment-like">👍 {c.get("like", 0)}</span> {content}</div>')
+                content = html.escape(c.get("content", "")[:90])
+                like = c.get("like", 0)
+                vtitle = html.escape(c.get("video_title", "")[:30]) + ("…" if len(c.get("video_title", "")) > 30 else "")
+                vtitle_full = html.escape(c.get("video_title", ""))
+                vlink = html.escape(c.get("video_link", "#"), quote=True)
+                comments.append(f'<div class="comment-bubble"><span class="comment-like">👍 {like}</span> {content}<a class="comment-source" href="{vlink}" target="_blank" rel="noopener noreferrer" title="{vtitle_full}">出自：{vtitle}</a></div>')
             top_comments = "".join(comments)
 
         videos = bilibili.get("videos", [])
@@ -1965,6 +1970,24 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             color: var(--warning);
             font-weight: 700;
             margin-right: 6px;
+        }}
+        .comment-source {{
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.15s;
+        }}
+        .comment-source::before {{
+            content: "▶ ";
+            color: var(--accent);
+        }}
+        .comment-source:hover {{
+            color: var(--accent);
+            text-decoration: underline;
         }}
         .keywords {{
             font-size: 0.85rem;
