@@ -175,6 +175,15 @@
             background: var(--accent-light);
             color: var(--accent);
         }
+        .index-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .index-btn.active:hover {
+            background: var(--accent);
+            color: #ffffff;
+        }
         .empty-state {
             display: none;
             padding: 64px 24px;
@@ -238,7 +247,7 @@
                     <h3>暂无日报</h3>
                     <p>请运行项目根目录的 <strong>双击运行.bat</strong><br>生成今日简报后再刷新本页。</p>
                 </div>
-                <iframe id="viewer" src="history/briefing_2026-08-12.html"></iframe>
+                <iframe id="viewer" src="history/briefing_2026-08-14.html"></iframe>
             </div>
             <aside class="right-index" id="right-index">
                 <div class="index-title">游戏索引</div>
@@ -246,7 +255,7 @@
             </aside>
         </div>
     </div>
-    <div id="history-data" data-dates='["2026-08-12", "2026-08-11", "2026-08-10", "2026-08-09", "2026-08-08", "2026-08-07", "2026-08-06", "2026-08-05", "2026-08-04", "2026-08-03", "2026-08-02", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-23"]' style="display:none"></div>
+    <div id="history-data" data-dates='["2026-08-14", "2026-08-13", "2026-08-12", "2026-08-11", "2026-08-10", "2026-08-09", "2026-08-08", "2026-08-07", "2026-08-06", "2026-08-05", "2026-08-04", "2026-08-03", "2026-08-02", "2026-08-01", "2026-07-31", "2026-07-30", "2026-07-29", "2026-07-28", "2026-07-27", "2026-07-23"]' style="display:none"></div>
     <script src="viewer.js"></script>
 </body>
 </html>

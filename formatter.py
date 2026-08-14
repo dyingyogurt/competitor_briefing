@@ -2559,6 +2559,15 @@ def _build_viewer_html(history_dates):
             background: var(--accent-light);
             color: var(--accent);
         }}
+        .index-btn.active {{
+            background: var(--accent);
+            color: #ffffff;
+            font-weight: 600;
+        }}
+        .index-btn.active:hover {{
+            background: var(--accent);
+            color: #ffffff;
+        }}
         .empty-state {{
             display: none;
             padding: 64px 24px;
