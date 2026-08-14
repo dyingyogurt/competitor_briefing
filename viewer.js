@@ -69,7 +69,8 @@ function buildHistorySelect() {
 function buildIndex() {
   try {
     const doc = viewer.contentDocument || (viewer.contentWindow && viewer.contentWindow.document);
-    if (!doc) return;
+    const win = viewer.contentWindow;
+    if (!doc || !win) return;
     const sections = doc.querySelectorAll('.competitor');
     indexList.innerHTML = '';
     if (sections.length === 0) {
@@ -82,12 +83,36 @@ function buildIndex() {
       const btn = document.createElement('button');
       btn.className = 'index-btn';
       btn.textContent = name;
+      btn.dataset.target = sec.id;
       btn.addEventListener('click', () => {
         const target = doc.getElementById(sec.id);
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
       indexList.appendChild(btn);
     });
+
+    // 滚动时高亮当前游戏
+    const updateActive = () => {
+      const scrollTop = win.scrollY || doc.documentElement.scrollTop || 0;
+      const offset = 24; // 顶部留一点缓冲
+      let activeId = '';
+      for (const sec of sections) {
+        if (sec.offsetTop >= scrollTop + offset) {
+          activeId = sec.id;
+          break;
+        }
+      }
+      if (!activeId && sections.length > 0) {
+        activeId = sections[sections.length - 1].id;
+      }
+      indexList.querySelectorAll('.index-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.target === activeId);
+      });
+    };
+
+    win.removeEventListener('scroll', updateActive);
+    win.addEventListener('scroll', updateActive, { passive: true });
+    updateActive();
   } catch (e) {
     // Pages 站点跨域时无法读取 iframe 内容DOM，这是正常现象
     indexList.textContent = '线上简报不支持索引';
