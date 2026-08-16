@@ -1396,5 +1396,83 @@
       },
       "bilibili_comment_count": 12
     }
+  },
+  "2026-08-16": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": "6.4.1.0",
+      "ranks": {
+        "iOS 总畅销榜": null,
+        "iOS 总免费榜": null,
+        "iOS 游戏畅销榜": null,
+        "iOS 游戏免费榜": null
+      },
+      "app_store_rating": 2.6325,
+      "review_avg_rating": 1.51,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 92,
+        "negative": 76,
+        "neutral": 63
+      },
+      "bilibili_comment_count": 25
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": "1.0.6",
+      "ranks": {
+        "iOS 总畅销榜": null,
+        "iOS 总免费榜": null,
+        "iOS 游戏畅销榜": null,
+        "iOS 游戏免费榜": null
+      },
+      "app_store_rating": 4.47735,
+      "review_avg_rating": 3.22,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 54,
+        "negative": 75,
+        "neutral": 28
+      },
+      "bilibili_comment_count": 30
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": "4.31.0",
+      "ranks": {
+        "iOS 总畅销榜": null,
+        "iOS 总免费榜": null,
+        "iOS 游戏畅销榜": null,
+        "iOS 游戏免费榜": null
+      },
+      "app_store_rating": 3.33914,
+      "review_avg_rating": 1.26,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 16,
+        "negative": 19,
+        "neutral": 32
+      },
+      "bilibili_comment_count": 29
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": "1.7.2",
+      "ranks": {
+        "iOS 总畅销榜": null,
+        "iOS 总免费榜": null,
+        "iOS 游戏畅销榜": null,
+        "iOS 游戏免费榜": null
+      },
+      "app_store_rating": 4.42553,
+      "review_avg_rating": 3.74,
+      "review_count": 100,
+      "bilibili_sentiment": {
+        "positive": 0,
+        "negative": 50,
+        "neutral": 1289
+      },
+      "bilibili_comment_count": 15
+    }
   }
 }
