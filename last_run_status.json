@@ -1,9 +1,9 @@
 {
   "success": true,
-  "message": "已生成 2026-08-18 日报，共 4 个竞品",
-  "date": "2026-08-18",
-  "checked_at": "2026-08-18 10:12:06",
+  "message": "已生成 2026-08-19 日报，共 4 个竞品",
+  "date": "2026-08-19",
+  "checked_at": "2026-08-19 10:14:58",
   "detail": "",
   "competitors_count": 4,
-  "history_days": 24
+  "history_days": 25
 }
