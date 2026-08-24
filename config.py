@@ -16,7 +16,8 @@ COMPETITORS = [
         "itunes_id": 1389650592,
         # B 站搜索关键词必须精确到产品全名，防止和手杀 / OL 内容混淆
         "bilibili_keyword": "三国杀一将成名",
-        "taptap_url": "",
+        "taptap_app_id": 145396,
+        "taptap_url": "https://www.taptap.cn/app/145396",
         "official_news_url": "",
     },
     {

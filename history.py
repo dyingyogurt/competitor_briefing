@@ -35,6 +35,7 @@ def snapshot(data):
     for c in data["competitors"]:
         reviews = c.get("reviews", {})
         bilibili = c.get("bilibili_sentiment") or {}
+        taptap = c.get("taptap") or {}
         snap[c["key"]] = {
             "name": c["name"],
             "version": c.get("app_store", {}).get("version"),
@@ -44,6 +45,8 @@ def snapshot(data):
             "review_count": reviews.get("count", 0),
             "bilibili_sentiment": bilibili.get("sentiment", {}),
             "bilibili_comment_count": bilibili.get("comment_count", 0),
+            "taptap_rating": taptap.get("rating"),
+            "taptap_review_count": taptap.get("review_count", 0),
         }
     return snap
 

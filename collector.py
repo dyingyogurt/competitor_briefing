@@ -12,6 +12,7 @@ from collections import Counter
 from html.parser import HTMLParser
 from config import COMPETITORS, CHART_FEEDS, REVIEW_PAGES
 from sentiment_collector import collect_bilibili_sentiment
+from taptap_collector import collect_taptap
 
 
 USER_AGENT = (
@@ -361,6 +362,16 @@ def collect_all():
             except Exception:
                 # B 站接口不稳定，失败不阻断主流程
                 pass
+
+        # 如果配置了 TapTap app_id，则采集 TapTap 评分与热评（目前仅一将成名跑通测试）
+        taptap_app_id = comp.get("taptap_app_id")
+        if taptap_app_id:
+            try:
+                item["taptap"] = collect_taptap(taptap_app_id)
+            except Exception:
+                # TapTap 接口可能变化，失败不阻断主流程
+                pass
+
         result["competitors"].append(item)
 
     return result

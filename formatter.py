@@ -149,11 +149,25 @@ def _render_competitor(item, idx):
                 lines.append(f"  - 👍{c.get('like', 0)}「{content}」")
         lines.append("")
 
+    # TapTap 自动采集
+    taptap = item.get("taptap")
+    if taptap and taptap.get("rating") is not None:
+        lines.append("### 🎮 TapTap 玩家反馈")
+        lines.append(f"- **评分**：{taptap.get('rating')} / {taptap.get('rating_max', 10)}（{taptap.get('review_count', 0)} 条评价）")
+        if taptap.get("latest_score") is not None:
+            lines.append(f"- **最近评分**：{taptap['latest_score']}")
+        if taptap.get("hot_reviews"):
+            lines.append("- **热门评价**：")
+            for r in taptap["hot_reviews"][:3]:
+                text = r.get("text", "")[:70]
+                lines.append(f"  - {r.get('score')} 分 @{r.get('author', '匿名')}：{text}")
+        lines.append("")
+
     # 人工补充（TapTap / 官网 / 社媒）
     lines.append("### 🔍 其他渠道补充")
     if manual:
         if manual.get("taptap_rating"):
-            lines.append(f"- **TapTap 评分**：{manual['taptap_rating']}")
+            lines.append(f"- **TapTap 评分（人工）**：{manual['taptap_rating']}")
         if manual.get("taptap_heat"):
             lines.append(f"- **TapTap 热度**：{manual['taptap_heat']}")
         if manual.get("marketing"):
@@ -575,6 +589,30 @@ def _overview_bilibili_card(bilibili):
     """
 
 
+def _overview_taptap_card(taptap):
+    if not taptap:
+        return ""
+    if taptap.get("rating") is None:
+        return """
+        <div class="overview-card">
+            <div class="overview-header"><span class="overview-icon">🎮</span><span class="overview-title">TapTap</span></div>
+            <div class="overview-value">—</div>
+            <div class="overview-summary">暂无 TapTap 数据</div>
+        </div>
+        """
+    rating = taptap.get("rating", "—")
+    count = taptap.get("review_count", 0)
+    latest = taptap.get("latest_score")
+    latest_text = f"最近评分 {latest}" if latest is not None else ""
+    return f"""
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">🎮</span><span class="overview-title">TapTap</span></div>
+        <div class="overview-value">⭐ {rating}<small>/{taptap.get('rating_max', 10)}</small></div>
+        <div class="overview-summary">{count} 条评价 {latest_text}</div>
+    </div>
+    """
+
+
 def _sentiment_bar_html(sentiment):
     pos = sentiment.get('positive', 0)
     neg = sentiment.get('negative', 0)
@@ -774,6 +812,61 @@ def _detail_bilibili_section(bilibili):
                 <h4 class="sub-section-title">代表评论</h4>
                 {_bilibili_comments_html(bilibili)}
                 {_bilibili_video_list_html(bilibili)}
+            </div>
+        </div>
+    </div>
+    """
+
+
+def _taptap_reviews_html(taptap, limit=3):
+    reviews = taptap.get("hot_reviews", [])[:limit]
+    if not reviews:
+        return "<p class='empty'>暂无热评</p>"
+    bubbles = []
+    for r in reviews:
+        score = r.get("score", "—")
+        text = html.escape(r.get("text", "")[:180] + ("…" if len(r.get("text", "")) > 180 else ""))
+        author = html.escape(r.get("author", "匿名"))
+        link = html.escape(r.get("link", "#"), quote=True)
+        score_label = f"<span class='comment-rating'>{score} 分</span>"
+        bubbles.append(
+            f'<a class="comment-bubble" href="{link}" target="_blank" rel="noopener noreferrer" '
+            f'title="{html.escape(r.get("text", ""), quote=True)}">'
+            f'{score_label} <strong>@{author}</strong> {text}'
+            f'</a>'
+        )
+    return "".join(bubbles)
+
+
+def _detail_taptap_section(taptap):
+    if not taptap:
+        return ""
+    if taptap.get("rating") is None:
+        return """
+        <div class="detail-section">
+            <h3>🎮 TapTap 玩家反馈</h3>
+            <p class="empty">暂无 TapTap 数据</p>
+        </div>
+        """
+    rating = taptap.get("rating", "—")
+    count = taptap.get("review_count", 0)
+    latest = taptap.get("latest_score", "—")
+    url = taptap.get("app_url", "#")
+    return f"""
+    <div class="detail-section">
+        <h3>🎮 TapTap 玩家反馈</h3>
+        <div class="detail-row">
+            <div class="detail-col-left">
+                <div class="metrics-row compact">
+                    <div class="metric"><div class="metric-value">{rating}</div><div class="metric-label">总评分</div></div>
+                    <div class="metric"><div class="metric-value">{count}</div><div class="metric-label">总评数</div></div>
+                    <div class="metric"><div class="metric-value">{latest}</div><div class="metric-label">最近评分</div></div>
+                </div>
+                <a class="store-link" href="{url}" target="_blank">打开 TapTap →</a>
+            </div>
+            <div class="detail-col-right">
+                <h4 class="sub-section-title">热门评价</h4>
+                {_taptap_reviews_html(taptap)}
             </div>
         </div>
     </div>
@@ -991,6 +1084,7 @@ def _render_competitor_html(item, idx, history=None):
     rev = item["reviews"]
     manual = item.get("manual", {})
     bilibili = item.get("bilibili_sentiment")
+    taptap = item.get("taptap")
     trend = _trend_data_for_key(item.get("key", ""), history, current_item=item)
     trend_html = _trend_section_html(trend, item.get("key", ""))
 
@@ -1190,6 +1284,7 @@ def _render_competitor_html(item, idx, history=None):
         {_overview_rank_card(rank)}
         {_overview_appstore_card(rev)}
         {_overview_bilibili_card(bilibili)}
+        {_overview_taptap_card(taptap)}
     </div>
     """
 
@@ -1223,6 +1318,7 @@ def _render_competitor_html(item, idx, history=None):
                 {_detail_rank_section(rank_cards)}
                 {_detail_appstore_section(rev, store)}
                 {_detail_bilibili_section(bilibili)}
+                {_detail_taptap_section(taptap)}
                 {_detail_manual_section(manual_body)}
             </div>
         </details>
