@@ -154,8 +154,6 @@ def _render_competitor(item, idx):
     if taptap and taptap.get("rating") is not None:
         lines.append("### 🎮 TapTap 玩家反馈")
         lines.append(f"- **评分**：{taptap.get('rating')} / {taptap.get('rating_max', 10)}（{taptap.get('review_count', 0)} 条评价）")
-        if taptap.get("latest_score") is not None:
-            lines.append(f"- **最近评分**：{taptap['latest_score']}")
         if taptap.get("hot_reviews"):
             lines.append("- **热门评价**：")
             for r in taptap["hot_reviews"][:3]:
@@ -602,13 +600,11 @@ def _overview_taptap_card(taptap):
         """
     rating = taptap.get("rating", "—")
     count = taptap.get("review_count", 0)
-    latest = taptap.get("latest_score")
-    latest_text = f"最近评分 {latest}" if latest is not None else ""
     return f"""
     <div class="overview-card">
         <div class="overview-header"><span class="overview-icon">🎮</span><span class="overview-title">TapTap</span></div>
         <div class="overview-value">⭐ {rating}<small>/{taptap.get('rating_max', 10)}</small></div>
-        <div class="overview-summary">{count} 条评价 {latest_text}</div>
+        <div class="overview-summary">{count} 条评价</div>
     </div>
     """
 
@@ -850,7 +846,6 @@ def _detail_taptap_section(taptap):
         """
     rating = taptap.get("rating", "—")
     count = taptap.get("review_count", 0)
-    latest = taptap.get("latest_score", "—")
     url = taptap.get("app_url", "#")
     return f"""
     <div class="detail-section">
@@ -860,7 +855,6 @@ def _detail_taptap_section(taptap):
                 <div class="metrics-row compact">
                     <div class="metric"><div class="metric-value">{rating}</div><div class="metric-label">总评分</div></div>
                     <div class="metric"><div class="metric-value">{count}</div><div class="metric-label">总评数</div></div>
-                    <div class="metric"><div class="metric-value">{latest}</div><div class="metric-label">最近评分</div></div>
                 </div>
                 <a class="store-link" href="{url}" target="_blank">打开 TapTap →</a>
             </div>
