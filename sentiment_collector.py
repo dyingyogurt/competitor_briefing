@@ -31,6 +31,25 @@ NEGATIVE_WORDS = [
     "坑人", "垃圾游戏",
 ]
 
+# 否定词：命中关键词时，若其前面很近的位置出现否定词，则跳过该命中
+NEGATION_WORDS = ["不", "没", "无", "并非", "不是", "没有", "不算"]
+
+
+def _find_keywords(text, keyword_list):
+    """返回文本中命中的关键词列表（不含被否定词修饰的命中）。"""
+    hits = []
+    for kw in keyword_list:
+        start = 0
+        while True:
+            idx = text.find(kw, start)
+            if idx == -1:
+                break
+            window = text[max(0, idx - 6): idx]
+            if not any(nw in window for nw in NEGATION_WORDS):
+                hits.append(kw)
+            start = idx + len(kw)
+    return hits
+
 
 def _buvid():
     return "XY" + str(uuid.uuid4()).upper().replace("-", "")[:30] + "infoc"
@@ -145,10 +164,13 @@ def analyze_sentiment(comments):
 
     规则：
     - 将视频标题和评论内容一起纳入关键词匹配；
-    - 按点赞数加权（点赞为 0 时权重为 1），让高赞热评更有代表性。
+    - 按点赞数加权（点赞为 0 时权重为 1），让高赞热评更有代表性；
+    - 正面、负面独立计数：一条评论可以同时计入正面和负面（混合评论）；
+    - 命中关键词时，若其前面很近的位置出现否定词，则忽略该关键词，减少误判。
     """
     positive, negative, neutral = 0, 0, 0
-    raw_positive, raw_negative, raw_neutral = 0, 0, 0
+    raw_positive, raw_negative, raw_neutral, raw_mixed = 0, 0, 0, 0
+    mixed = 0
     neg_keyword_count = {}
     negative_samples = []
 
@@ -158,19 +180,24 @@ def analyze_sentiment(comments):
         text = f"{title} {content}".strip()
         weight = max(1, int(c.get("like", 0)))
 
-        neg_words = [w for w in NEGATIVE_WORDS if w in text]
-        pos_words = [w for w in POSITIVE_WORDS if w in text]
+        neg_hits = _find_keywords(text, NEGATIVE_WORDS)
+        pos_hits = _find_keywords(text, POSITIVE_WORDS)
+        is_neg = bool(neg_hits)
+        is_pos = bool(pos_hits)
 
-        if neg_words:
-            raw_negative += 1
-            negative += weight
-            for w in neg_words:
-                neg_keyword_count[w] = neg_keyword_count.get(w, 0) + weight
-            negative_samples.append(c)
-        elif pos_words:
+        if is_pos:
             raw_positive += 1
             positive += weight
-        else:
+        if is_neg:
+            raw_negative += 1
+            negative += weight
+            for w in neg_hits:
+                neg_keyword_count[w] = neg_keyword_count.get(w, 0) + weight
+            negative_samples.append(c)
+        if is_pos and is_neg:
+            raw_mixed += 1
+            mixed += weight
+        if not is_pos and not is_neg:
             raw_neutral += 1
             neutral += weight
 
@@ -181,9 +208,11 @@ def analyze_sentiment(comments):
         "positive": positive,
         "negative": negative,
         "neutral": neutral,
+        "mixed": mixed,
         "raw_positive": raw_positive,
         "raw_negative": raw_negative,
         "raw_neutral": raw_neutral,
+        "raw_mixed": raw_mixed,
         "negative_keywords": dict(sorted(neg_keyword_count.items(), key=lambda x: -x[1])),
         "negative_samples": negative_samples,
     }
@@ -236,6 +265,7 @@ def collect_bilibili_sentiment(keyword, max_videos=3, max_comments_per_video=5):
             "positive": sentiment["positive"],
             "negative": sentiment["negative"],
             "neutral": sentiment["neutral"],
+            "mixed": sentiment["mixed"],
         },
         "negative_keywords": sentiment["negative_keywords"],
         "top_comments": sorted(all_comments, key=lambda x: -x.get("like", 0))[:5],

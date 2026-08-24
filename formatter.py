@@ -37,8 +37,8 @@ def _render_sampling_note():
         "- **App Store 版本 / 评分**：通过 iTunes Lookup API（中国区）获取，包含最新版本号、更新日期、开发商、总评分及评分人数。",
         "- **iOS 榜单**：使用 Apple 公开 RSS 榜单（总畅销 / 总免费 / 游戏畅销 / 游戏免费），仅覆盖 Top100；超过 100 名显示「未进入 Top100」。",
         "- **App Store 评论**：优先抓取 RSS 最新评论（每页约 50 条，最多 2 页，共约 100 条）；当 RSS 无数据时，自动抓取 App Store 详情页「精选评论」作为兜底（通常 4 条，非实时）。",
-        "- **Bilibili 舆情**：搜索竞品关键词，仅采集**前一天 0:00–23:59（北京时间）**发布的热门视频；取综合排序前 10 个视频，每个视频取热门评论前 20 条进行情感统计。",
-        "- **情感统计规则**：评论命中正面词表记为正面，命中负面词表记为负面，否则为中性；典型差评从负面样本中按顺序展示。",
+        "- **Bilibili 舆情**：搜索竞品关键词，采集**最近 3 天内发布的热门视频**；取综合排序前 3 个视频，每个视频取热门评论前 5 条进行情感统计。",
+        "- **情感统计规则**：将视频标题与评论内容合并进行关键词匹配；正面、负面独立计数，一条评论可以同时计入正面与负面；若关键词前出现否定词（如“不/没/没有”）则忽略该命中。",
         "- **历史异动**：每天保存版本号和榜单排名快照；异动标准为版本号变化，或榜单变化绝对值 ≥ 5 位 / 进出榜。",
         "- **人工补充**：`manual_overrides.json` 中的 TapTap 评分、热度、市场动向、重点活动、备注等会直接展示在报告中。",
         "",
@@ -53,8 +53,8 @@ def _sampling_note_html():
     <li><strong>App Store 版本 / 评分</strong>：通过 iTunes Lookup API（中国区）获取，包含最新版本号、更新日期、开发商、总评分及评分人数。</li>
     <li><strong>iOS 榜单</strong>：使用 Apple 公开 RSS 榜单（总畅销 / 总免费 / 游戏畅销 / 游戏免费），仅覆盖 Top100。</li>
     <li><strong>App Store 评论</strong>：优先抓取 RSS 最新评论（每页约 50 条，最多 2 页）；RSS 无数据时，自动抓取 App Store 详情页「精选评论」兜底（通常 4 条，非实时）。</li>
-    <li><strong>Bilibili 舆情</strong>：搜索竞品关键词，仅采集<strong>前一天 0:00–23:59（北京时间）</strong>发布的热门视频；取综合排序前 10 个视频，每个视频取热门评论前 20 条。</li>
-    <li><strong>情感统计</strong>：评论命中正面词表为正面，命中负面词表为负面，否则为中性。</li>
+    <li><strong>Bilibili 舆情</strong>：搜索竞品关键词，采集<strong>最近 3 天内发布的热门视频</strong>；取综合排序前 3 个视频，每个视频取热门评论前 5 条。</li>
+    <li><strong>情感统计</strong>：将视频标题与评论内容合并匹配关键词；正面、负面独立计数，一条评论可同时计入正/负面；若关键词前出现否定词（如“不/没/没有”）则忽略该命中。</li>
     <li><strong>历史异动</strong>：每天保存快照；异动标准为版本号变化，或榜单变化绝对值 ≥ 5 位 / 进出榜。</li>
     <li><strong>人工补充</strong>：<code>manual_overrides.json</code> 中的 TapTap 评分、热度、市场动向、重点活动、备注等会直接展示。</li>
   </ul>
@@ -137,7 +137,7 @@ def _render_competitor(item, idx):
         lines.append(f"- **采样视频**：{len(bilibili['videos'])} 个，共 {bilibili['comment_count']} 条采样评论")
         lines.append(
             f"- **加权情感分布**（按点赞加权，含视频标题）："
-            f"正面 {sent.get('positive', 0)} / 负面 {sent.get('negative', 0)} / 中性 {sent.get('neutral', 0)}"
+            f"正面 {sent.get('positive', 0)} / 负面 {sent.get('negative', 0)} / 中性 {sent.get('neutral', 0)} / 混合 {sent.get('mixed', 0)}"
         )
         neg_kw = bilibili.get("negative_keywords", {})
         if neg_kw:
@@ -547,25 +547,28 @@ def _overview_bilibili_card(bilibili):
         </div>
         """
     sent = bilibili["sentiment"]
-    total = sum(sent.values())
     pos = sent.get("positive", 0)
     neg = sent.get("negative", 0)
     neu = sent.get("neutral", 0)
+    mix = sent.get("mixed", 0)
+    total = pos + neg + neu + mix
     pos_pct = round(pos / total * 100, 1) if total else 0
     neg_pct = round(neg / total * 100, 1) if total else 0
     neu_pct = round(neu / total * 100, 1) if total else 0
+    mix_pct = round(mix / total * 100, 1) if total else 0
     kw = bilibili.get("negative_keywords", {})
     kw_text = "、".join([k for k, _ in list(kw.items())[:2]]) if kw else "暂无"
     return f"""
     <div class="overview-card">
         <div class="overview-header"><span class="overview-icon">▶️</span><span class="overview-title">Bilibili</span></div>
         <div class="overview-mini-sentiment">
-            <div class="mini-sentiment-bar" title="正面 {pos} / 中性 {neu} / 负面 {neg}">
+            <div class="mini-sentiment-bar" title="正面 {pos} / 中性 {neu} / 负面 {neg} / 混合 {mix}">
                 <div class="mini-segment mini-positive" style="width: {pos_pct}%"></div>
                 <div class="mini-segment mini-neutral" style="width: {neu_pct}%"></div>
                 <div class="mini-segment mini-negative" style="width: {neg_pct}%"></div>
+                <div class="mini-segment mini-mixed" style="width: {mix_pct}%"></div>
             </div>
-            <div class="mini-sentiment-label">正 {pos_pct}% · 中 {neu_pct}% · 负 {neg_pct}%</div>
+            <div class="mini-sentiment-label">正 {pos_pct}% · 中 {neu_pct}% · 负 {neg_pct}% · 混合 {mix_pct}%</div>
         </div>
         <div class="overview-summary">{bilibili['comment_count']} 条采样评论，高频负面词：{kw_text}</div>
     </div>
@@ -573,26 +576,34 @@ def _overview_bilibili_card(bilibili):
 
 
 def _sentiment_bar_html(sentiment):
-    total = sum(sentiment.values())
-    if total == 0:
-        return "<p class='empty'>暂无情感分布数据</p>"
     pos = sentiment.get('positive', 0)
     neg = sentiment.get('negative', 0)
     neu = sentiment.get('neutral', 0)
+    mix = sentiment.get('mixed', 0)
+    total = pos + neg + neu + mix
+    if total == 0:
+        return "<p class='empty'>暂无情感分布数据</p>"
     pos_pct = round(pos / total * 100, 1)
     neg_pct = round(neg / total * 100, 1)
     neu_pct = round(neu / total * 100, 1)
+    mix_pct = round(mix / total * 100, 1)
+
+    mixed_segment = f'<div class="sentiment-segment sentiment-mixed" style="width: {mix_pct}%"></div>' if mix else ''
+    mixed_legend = f'<span><span class="dot dot-mixed"></span> 混合 {mix} ({mix_pct}%)</span>' if mix else ''
+
     return f"""
     <div class="sentiment-bar-wrap">
-        <div class="sentiment-bar" title="正面 {pos} / 中性 {neu} / 负面 {neg}">
+        <div class="sentiment-bar" title="正面 {pos} / 中性 {neu} / 负面 {neg} / 混合 {mix}">
             <div class="sentiment-segment sentiment-positive" style="width: {pos_pct}%"></div>
             <div class="sentiment-segment sentiment-neutral" style="width: {neu_pct}%"></div>
             <div class="sentiment-segment sentiment-negative" style="width: {neg_pct}%"></div>
+            {mixed_segment}
         </div>
         <div class="sentiment-legend">
             <span><span class="dot dot-positive"></span> 正面 {pos} ({pos_pct}%)</span>
             <span><span class="dot dot-neutral"></span> 中性 {neu} ({neu_pct}%)</span>
             <span><span class="dot dot-negative"></span> 负面 {neg} ({neg_pct}%)</span>
+            {mixed_legend}
         </div>
     </div>
     """
@@ -948,16 +959,16 @@ def _trend_section_html(trend, key):
         trend["dates"], trend["bilibili_positive"], "#10b981",
         "B站 正面情感（加权）",
         help=(
-            "正面分数 = 含正面关键词评论的点赞数之和（点赞为 0 计 1）。"
-            "判定文本 = 视频标题 + 评论内容，命中任一正面词即计正面。"
+            "正面分数 = 含未被否定的正面关键词评论的点赞数之和（点赞为 0 计 1）。"
+            "判定文本 = 视频标题 + 评论内容；只要命中任一正面词即计正面，与负面词独立计算。"
         ),
     ))
     charts.append(_svg_line_chart(
         trend["dates"], trend["bilibili_negative"], "#ef4444",
         "B站 负面情感（加权）",
         help=(
-            "负面分数 = 含负面关键词评论的点赞数之和（点赞为 0 计 1）。"
-            "负面优先：命中任一负面词即判负面，即使同时含正面词。"
+            "负面分数 = 含未被否定的负面关键词评论的点赞数之和（点赞为 0 计 1）。"
+            "判定文本 = 视频标题 + 评论内容；与正面词独立计算，允许同一条评论同时计入正/负面。"
         ),
     ))
     charts = [c for c in charts if c]
@@ -1095,6 +1106,7 @@ def _render_competitor_html(item, idx, history=None):
             sent.get("negative", 0),
             sent.get("neutral", 0),
             top_keywords=neg_kw,
+            mixed=sent.get("mixed", 0),
         )
 
         top_comments = ""
@@ -1218,15 +1230,25 @@ def _render_competitor_html(item, idx, history=None):
     """
 
 
-def _summarize_comment_section(source_label, total, positive, negative, neutral, avg_rating=None, top_keywords=None):
+def _summarize_comment_section(source_label, total, positive, negative, neutral, avg_rating=None, top_keywords=None, mixed=None):
     """生成一段自然语言评论区总结。"""
     if total == 0:
         return f"{source_label}：未采集到有效评论。"
     parts = [f"{source_label}共采集 {total} 条样本"]
     if avg_rating is not None:
         parts.append(f"，平均评分 {avg_rating}")
-    parts.append(f"。情绪分布：正面 {positive} 条、负面 {negative} 条、中性 {neutral} 条")
-    if negative > positive and negative > neutral:
+    if mixed is None:
+        parts.append(f"。情绪分布：正面 {positive} 条、负面 {negative} 条、中性 {neutral} 条")
+    else:
+        parts.append(f"。情绪分布：正面 {positive} 分、负面 {negative} 分、中性 {neutral} 条、混合 {mixed} 分")
+    if mixed is not None:
+        if negative > positive:
+            parts.append("，负面声量占优")
+        elif positive > negative:
+            parts.append("，正面声量占优")
+        else:
+            parts.append("，正负面势均力敌")
+    elif negative > positive and negative > neutral:
         parts.append("，整体偏负面")
     elif positive > negative and positive > neutral:
         parts.append("，整体偏正面")
@@ -1565,6 +1587,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .mini-positive {{ background: var(--success); }}
         .mini-neutral {{ background: #9ca3af; }}
         .mini-negative {{ background: var(--hot); }}
+        .mini-mixed {{ background: #f59e0b; }}
         .mini-sentiment-label {{
             font-size: 0.72rem;
             color: var(--muted);
@@ -1940,6 +1963,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .sentiment-positive {{ background: var(--success); }}
         .sentiment-neutral {{ background: #9ca3af; }}
         .sentiment-negative {{ background: var(--hot); }}
+        .sentiment-mixed {{ background: #f59e0b; }}
         .sentiment-legend {{
             display: flex;
             gap: 16px;
@@ -1958,6 +1982,7 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         .dot-positive {{ background: var(--success); }}
         .dot-neutral {{ background: #9ca3af; }}
         .dot-negative {{ background: var(--hot); }}
+        .dot-mixed {{ background: #f59e0b; }}
 
         /* Comments */
         .comment-bubble {{
