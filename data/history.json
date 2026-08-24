@@ -2031,15 +2031,16 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 2.63223,
-      "review_avg_rating": 1.43,
-      "review_count": 100,
+      "app_store_rating": 2.63221,
+      "review_avg_rating": 1.48,
+      "review_count": 50,
       "bilibili_sentiment": {
-        "positive": 105,
-        "negative": 10,
-        "neutral": 167
+        "positive": 50,
+        "negative": 51,
+        "neutral": 148,
+        "mixed": 3
       },
-      "bilibili_comment_count": 30
+      "bilibili_comment_count": 28
     },
     "mjs": {
       "name": "名将杀",
@@ -2051,14 +2052,15 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 4.47487,
-      "review_avg_rating": 3.2,
-      "review_count": 100,
+      "review_avg_rating": 5.0,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 17,
+        "positive": 14,
         "negative": 12,
-        "neutral": 45
+        "neutral": 65,
+        "mixed": 4
       },
-      "bilibili_comment_count": 28
+      "bilibili_comment_count": 29
     },
     "yxs": {
       "name": "英雄杀",
@@ -2069,13 +2071,14 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 3.33863,
-      "review_avg_rating": 1.27,
-      "review_count": 100,
+      "app_store_rating": 3.33859,
+      "review_avg_rating": 4.0,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 1,
+        "positive": 4,
         "negative": 5,
-        "neutral": 73
+        "neutral": 71,
+        "mixed": 0
       },
       "bilibili_comment_count": 25
     },
@@ -2088,13 +2091,14 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 4.43762,
-      "review_avg_rating": 3.9,
-      "review_count": 100,
+      "app_store_rating": 4.44848,
+      "review_avg_rating": null,
+      "review_count": 0,
       "bilibili_sentiment": {
-        "positive": 59,
+        "positive": 63,
         "negative": 1,
-        "neutral": 10
+        "neutral": 10,
+        "mixed": 1
       },
       "bilibili_comment_count": 21
     }
