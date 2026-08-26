@@ -772,7 +772,7 @@ def _detail_appstore_section(rev, store):
             <div class="detail-col-right">
                 {_sentiment_bar_html(sent)}
                 {_keywords_html(rev.get("negative_keywords"), "负面高频词")}
-                <h4 class="sub-section-title">代表评论</h4>
+                <h4 class="sub-section-title">代表评论 {_help_icon("评分 ≤ 2 星或命中负面关键词的评论，取前 3 条")}</h4>
                 {_appstore_comments_html(rev)}
             </div>
         </div>
@@ -805,7 +805,7 @@ def _detail_bilibili_section(bilibili):
                 {_sentiment_bar_html(sent)}
                 {_keywords_html(bilibili.get("negative_keywords"), "负面高频词")}
 
-                <h4 class="sub-section-title">代表评论</h4>
+                <h4 class="sub-section-title">代表评论 {_help_icon("按点赞数从高到低排序，取前 5 条")}</h4>
                 {_bilibili_comments_html(bilibili)}
                 {_bilibili_video_list_html(bilibili)}
             </div>
@@ -859,7 +859,7 @@ def _detail_taptap_section(taptap):
                 <a class="store-link" href="{url}" target="_blank">打开 TapTap →</a>
             </div>
             <div class="detail-col-right">
-                <h4 class="sub-section-title">热门评价</h4>
+                <h4 class="sub-section-title">热门评价 {_help_icon("使用 TapTap 官方热门排序，取前 5 条")}</h4>
                 {_taptap_reviews_html(taptap)}
             </div>
         </div>
@@ -924,6 +924,16 @@ def _trend_data_for_key(key, history, current_item=None, days=30):
     }
 
 
+def _help_icon(tip):
+    """生成标题旁的问号悬停提示图标。"""
+    info_svg = (
+        '<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true">'
+        '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 1 1 0 1.5A.75.75 0 0 1 8 4zm1 8H7V7h2v5z"/>'
+        '</svg>'
+    )
+    return f'<span class="i-help" aria-label="说明">{info_svg}<span class="i-tip">{tip}</span></span>'
+
+
 def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360, height=90, help=None):
     """生成轻量级 SVG 折线图；values 中 None 的点会被跳过。"""
     clean = [(i, v) for i, v in enumerate(values) if isinstance(v, (int, float))]
@@ -982,16 +992,7 @@ def _svg_line_chart(dates, values, color, title, y_min=0, y_max=None, width=360,
         grid_lines += f'<text x="{pad_left - 4}" y="{gy + 3}" text-anchor="end" font-size="9" fill="#9ca3af">{label}</text>'
 
     # 可选：标题旁的「i」说明按钮（悬停显示规则）
-    help_html = ""
-    if help:
-        info_svg = (
-            '<svg viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true">'
-            '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 3a.75.75 0 1 1 0 1.5A.75.75 0 0 1 8 4zm1 8H7V7h2v5z"/>'
-            '</svg>'
-        )
-        help_html = (
-            f'<span class="i-help" aria-label="说明">{info_svg}<span class="i-tip">{help}</span></span>'
-        )
+    help_html = _help_icon(help) if help else ""
 
     # X 轴日期标签：均匀显示最多 5 个，避免重叠
     def build_x_labels():
