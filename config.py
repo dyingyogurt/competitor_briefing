@@ -26,7 +26,8 @@ COMPETITORS = [
         "display_name": "名将杀",
         "itunes_id": 6746475501,
         "bilibili_keyword": "名将杀",
-        "taptap_url": "",
+        "taptap_app_id": 737825,
+        "taptap_url": "https://www.taptap.cn/app/737825",
         "official_news_url": "",
     },
     {
@@ -35,7 +36,8 @@ COMPETITORS = [
         "display_name": "英雄杀",
         "itunes_id": 483330461,
         "bilibili_keyword": "英雄杀",
-        "taptap_url": "",
+        "taptap_app_id": 6985,
+        "taptap_url": "https://www.taptap.cn/app/6985",
         "official_news_url": "",
     },
     {
@@ -44,7 +46,8 @@ COMPETITORS = [
         "display_name": "百将牌",
         "itunes_id": 6741894810,
         "bilibili_keyword": "三国百将牌",
-        "taptap_url": "",
+        "taptap_app_id": 774226,
+        "taptap_url": "https://www.taptap.cn/app/774226",
         "official_news_url": "",
     },
 ]
