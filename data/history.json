@@ -2211,14 +2211,14 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 2.63023,
-      "review_avg_rating": 1.4,
-      "review_count": 50,
+      "app_store_rating": 2.62993,
+      "review_avg_rating": 1.39,
+      "review_count": 100,
       "bilibili_sentiment": {
-        "positive": 404,
-        "negative": 45,
-        "neutral": 149,
-        "mixed": 0
+        "positive": 514,
+        "negative": 30,
+        "neutral": 159,
+        "mixed": 1
       },
       "bilibili_comment_count": 30,
       "taptap_rating": 3.4,
@@ -2233,16 +2233,16 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 4.47474,
+      "app_store_rating": 4.47495,
       "review_avg_rating": 3.2,
       "review_count": 100,
       "bilibili_sentiment": {
-        "positive": 27,
-        "negative": 17,
-        "neutral": 36,
-        "mixed": 15
+        "positive": 36,
+        "negative": 19,
+        "neutral": 66,
+        "mixed": 18
       },
-      "bilibili_comment_count": 29,
+      "bilibili_comment_count": 30,
       "taptap_rating": null,
       "taptap_review_count": 0
     },
@@ -2256,15 +2256,15 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 3.33832,
-      "review_avg_rating": 1.36,
-      "review_count": 50,
+      "review_avg_rating": 1.27,
+      "review_count": 100,
       "bilibili_sentiment": {
-        "positive": 7,
+        "positive": 80,
         "negative": 1,
-        "neutral": 66,
+        "neutral": 136,
         "mixed": 1
       },
-      "bilibili_comment_count": 20,
+      "bilibili_comment_count": 25,
       "taptap_rating": null,
       "taptap_review_count": 0
     },
@@ -2278,13 +2278,13 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 4.43682,
-      "review_avg_rating": 4.08,
+      "review_avg_rating": 4.16,
       "review_count": 100,
       "bilibili_sentiment": {
-        "positive": 20,
+        "positive": 18,
         "negative": 15,
         "neutral": 11,
-        "mixed": 12
+        "mixed": 10
       },
       "bilibili_comment_count": 19,
       "taptap_rating": null,
