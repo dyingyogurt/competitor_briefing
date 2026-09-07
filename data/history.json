@@ -3291,13 +3291,13 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 2.62922,
+      "app_store_rating": 2.62913,
       "review_avg_rating": 4.75,
       "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 105,
+        "positive": 106,
         "negative": 37,
-        "neutral": 181,
+        "neutral": 182,
         "mixed": 30
       },
       "bilibili_comment_count": 30,
@@ -3314,12 +3314,12 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 4.4813,
-      "review_avg_rating": 2.88,
-      "review_count": 50,
+      "review_avg_rating": 5.0,
+      "review_count": 4,
       "bilibili_sentiment": {
         "positive": 5,
         "negative": 0,
-        "neutral": 75,
+        "neutral": 76,
         "mixed": 0
       },
       "bilibili_comment_count": 26,
@@ -3335,16 +3335,16 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 3.33778,
+      "app_store_rating": 3.33772,
       "review_avg_rating": 4.0,
       "review_count": 4,
       "bilibili_sentiment": {
         "positive": 28,
-        "negative": 14,
-        "neutral": 16,
+        "negative": 16,
+        "neutral": 20,
         "mixed": 13
       },
-      "bilibili_comment_count": 23,
+      "bilibili_comment_count": 29,
       "taptap_rating": 3.8,
       "taptap_review_count": 2011
     },
@@ -3357,7 +3357,7 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 4.38601,
+      "app_store_rating": 4.39433,
       "review_avg_rating": 3.75,
       "review_count": 4,
       "bilibili_sentiment": {
