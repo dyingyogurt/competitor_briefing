@@ -3292,17 +3292,17 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 2.62922,
-      "review_avg_rating": 1.42,
-      "review_count": 100,
+      "review_avg_rating": 4.75,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 117,
-        "negative": 30,
-        "neutral": 266,
-        "mixed": 24
+        "positive": 97,
+        "negative": 35,
+        "neutral": 139,
+        "mixed": 28
       },
       "bilibili_comment_count": 30,
       "taptap_rating": 3.4,
-      "taptap_review_count": 6144
+      "taptap_review_count": 6145
     },
     "mjs": {
       "name": "名将杀",
@@ -3314,15 +3314,15 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 4.4813,
-      "review_avg_rating": 3.16,
-      "review_count": 100,
+      "review_avg_rating": 5.0,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 7,
-        "negative": 4,
-        "neutral": 63,
-        "mixed": 4
+        "positive": 4,
+        "negative": 1,
+        "neutral": 69,
+        "mixed": 0
       },
-      "bilibili_comment_count": 27,
+      "bilibili_comment_count": 26,
       "taptap_rating": 8.4,
       "taptap_review_count": 7574
     },
@@ -3336,15 +3336,15 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 3.33778,
-      "review_avg_rating": 1.27,
-      "review_count": 100,
+      "review_avg_rating": 4.0,
+      "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 26,
-        "negative": 18,
-        "neutral": 8,
+        "positive": 37,
+        "negative": 16,
+        "neutral": 15,
         "mixed": 13
       },
-      "bilibili_comment_count": 24,
+      "bilibili_comment_count": 29,
       "taptap_rating": 3.8,
       "taptap_review_count": 2011
     },
@@ -3357,18 +3357,18 @@
         "iOS 游戏畅销榜": null,
         "iOS 游戏免费榜": null
       },
-      "app_store_rating": 4.38795,
+      "app_store_rating": 4.38601,
       "review_avg_rating": 3.31,
       "review_count": 100,
       "bilibili_sentiment": {
-        "positive": 2,
-        "negative": 3,
-        "neutral": 5,
-        "mixed": 0
+        "positive": 20,
+        "negative": 11,
+        "neutral": 12,
+        "mixed": 5
       },
-      "bilibili_comment_count": 9,
+      "bilibili_comment_count": 21,
       "taptap_rating": 8.0,
-      "taptap_review_count": 2156
+      "taptap_review_count": 2158
     }
   }
 }
