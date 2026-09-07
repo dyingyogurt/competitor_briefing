@@ -3295,10 +3295,10 @@
       "review_avg_rating": 4.75,
       "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 97,
-        "negative": 35,
-        "neutral": 139,
-        "mixed": 28
+        "positive": 105,
+        "negative": 37,
+        "neutral": 181,
+        "mixed": 30
       },
       "bilibili_comment_count": 30,
       "taptap_rating": 3.4,
@@ -3314,17 +3314,17 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 4.4813,
-      "review_avg_rating": 5.0,
-      "review_count": 4,
+      "review_avg_rating": 2.88,
+      "review_count": 50,
       "bilibili_sentiment": {
-        "positive": 4,
-        "negative": 1,
-        "neutral": 69,
+        "positive": 5,
+        "negative": 0,
+        "neutral": 75,
         "mixed": 0
       },
       "bilibili_comment_count": 26,
       "taptap_rating": 8.4,
-      "taptap_review_count": 7574
+      "taptap_review_count": 7572
     },
     "yxs": {
       "name": "英雄杀",
@@ -3339,12 +3339,12 @@
       "review_avg_rating": 4.0,
       "review_count": 4,
       "bilibili_sentiment": {
-        "positive": 37,
-        "negative": 16,
-        "neutral": 15,
+        "positive": 28,
+        "negative": 14,
+        "neutral": 16,
         "mixed": 13
       },
-      "bilibili_comment_count": 29,
+      "bilibili_comment_count": 23,
       "taptap_rating": 3.8,
       "taptap_review_count": 2011
     },
@@ -3358,8 +3358,8 @@
         "iOS 游戏免费榜": null
       },
       "app_store_rating": 4.38601,
-      "review_avg_rating": 3.31,
-      "review_count": 100,
+      "review_avg_rating": 3.75,
+      "review_count": 4,
       "bilibili_sentiment": {
         "positive": 20,
         "negative": 11,
