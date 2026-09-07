@@ -456,8 +456,8 @@ def _rank_text_html(rank):
     return str(rank)
 
 
-def _activity_timeline_section_html(data):
-    """渲染独立的竞品活动节点时间轴区块（按状态分组，已结束默认折叠）。"""
+def _activity_nodes_groups_html(nodes_list):
+    """把节点列表按状态分组并渲染成时间轴 HTML（不含外层容器）。"""
     now = datetime.now(CN_TZ)
     groups = {
         "active": {"label": "进行中", "status_class": "active", "open": True, "items": []},
@@ -465,74 +465,63 @@ def _activity_timeline_section_html(data):
         "notice_new": {"label": "最新公告", "status_class": "notice-new", "open": True, "items": []},
         "ended": {"label": "已结束 / 历史公告", "status_class": "ended-group", "open": False, "items": []},
     }
-    total = 0
 
-    for item in data.get("competitors", []):
-        comp_name = item.get("name", "") or item.get("display_name", "竞品")
-        activity_nodes = item.get("activity_nodes")
-        if not activity_nodes:
-            continue
-        for node in activity_nodes.get("nodes", []):
-            total += 1
-            status, status_class = _activity_status(node, now)
-            key = "ended"
-            sort_key = None
-            if status == "进行中":
-                key = "active"
-                try:
-                    sort_key = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S")
-                except Exception:
-                    pass
-            elif status == "未开始":
-                key = "upcoming"
-                try:
-                    sort_key = datetime.strptime(node["event_start"], "%Y-%m-%d %H:%M:%S")
-                except Exception:
-                    pass
-            elif status == "新公告":
-                key = "notice_new"
-                try:
+    for node in nodes_list:
+        status, status_class = _activity_status(node, now)
+        key = "ended"
+        sort_key = None
+        if status == "进行中":
+            key = "active"
+            try:
+                sort_key = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S")
+            except Exception:
+                pass
+        elif status == "未开始":
+            key = "upcoming"
+            try:
+                sort_key = datetime.strptime(node["event_start"], "%Y-%m-%d %H:%M:%S")
+            except Exception:
+                pass
+        elif status == "新公告":
+            key = "notice_new"
+            try:
+                sort_key = datetime.strptime(node["publish_date"], "%Y-%m-%d")
+            except Exception:
+                pass
+        else:
+            try:
+                sort_key = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S") if node.get("event_end") else None
+                if sort_key is None:
                     sort_key = datetime.strptime(node["publish_date"], "%Y-%m-%d")
-                except Exception:
-                    pass
-            else:
-                try:
-                    sort_key = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S") if node.get("event_end") else None
-                    if sort_key is None:
-                        sort_key = datetime.strptime(node["publish_date"], "%Y-%m-%d")
-                except Exception:
-                    pass
+            except Exception:
+                pass
 
-            # 显示用日期串
-            if node.get("event_start") and node.get("event_end"):
-                try:
-                    s = datetime.strptime(node["event_start"], "%Y-%m-%d %H:%M:%S")
-                    e = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S")
-                    if s.date() == e.date():
-                        date_str = f"{s.month}.{s.day} {s.strftime('%H:%M')}~{e.strftime('%H:%M')}"
-                    else:
-                        date_str = f"{s.month}.{s.day} ~ {e.month}.{e.day}"
-                except Exception:
-                    date_str = node.get("publish_date", "")[5:]
-            elif node.get("publish_date"):
-                date_str = node["publish_date"][5:]
-            else:
-                date_str = ""
+        if node.get("event_start") and node.get("event_end"):
+            try:
+                s = datetime.strptime(node["event_start"], "%Y-%m-%d %H:%M:%S")
+                e = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S")
+                if s.date() == e.date():
+                    date_str = f"{s.month}.{s.day} {s.strftime('%H:%M')}~{e.strftime('%H:%M')}"
+                else:
+                    date_str = f"{s.month}.{s.day} ~ {e.month}.{e.day}"
+            except Exception:
+                date_str = node.get("publish_date", "")[5:]
+        elif node.get("publish_date"):
+            date_str = node["publish_date"][5:]
+        else:
+            date_str = ""
 
-            groups[key]["items"].append({
-                "node": node,
-                "status": status,
-                "status_class": status_class,
-                "comp_name": comp_name,
-                "date_str": date_str,
-                "summary": node.get("summary", "")[:160],
-                "sort_key": sort_key,
-            })
+        groups[key]["items"].append({
+            "node": node,
+            "status_class": status_class,
+            "date_str": date_str,
+            "summary": node.get("summary", "")[:160],
+            "sort_key": sort_key,
+        })
 
-    if total == 0:
+    if not any(g["items"] for g in groups.values()):
         return ""
 
-    # 排序
     groups["active"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.max))
     groups["upcoming"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.max))
     groups["notice_new"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.min), reverse=True)
@@ -543,14 +532,12 @@ def _activity_timeline_section_html(data):
         title = html.escape(n["title"])
         url = html.escape(n["source_url"], quote=True)
         summary = html.escape(item["summary"])
-        source = html.escape(item["comp_name"])
         return (
             f'<li class="timeline-node {item["status_class"]}">'
             f'<span class="timeline-dot {item["status_class"]}"></span>'
             f'<div class="timeline-body">'
             f'<div class="timeline-meta">'
             f'<span class="timeline-date">{html.escape(item["date_str"])}</span>'
-            f'<span class="timeline-source">{source}</span>'
             f'</div>'
             f'<a class="timeline-title" href="{url}" target="_blank" rel="noopener noreferrer" title="{summary}">{title}</a>'
             f'</div>'
@@ -563,32 +550,63 @@ def _activity_timeline_section_html(data):
             return ""
         rows = "".join(_row(i) for i in items)
         cls = f"timeline-group group-{group['status_class']}"
-        count = len(items)
         dot = f'<span class="group-dot {group["status_class"]}"></span>'
         if group["open"]:
             return (
                 f'<div class="{cls}">'
-                f'<h3>{dot}{group["label"]} ({count})</h3>'
+                f'<h3>{dot}{group["label"]} ({len(items)})</h3>'
                 f'<ul class="timeline-list">{rows}</ul>'
                 f'</div>'
             )
         return (
             f'<details class="{cls}">'
-            f'<summary>{dot}{group["label"]} ({count})</summary>'
+            f'<summary>{dot}{group["label"]} ({len(items)})</summary>'
             f'<ul class="timeline-list">{rows}</ul>'
             f'</details>'
         )
 
-    groups_html = "".join(_group_html(groups[k]) for k in ("active", "upcoming", "notice_new", "ended"))
-    return (
-        f'<section class="activity-timeline index-section" id="activity-timeline" data-index-label="活动节点">'
-        f'<div class="section-header">'
-        f'<h2><span class="section-icon">📅</span>竞品活动节点<span class="section-count">近 30 天 · {total} 条</span></h2>'
-        f'<p class="section-subtitle">按活动时间 / 公告发布时间 · 数据源：官网</p>'
-        f'</div>'
-        f'<div class="timeline-groups">{groups_html}</div>'
-        f'</section>'
-    )
+    return "".join(_group_html(groups[k]) for k in ("active", "upcoming", "notice_new", "ended"))
+
+
+def _overview_activity_card(activity_nodes):
+    """概览区活动节点计数卡。"""
+    if not activity_nodes or not activity_nodes.get("nodes"):
+        return ""
+    now = datetime.now(CN_TZ)
+    active = upcoming = ended = 0
+    for node in activity_nodes["nodes"]:
+        status, _ = _activity_status(node, now)
+        if status == "进行中":
+            active += 1
+        elif status == "未开始":
+            upcoming += 1
+        else:
+            ended += 1
+    total = active + upcoming + ended
+    if total == 0:
+        return ""
+    return f"""
+    <div class="overview-card">
+        <div class="overview-header"><span class="overview-icon">🎮</span><span class="overview-title">活动节点</span></div>
+        <div class="overview-value">{active}<small>进行中</small></div>
+        <div class="overview-summary">{upcoming} 未开始 · {ended} 已结束</div>
+    </div>
+    """
+
+
+def _detail_activity_section(activity_nodes):
+    """详情区活动时间轴卡片。"""
+    if not activity_nodes or not activity_nodes.get("nodes"):
+        return ""
+    groups_html = _activity_nodes_groups_html(activity_nodes["nodes"])
+    if not groups_html:
+        return ""
+    return f"""
+    <div class="info-card wide activity-timeline-card">
+        <h3>🎮 活动节点</h3>
+        <div class="timeline-groups">{groups_html}</div>
+    </div>
+    """
 
 
 def _update_notes_html(notes):
@@ -1241,6 +1259,7 @@ def _render_competitor_html(item, idx, history=None):
     manual = item.get("manual", {})
     bilibili = item.get("bilibili_sentiment")
     taptap = item.get("taptap")
+    activity = item.get("activity_nodes")
     trend = _trend_data_for_key(item.get("key", ""), history, current_item=item)
     trend_html = _trend_section_html(trend, item.get("key", ""))
 
@@ -1441,6 +1460,7 @@ def _render_competitor_html(item, idx, history=None):
         {_overview_appstore_card(rev)}
         {_overview_bilibili_card(bilibili)}
         {_overview_taptap_card(taptap)}
+        {_overview_activity_card(activity)}
     </div>
     """
 
@@ -1475,6 +1495,7 @@ def _render_competitor_html(item, idx, history=None):
                 {_detail_appstore_section(rev, store)}
                 {_detail_bilibili_section(bilibili)}
                 {_detail_taptap_section(taptap)}
+                {_detail_activity_section(activity)}
                 {_detail_manual_section(manual_body)}
             </div>
         </details>
@@ -1557,8 +1578,6 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         </div>
     </div>
     """
-
-    activity_section_html = _activity_timeline_section_html(data)
 
     sampling_note_html = _sampling_note_html()
 
@@ -2053,46 +2072,10 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         }}
 
         /* Activity timeline */
-        .activity-timeline {{
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 18px 20px;
-            box-shadow: var(--shadow-card);
-            margin-bottom: 18px;
-        }}
-        .activity-timeline .section-header {{
-            margin-bottom: 14px;
-        }}
-        .activity-timeline h2 {{
-            font-size: 1.15rem;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 0 0 4px;
-        }}
-        .section-icon {{
-            font-size: 1.1em;
-        }}
-        .section-count {{
-            margin-left: auto;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: var(--muted);
-            background: var(--surface-2);
-            padding: 2px 10px;
-            border-radius: 999px;
-        }}
-        .section-subtitle {{
-            margin: 0;
-            font-size: 0.82rem;
-            color: var(--muted);
-        }}
-        .timeline-groups {{
+        .activity-timeline-card .timeline-groups {{
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }}
         .timeline-group h3,
         .timeline-group summary {{
@@ -2734,8 +2717,6 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         </header>
 
         {highlights_html}
-
-        {activity_section_html}
 
         {sampling_note_html}
 

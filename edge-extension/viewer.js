@@ -71,7 +71,7 @@ function buildIndex() {
     const doc = viewer.contentDocument || (viewer.contentWindow && viewer.contentWindow.document);
     const win = viewer.contentWindow;
     if (!doc || !win) return;
-    const sections = Array.from(doc.querySelectorAll('.competitor, .index-section'));
+    const sections = doc.querySelectorAll('.competitor');
     indexList.innerHTML = '';
     if (sections.length === 0) {
       indexList.textContent = '无数据';
@@ -79,7 +79,7 @@ function buildIndex() {
     }
     sections.forEach(sec => {
       const h2 = sec.querySelector('h2');
-      const name = sec.dataset.indexLabel || (h2 ? h2.textContent.trim() : sec.id);
+      const name = h2 ? h2.textContent.trim() : sec.id;
       const btn = document.createElement('button');
       btn.className = 'index-btn';
       btn.textContent = name;
@@ -91,7 +91,7 @@ function buildIndex() {
       indexList.appendChild(btn);
     });
 
-    // 滚动时高亮当前区域
+    // 滚动时高亮当前游戏
     const updateActive = () => {
       const scrollTop = win.scrollY || doc.documentElement.scrollTop || 0;
       const offset = 24; // 顶部留一点缓冲
@@ -109,10 +109,10 @@ function buildIndex() {
         btn.classList.toggle('active', btn.dataset.target === activeId);
       });
     };
+
     win.removeEventListener('scroll', updateActive);
     win.addEventListener('scroll', updateActive, { passive: true });
     updateActive();
-
   } catch (e) {
     // Pages 站点跨域时无法读取 iframe 内容DOM，这是正常现象
     indexList.textContent = '线上简报不支持索引';
