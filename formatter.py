@@ -1490,12 +1490,12 @@ def _render_competitor_html(item, idx, history=None):
                 <span class="expand-open">收起 ▲</span>
             </summary>
             <div class="competitor-detail-body">
+                {_detail_activity_section(activity)}
                 {_detail_version_section(store)}
                 {_detail_rank_section(rank_cards)}
                 {_detail_appstore_section(rev, store)}
                 {_detail_bilibili_section(bilibili)}
                 {_detail_taptap_section(taptap)}
-                {_detail_activity_section(activity)}
                 {_detail_manual_section(manual_body)}
             </div>
         </details>
