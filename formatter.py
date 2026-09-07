@@ -367,6 +367,32 @@ def _per_product_insight(item):
     )
 
 
+def _activity_status(node, now):
+    """判断活动节点状态：进行中 / 未开始 / 已结束 / 新公告 / 公告。"""
+    has_event = bool(node.get("event_start") and node.get("event_end"))
+    pub = None
+    try:
+        pub = datetime.strptime(node["publish_date"], "%Y-%m-%d").replace(tzinfo=CN_TZ)
+    except Exception:
+        pass
+
+    if not has_event:
+        if pub and (now - pub).days <= 7:
+            return "新公告", "notice-new"
+        return "公告", "notice-old"
+
+    try:
+        start = datetime.strptime(node["event_start"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=CN_TZ)
+        end = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S").replace(tzinfo=CN_TZ)
+        if start <= now <= end:
+            return "进行中", "active"
+        if now < start:
+            return "未开始", "upcoming"
+        return "已结束", "ended"
+    except Exception:
+        return "公告", "notice-old"
+
+
 def _generate_highlights(data, changes=None, prev_date=None):
     """生成今日重点关注条目，用于顶部高优提示。"""
     highlights = []
@@ -428,6 +454,141 @@ def _rank_text_html(rank):
         badge = "<span class='badge hot'>Top10</span>" if rank <= 10 else ""
         return f"第 {rank} 名 {badge}"
     return str(rank)
+
+
+def _activity_timeline_section_html(data):
+    """渲染独立的竞品活动节点时间轴区块（按状态分组，已结束默认折叠）。"""
+    now = datetime.now(CN_TZ)
+    groups = {
+        "active": {"label": "进行中", "status_class": "active", "open": True, "items": []},
+        "upcoming": {"label": "未开始", "status_class": "upcoming", "open": True, "items": []},
+        "notice_new": {"label": "最新公告", "status_class": "notice-new", "open": True, "items": []},
+        "ended": {"label": "已结束 / 历史公告", "status_class": "ended-group", "open": False, "items": []},
+    }
+    total = 0
+
+    for item in data.get("competitors", []):
+        comp_name = item.get("name", "") or item.get("display_name", "竞品")
+        activity_nodes = item.get("activity_nodes")
+        if not activity_nodes:
+            continue
+        for node in activity_nodes.get("nodes", []):
+            total += 1
+            status, status_class = _activity_status(node, now)
+            key = "ended"
+            sort_key = None
+            if status == "进行中":
+                key = "active"
+                try:
+                    sort_key = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    pass
+            elif status == "未开始":
+                key = "upcoming"
+                try:
+                    sort_key = datetime.strptime(node["event_start"], "%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    pass
+            elif status == "新公告":
+                key = "notice_new"
+                try:
+                    sort_key = datetime.strptime(node["publish_date"], "%Y-%m-%d")
+                except Exception:
+                    pass
+            else:
+                try:
+                    sort_key = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S") if node.get("event_end") else None
+                    if sort_key is None:
+                        sort_key = datetime.strptime(node["publish_date"], "%Y-%m-%d")
+                except Exception:
+                    pass
+
+            # 显示用日期串
+            if node.get("event_start") and node.get("event_end"):
+                try:
+                    s = datetime.strptime(node["event_start"], "%Y-%m-%d %H:%M:%S")
+                    e = datetime.strptime(node["event_end"], "%Y-%m-%d %H:%M:%S")
+                    if s.date() == e.date():
+                        date_str = f"{s.month}.{s.day} {s.strftime('%H:%M')}~{e.strftime('%H:%M')}"
+                    else:
+                        date_str = f"{s.month}.{s.day} ~ {e.month}.{e.day}"
+                except Exception:
+                    date_str = node.get("publish_date", "")[5:]
+            elif node.get("publish_date"):
+                date_str = node["publish_date"][5:]
+            else:
+                date_str = ""
+
+            groups[key]["items"].append({
+                "node": node,
+                "status": status,
+                "status_class": status_class,
+                "comp_name": comp_name,
+                "date_str": date_str,
+                "summary": node.get("summary", "")[:160],
+                "sort_key": sort_key,
+            })
+
+    if total == 0:
+        return ""
+
+    # 排序
+    groups["active"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.max))
+    groups["upcoming"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.max))
+    groups["notice_new"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.min), reverse=True)
+    groups["ended"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.min), reverse=True)
+
+    def _row(item):
+        n = item["node"]
+        title = html.escape(n["title"])
+        url = html.escape(n["source_url"], quote=True)
+        summary = html.escape(item["summary"])
+        source = html.escape(item["comp_name"])
+        return (
+            f'<li class="timeline-node {item["status_class"]}">'
+            f'<span class="timeline-dot {item["status_class"]}"></span>'
+            f'<div class="timeline-body">'
+            f'<div class="timeline-meta">'
+            f'<span class="timeline-date">{html.escape(item["date_str"])}</span>'
+            f'<span class="timeline-source">{source}</span>'
+            f'</div>'
+            f'<a class="timeline-title" href="{url}" target="_blank" rel="noopener noreferrer" title="{summary}">{title}</a>'
+            f'</div>'
+            f'</li>'
+        )
+
+    def _group_html(group):
+        items = group["items"]
+        if not items:
+            return ""
+        rows = "".join(_row(i) for i in items)
+        cls = f"timeline-group group-{group['status_class']}"
+        count = len(items)
+        dot = f'<span class="group-dot {group["status_class"]}"></span>'
+        if group["open"]:
+            return (
+                f'<div class="{cls}">'
+                f'<h3>{dot}{group["label"]} ({count})</h3>'
+                f'<ul class="timeline-list">{rows}</ul>'
+                f'</div>'
+            )
+        return (
+            f'<details class="{cls}">'
+            f'<summary>{dot}{group["label"]} ({count})</summary>'
+            f'<ul class="timeline-list">{rows}</ul>'
+            f'</details>'
+        )
+
+    groups_html = "".join(_group_html(groups[k]) for k in ("active", "upcoming", "notice_new", "ended"))
+    return (
+        f'<section class="activity-timeline index-section" id="activity-timeline" data-index-label="活动节点">'
+        f'<div class="section-header">'
+        f'<h2><span class="section-icon">📅</span>竞品活动节点<span class="section-count">近 30 天 · {total} 条</span></h2>'
+        f'<p class="section-subtitle">按活动时间 / 公告发布时间 · 数据源：官网</p>'
+        f'</div>'
+        f'<div class="timeline-groups">{groups_html}</div>'
+        f'</section>'
+    )
 
 
 def _update_notes_html(notes):
@@ -1397,6 +1558,8 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
     </div>
     """
 
+    activity_section_html = _activity_timeline_section_html(data)
+
     sampling_note_html = _sampling_note_html()
 
     html = f"""<!DOCTYPE html>
@@ -1889,7 +2052,154 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
             margin: 8px 0;
         }}
 
+        /* Activity timeline */
+        .activity-timeline {{
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 18px 20px;
+            box-shadow: var(--shadow-card);
+            margin-bottom: 18px;
+        }}
+        .activity-timeline .section-header {{
+            margin-bottom: 14px;
+        }}
+        .activity-timeline h2 {{
+            font-size: 1.15rem;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 4px;
+        }}
+        .section-icon {{
+            font-size: 1.1em;
+        }}
+        .section-count {{
+            margin-left: auto;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--muted);
+            background: var(--surface-2);
+            padding: 2px 10px;
+            border-radius: 999px;
+        }}
+        .section-subtitle {{
+            margin: 0;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }}
+        .timeline-groups {{
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }}
+        .timeline-group h3,
+        .timeline-group summary {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 8px;
+        }}
+        .timeline-group summary {{
+            cursor: pointer;
+            user-select: none;
+        }}
+        .timeline-group summary::marker,
+        .timeline-group summary::-webkit-details-marker {{
+            font-size: 0.8em;
+        }}
+        .group-dot {{
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }}
+        .group-dot.active {{ background: #10b981; }}
+        .group-dot.upcoming {{ background: #f59e0b; }}
+        .group-dot.notice-new {{ background: #dc2626; }}
+        .group-dot.ended-group {{ background: var(--muted); }}
+        .timeline-list {{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: relative;
+        }}
+        .timeline-list::before {{
+            content: "";
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            left: 9px;
+            width: 2px;
+            background: var(--border);
+        }}
+        .timeline-node {{
+            position: relative;
+            padding-left: 28px;
+            padding-bottom: 12px;
+        }}
+        .timeline-node:last-child {{
+            padding-bottom: 0;
+        }}
+        .timeline-dot {{
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 3px solid var(--surface);
+            box-shadow: 0 0 0 2px var(--border);
+            background: var(--muted);
+            z-index: 1;
+        }}
+        .timeline-dot.active {{ background: #10b981; box-shadow: 0 0 0 2px #10b98133; }}
+        .timeline-dot.upcoming {{ background: #f59e0b; box-shadow: 0 0 0 2px #f59e0b33; }}
+        .timeline-dot.notice-new {{ background: #dc2626; box-shadow: 0 0 0 2px #dc262633; }}
+        .timeline-dot.notice-old {{ background: var(--muted); }}
+        .timeline-dot.ended {{ background: var(--muted); }}
+        .timeline-body {{
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px 12px;
+        }}
+        .timeline-meta {{
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }}
+        .timeline-date {{
+            font-size: 0.8rem;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }}
+        .timeline-source {{
+            font-size: 0.75rem;
+            color: var(--accent);
+            background: var(--accent-light);
+            padding: 1px 6px;
+            border-radius: 999px;
+        }}
+        .timeline-title {{
+            color: var(--text);
+            text-decoration: none;
+            font-size: 0.92rem;
+            font-weight: 600;
+            line-height: 1.4;
+            display: inline-block;
+            max-width: 100%;
+        }}
+        .timeline-title:hover {{
+            color: var(--accent);
+        }}
+
         /* Version */
+
         .version-line {{
             display: flex;
             align-items: center;
@@ -2420,10 +2730,12 @@ def generate_briefing_html(data, output_dir="edge-extension", changes=None, prev
         <header>
             <div class="date">{date_str}</div>
             <div class="meta">生成时间：{data['generated_at']}（北京时间）</div>
-            <div class="meta">来源：App Store · Bilibili · manual_overrides.json</div>
+            <div class="meta">来源：App Store · Bilibili · 官网 · manual_overrides.json</div>
         </header>
 
         {highlights_html}
+
+        {activity_section_html}
 
         {sampling_note_html}
 
@@ -2750,7 +3062,7 @@ def _build_viewer_html(history_dates):
                 <iframe id="viewer" src="{default_src}"></iframe>
             </div>
             <aside class="right-index" id="right-index">
-                <div class="index-title">游戏索引</div>
+                <div class="index-title">快速导航</div>
                 <div id="index-list"></div>
             </aside>
         </div>

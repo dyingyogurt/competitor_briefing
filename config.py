@@ -19,6 +19,7 @@ COMPETITORS = [
         "taptap_app_id": 145396,
         "taptap_url": "https://www.taptap.cn/app/145396",
         "official_news_url": "",
+        "activity_sources": [{"type": "sgs_official", "base_url": "https://x.sanguosha.com/news"}],
     },
     {
         "key": "mjs",
