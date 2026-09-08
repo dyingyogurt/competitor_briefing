@@ -522,10 +522,15 @@ def _activity_nodes_groups_html(nodes_list):
     if not any(g["items"] for g in groups.values()):
         return ""
 
+    # 先按时间轴排序，再按节点权重稳定排序（高权重在前，同权重保持时间顺序）
     groups["active"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.max))
+    groups["active"]["items"].sort(key=lambda x: x["node"].get("weight", 0), reverse=True)
     groups["upcoming"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.max))
+    groups["upcoming"]["items"].sort(key=lambda x: x["node"].get("weight", 0), reverse=True)
     groups["notice_new"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.min), reverse=True)
+    groups["notice_new"]["items"].sort(key=lambda x: x["node"].get("weight", 0), reverse=True)
     groups["ended"]["items"].sort(key=lambda x: (x["sort_key"] is None, x["sort_key"] or datetime.min), reverse=True)
+    groups["ended"]["items"].sort(key=lambda x: x["node"].get("weight", 0), reverse=True)
 
     def _row(item):
         n = item["node"]

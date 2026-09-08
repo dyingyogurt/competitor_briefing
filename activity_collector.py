@@ -53,6 +53,16 @@ _EVENT_TIME_START_RE = re.compile(
     r"(?:(\d{4})年)?(\d{1,2})月(\d{1,2})日\s*(\d{1,2})[:\uff1a](\d{2})\s*(?:开启|开始|起)",
     re.S,
 )
+# 数字短格式：8.22~8.29 / 9.5-9.13 / 8.22-8.29（避免匹配版本号 1.7.3.0）
+_EVENT_TIME_DECIMAL_RE = re.compile(
+    r"(?<![\d.])(\d{1,2})\.(\d{1,2})\s*[\-~～]\s*(\d{1,2})\.(\d{1,2})(?![\d.])",
+    re.S,
+)
+# 中文短格式：8月22日~8月29日 / 8月22日-8月29日
+_EVENT_TIME_CN_SHORT_DASH_RE = re.compile(
+    r"(\d{1,2})月(\d{1,2})日\s*[\-~～]\s*(\d{1,2})月(\d{1,2})日",
+    re.S,
+)
 
 
 def _cache_path(key):
@@ -141,6 +151,26 @@ def _parse_event_windows(text, now=None):
             matches.append((start_dt.strftime("%Y-%m-%d %H:%M:%S"), end_dt.strftime("%Y-%m-%d %H:%M:%S")))
         except Exception:
             pass
+    # 数字短格式：8.22~8.29 / 9.5-9.13
+    for m in _EVENT_TIME_DECIMAL_RE.finditer(text):
+        try:
+            s_month, s_day, e_month, e_day = m.groups()
+            year = now.year
+            start_dt = datetime(year, int(s_month), int(s_day), 0, 0, 0, tzinfo=CN_TZ)
+            end_dt = datetime(year, int(e_month), int(e_day), 23, 59, 59, tzinfo=CN_TZ)
+            matches.append((start_dt.strftime("%Y-%m-%d %H:%M:%S"), end_dt.strftime("%Y-%m-%d %H:%M:%S")))
+        except Exception:
+            pass
+    # 中文短格式：8月22日~8月29日 / 8月22日-8月29日
+    for m in _EVENT_TIME_CN_SHORT_DASH_RE.finditer(text):
+        try:
+            s_month, s_day, e_month, e_day = m.groups()
+            year = now.year
+            start_dt = datetime(year, int(s_month), int(s_day), 0, 0, 0, tzinfo=CN_TZ)
+            end_dt = datetime(year, int(e_month), int(e_day), 23, 59, 59, tzinfo=CN_TZ)
+            matches.append((start_dt.strftime("%Y-%m-%d %H:%M:%S"), end_dt.strftime("%Y-%m-%d %H:%M:%S")))
+        except Exception:
+            pass
     return matches
 
 
@@ -151,6 +181,64 @@ def _merge_windows(windows):
     starts = [datetime.strptime(s, "%Y-%m-%d %H:%M:%S").replace(tzinfo=CN_TZ) for s, _ in windows]
     ends = [datetime.strptime(e, "%Y-%m-%d %H:%M:%S").replace(tzinfo=CN_TZ) for _, e in windows]
     return min(starts).strftime("%Y-%m-%d %H:%M:%S"), max(ends).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _normalize_title(title):
+    """用于去重的标题规范化：去除标点和空格，统一小写。"""
+    return re.sub(r"[^\w]", "", title or "").lower()
+
+
+def _node_weight(node, now):
+    """为活动节点计算权重，用于排序和去重择优。"""
+    score = 0
+    cat = node.get("category", "")
+    if cat == "活动":
+        score += 30
+    elif cat == "公告":
+        score += 15
+    elif cat == "版本更新":
+        score += 5
+    else:
+        score += 8
+
+    es = node.get("event_start")
+    ee = node.get("event_end")
+    if es and ee:
+        try:
+            start = datetime.strptime(es, "%Y-%m-%d %H:%M:%S").replace(tzinfo=CN_TZ)
+            end = datetime.strptime(ee, "%Y-%m-%d %H:%M:%S").replace(tzinfo=CN_TZ)
+            if start <= now <= end:
+                score += 25
+            elif now < start:
+                score += 18
+            else:
+                score -= 5
+        except Exception:
+            score += 5
+    elif es or ee:
+        score += 5
+
+    try:
+        pub = datetime.strptime(node["publish_date"], "%Y-%m-%d").replace(tzinfo=CN_TZ)
+        days = (now - pub).days
+        if days <= 1:
+            score += 15
+        elif days <= 3:
+            score += 10
+        elif days <= 7:
+            score += 5
+        elif days <= 14:
+            score += 2
+        elif days <= 30:
+            pass
+        else:
+            score -= min(days // 7, 5)
+    except Exception:
+        pass
+
+    if node.get("summary"):
+        score += 1
+    return score
 
 
 def _host_from_url(url):
@@ -512,15 +600,24 @@ def collect_activity_nodes(competitor_key, sources, days_back=30, max_pages=2):
         apk_nodes = [n for n in all_nodes.values() if n.get("category") == "版本更新"]
         if apk_nodes:
             nodes = [max(apk_nodes, key=lambda x: x["publish_date"])]
-    # 按标题+活动时间去重，避免同一事件多个来源重复展示
+
+    # 计算节点权重
+    for node in nodes:
+        node["weight"] = _node_weight(node, now)
+
+    # 按规范化标题+活动时间去重，避免同一事件在不同来源重复展示；保留权重更高的版本
     deduped = {}
     for node in nodes:
-        key = f"{node['title']}#{node.get('event_start', '')}#{node.get('event_end', '')}"
-        if key not in deduped:
+        key = (
+            f"{_normalize_title(node['title'])}#"
+            f"{node.get('event_start', '')}#{node.get('event_end', '')}"
+        )
+        if key not in deduped or node["weight"] > deduped[key]["weight"]:
             deduped[key] = node
     nodes = list(deduped.values())
-    # 按发布时间倒序
-    nodes.sort(key=lambda x: x["publish_date"], reverse=True)
+
+    # 按权重降序、发布时间降序排列
+    nodes.sort(key=lambda x: (-x["weight"], x["publish_date"]), reverse=False)
 
     result = {
         "source": "mixed" if len(sources) > 1 else sources[0].get("type", "sgs_official"),
