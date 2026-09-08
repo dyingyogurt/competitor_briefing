@@ -30,6 +30,9 @@ COMPETITORS = [
         "taptap_app_id": 737825,
         "taptap_url": "https://www.taptap.cn/app/737825",
         "official_news_url": "",
+        "activity_sources": [
+            {"type": "mjs_official", "api_base": "https://ucmsv2api.ztgame.com/api/news/list", "site": "mjs"}
+        ],
     },
     {
         "key": "yxs",
