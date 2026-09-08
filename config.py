@@ -43,6 +43,9 @@ COMPETITORS = [
         "taptap_app_id": 6985,
         "taptap_url": "https://www.taptap.cn/app/6985",
         "official_news_url": "",
+        "activity_sources": [
+            {"type": "taptap_apk", "app_id": 6985, "per_page": 5}
+        ],
     },
     {
         "key": "bjp",
@@ -53,6 +56,9 @@ COMPETITORS = [
         "taptap_app_id": 774226,
         "taptap_url": "https://www.taptap.cn/app/774226",
         "official_news_url": "",
+        "activity_sources": [
+            {"type": "taptap_apk", "app_id": 774226, "per_page": 5}
+        ],
     },
 ]
 

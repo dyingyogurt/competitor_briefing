@@ -15,6 +15,8 @@ import urllib.parse
 from datetime import datetime, timezone, timedelta
 from urllib.parse import urlparse
 
+from taptap_collector import _request_json as _taptap_request_json
+
 
 CN_TZ = timezone(timedelta(hours=8))
 
@@ -259,6 +261,78 @@ def _parse_mjs_list_page(source, page, per_page=10, days_back=30):
     return nodes
 
 
+def _parse_taptap_apk(source, days_back=30, max_pages=3):
+    """解析 TapTap APK 更新日志，作为版本/公告节点来源。"""
+    app_id = source.get("app_id")
+    if not app_id:
+        return {}
+    per_page = source.get("per_page", 5)
+    now = _now()
+    cutoff = now - timedelta(days=days_back)
+    all_nodes = {}
+    first_node_key = None
+    next_page = ""
+    for _ in range(max_pages):
+        params = {"app_id": app_id, "limit": per_page}
+        if next_page:
+            # next_page 已经是完整的 query string 路径，如 /webapiv2/apk/v1/list-by-app?...
+            # 拆出参数
+            query = next_page.split("?", 1)[1]
+            params = {k: v[0] for k, v in urllib.parse.parse_qs(query).items()}
+        try:
+            data = _taptap_request_json("apk/v1/list-by-app", params)
+        except Exception:
+            break
+        items = data.get("list", [])
+        if not items:
+            break
+        for item in items:
+            ts = item.get("update_date")
+            try:
+                pub_dt = datetime.fromtimestamp(ts, CN_TZ)
+            except Exception:
+                pub_dt = now
+            publish_date = pub_dt.strftime("%Y-%m-%d")
+            version = item.get("version_label", "")
+            title = f"版本更新 {version}" if version else "版本更新"
+            raw_text = (item.get("whatsnew") or {}).get("text", "")
+            summary = _strip_tags(raw_text)[:200]
+            # TapTap 某些返回的中文是乱码（含 replacement char），直接置空摘要
+            if "\ufffd" in summary:
+                summary = ""
+            source_url = f"https://www.taptap.cn/app/{app_id}"
+            windows = _parse_event_windows(raw_text, now=now) if raw_text else []
+            event_start, event_end = _merge_windows(windows)
+            node = {
+                "title": title,
+                "category": "版本更新",
+                "publish_date": publish_date,
+                "event_start": event_start,
+                "event_end": event_end,
+                "source_url": source_url,
+                "summary": summary,
+            }
+            key = f"{source_url}#{version}#{publish_date}"
+            if first_node_key is None:
+                first_node_key = key
+                all_nodes[key] = node
+            if pub_dt >= cutoff:
+                all_nodes[key] = node
+        next_page = data.get("next_page", "")
+        if not next_page:
+            break
+        # 如果本页最旧条目已超窗口且已有结果，提前结束
+        if all_nodes:
+            oldest_ts = min((i.get("update_date") or 0) for i in items)
+            try:
+                oldest_dt = datetime.fromtimestamp(oldest_ts, CN_TZ)
+            except Exception:
+                oldest_dt = now
+            if oldest_dt < cutoff:
+                break
+    return all_nodes
+
+
 def _collect_sgs_nodes(source, days_back=30, max_pages=2):
     """采集三国杀一将成名官网节点。"""
     now = _now()
@@ -308,6 +382,7 @@ def collect_activity_nodes(competitor_key, sources, days_back=30, max_pages=2):
     sources 示例：
         [{"type": "sgs_official", "base_url": "https://x.sanguosha.com/news"}]
         [{"type": "mjs_official", "api_base": "https://ucmsv2api.ztgame.com/api/news/list", "site": "mjs"}]
+        [{"type": "taptap_apk", "app_id": 6985}]
     """
     if not sources:
         return {"source": None, "competitor_key": competitor_key, "nodes": []}
@@ -319,6 +394,8 @@ def collect_activity_nodes(competitor_key, sources, days_back=30, max_pages=2):
 
     if source_type == "mjs_official":
         all_nodes = _collect_mjs_nodes(source, days_back=days_back, max_pages=max_pages)
+    elif source_type == "taptap_apk":
+        all_nodes = _parse_taptap_apk(source, days_back=days_back, max_pages=max_pages)
     else:
         # 默认按一将成名官网处理
         all_nodes = _collect_sgs_nodes(source, days_back=days_back, max_pages=max_pages)
@@ -335,6 +412,9 @@ def collect_activity_nodes(competitor_key, sources, days_back=30, max_pages=2):
         return pub >= cutoff
 
     nodes = [n for n in all_nodes.values() if _keep(n)]
+    # TapTap 版本更新比较稀疏，若 30 天内没有，至少保留最新一条
+    if not nodes and source_type == "taptap_apk" and all_nodes:
+        nodes = [max(all_nodes.values(), key=lambda x: x["publish_date"])]
     # 按发布时间倒序
     nodes.sort(key=lambda x: x["publish_date"], reverse=True)
 
