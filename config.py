@@ -19,7 +19,10 @@ COMPETITORS = [
         "taptap_app_id": 145396,
         "taptap_url": "https://www.taptap.cn/app/145396",
         "official_news_url": "",
-        "activity_sources": [{"type": "sgs_official", "base_url": "https://x.sanguosha.com/news"}],
+        "activity_sources": [
+            {"type": "sgs_official", "base_url": "https://x.sanguosha.com/news"},
+            {"type": "taptap_news", "app_id": 145396, "per_page": 10},
+        ],
     },
     {
         "key": "mjs",
@@ -31,7 +34,8 @@ COMPETITORS = [
         "taptap_url": "https://www.taptap.cn/app/737825",
         "official_news_url": "",
         "activity_sources": [
-            {"type": "mjs_official", "api_base": "https://ucmsv2api.ztgame.com/api/news/list", "site": "mjs"}
+            {"type": "mjs_official", "api_base": "https://ucmsv2api.ztgame.com/api/news/list", "site": "mjs"},
+            {"type": "taptap_news", "app_id": 737825, "per_page": 10},
         ],
     },
     {
@@ -44,7 +48,8 @@ COMPETITORS = [
         "taptap_url": "https://www.taptap.cn/app/6985",
         "official_news_url": "",
         "activity_sources": [
-            {"type": "taptap_apk", "app_id": 6985, "per_page": 5}
+            {"type": "taptap_apk", "app_id": 6985, "per_page": 5},
+            {"type": "taptap_news", "app_id": 6985, "per_page": 10},
         ],
     },
     {
@@ -57,7 +62,8 @@ COMPETITORS = [
         "taptap_url": "https://www.taptap.cn/app/774226",
         "official_news_url": "",
         "activity_sources": [
-            {"type": "taptap_apk", "app_id": 774226, "per_page": 5}
+            {"type": "taptap_apk", "app_id": 774226, "per_page": 5},
+            {"type": "taptap_news", "app_id": 774226, "per_page": 10},
         ],
     },
 ]

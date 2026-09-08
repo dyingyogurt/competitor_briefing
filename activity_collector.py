@@ -333,6 +333,93 @@ def _parse_taptap_apk(source, days_back=30, max_pages=3):
     return all_nodes
 
 
+def _parse_taptap_news(source, days_back=30, max_pages=3):
+    """解析 TapTap app-news（官方公告/活动），作为活动节点来源。"""
+    app_id = source.get("app_id")
+    if not app_id:
+        return {}
+    limit = source.get("per_page", 10)
+    now = _now()
+    cutoff = now - timedelta(days=days_back)
+    all_nodes = {}
+    try:
+        data = _taptap_request_json("app-news/v1/list", {"app_id": app_id, "limit": limit})
+    except Exception:
+        return all_nodes
+
+    sections = [
+        ("announcement", data.get("announcement_list", [])),
+        ("activity", data.get("activity_list", [])),
+    ]
+    for default_section, items in sections:
+        for item in items:
+            label = item.get("label_type", default_section)
+            moment = item.get("moment_v2") or {}
+            topic = moment.get("topic") or {}
+            title = topic.get("title", "").strip()
+            summary = topic.get("summary", "").strip()
+            created_ts = moment.get("created_time") or moment.get("publish_time")
+            try:
+                pub_dt = datetime.fromtimestamp(created_ts, CN_TZ) if created_ts else now
+            except Exception:
+                pub_dt = now
+            publish_date = pub_dt.strftime("%Y-%m-%d")
+            if pub_dt < cutoff:
+                continue
+            if not title:
+                title = (item.get("check_in") or {}).get("title", "").strip()
+            if not summary:
+                summary = title
+
+            # 活动时间优先取 start_time/end_time；否则从正文里解析
+            st = item.get("start_time")
+            et = item.get("end_time")
+            event_start = ""
+            event_end = ""
+            if st:
+                try:
+                    event_start = datetime.fromtimestamp(st, CN_TZ).strftime("%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    pass
+            if et:
+                try:
+                    event_end = datetime.fromtimestamp(et, CN_TZ).strftime("%Y-%m-%d %H:%M:%S")
+                except Exception:
+                    pass
+            if not event_start or not event_end:
+                windows = _parse_event_windows(summary, now=now) if summary else []
+                es, ee = _merge_windows(windows)
+                if not event_start and es:
+                    event_start = es
+                if not event_end and ee:
+                    event_end = ee
+
+            moment_id = moment.get("id_str", "")
+            if moment_id:
+                source_url = f"https://www.taptap.cn/moment/{moment_id}"
+            else:
+                source_url = f"https://www.taptap.cn/app/{app_id}"
+
+            if label in ("activity", "check_in") or (st and et):
+                category = "活动"
+            elif label == "announcement":
+                category = "公告"
+            else:
+                category = "资讯"
+
+            node = {
+                "title": title,
+                "category": category,
+                "publish_date": publish_date,
+                "event_start": event_start,
+                "event_end": event_end,
+                "source_url": source_url,
+                "summary": summary[:200],
+            }
+            all_nodes[source_url] = node
+    return all_nodes
+
+
 def _collect_sgs_nodes(source, days_back=30, max_pages=2):
     """采集三国杀一将成名官网节点。"""
     now = _now()
@@ -377,28 +464,36 @@ def _collect_mjs_nodes(source, days_back=30, max_pages=5):
 
 
 def collect_activity_nodes(competitor_key, sources, days_back=30, max_pages=2):
-    """采集单个竞品近 N 天的官网活动/公告节点。
+    """采集单个竞品近 N 天的活动/公告节点，支持多来源合并。
 
     sources 示例：
         [{"type": "sgs_official", "base_url": "https://x.sanguosha.com/news"}]
         [{"type": "mjs_official", "api_base": "https://ucmsv2api.ztgame.com/api/news/list", "site": "mjs"}]
         [{"type": "taptap_apk", "app_id": 6985}]
+        [{"type": "taptap_news", "app_id": 6985}]
     """
     if not sources:
         return {"source": None, "competitor_key": competitor_key, "nodes": []}
 
     now = _now()
     cutoff = now - timedelta(days=days_back)
-    source = sources[0]
-    source_type = source.get("type", "sgs_official")
+    all_nodes = {}
+    has_taptap_apk = False
 
-    if source_type == "mjs_official":
-        all_nodes = _collect_mjs_nodes(source, days_back=days_back, max_pages=max_pages)
-    elif source_type == "taptap_apk":
-        all_nodes = _parse_taptap_apk(source, days_back=days_back, max_pages=max_pages)
-    else:
-        # 默认按一将成名官网处理
-        all_nodes = _collect_sgs_nodes(source, days_back=days_back, max_pages=max_pages)
+    for source in sources:
+        source_type = source.get("type", "sgs_official")
+        if source_type == "mjs_official":
+            nodes = _collect_mjs_nodes(source, days_back=days_back, max_pages=max_pages)
+        elif source_type == "taptap_apk":
+            has_taptap_apk = True
+            nodes = _parse_taptap_apk(source, days_back=days_back, max_pages=max_pages)
+        elif source_type == "taptap_news":
+            nodes = _parse_taptap_news(source, days_back=days_back, max_pages=max_pages)
+        else:
+            # 默认按一将成名官网处理
+            nodes = _collect_sgs_nodes(source, days_back=days_back, max_pages=max_pages)
+        for key, node in nodes.items():
+            all_nodes[key] = node
 
     # 按活动时间口径过滤：
     # 1. 活动未结束超过 days_back 天；2. 活动尚未开始；3. 公告类按发布时间兜底
@@ -413,13 +508,22 @@ def collect_activity_nodes(competitor_key, sources, days_back=30, max_pages=2):
 
     nodes = [n for n in all_nodes.values() if _keep(n)]
     # TapTap 版本更新比较稀疏，若 30 天内没有，至少保留最新一条
-    if not nodes and source_type == "taptap_apk" and all_nodes:
-        nodes = [max(all_nodes.values(), key=lambda x: x["publish_date"])]
+    if not nodes and has_taptap_apk:
+        apk_nodes = [n for n in all_nodes.values() if n.get("category") == "版本更新"]
+        if apk_nodes:
+            nodes = [max(apk_nodes, key=lambda x: x["publish_date"])]
+    # 按标题+活动时间去重，避免同一事件多个来源重复展示
+    deduped = {}
+    for node in nodes:
+        key = f"{node['title']}#{node.get('event_start', '')}#{node.get('event_end', '')}"
+        if key not in deduped:
+            deduped[key] = node
+    nodes = list(deduped.values())
     # 按发布时间倒序
     nodes.sort(key=lambda x: x["publish_date"], reverse=True)
 
     result = {
-        "source": source_type,
+        "source": "mixed" if len(sources) > 1 else sources[0].get("type", "sgs_official"),
         "competitor_key": competitor_key,
         "generated_at": now.strftime("%Y-%m-%d %H:%M:%S"),
         "days_back": days_back,
