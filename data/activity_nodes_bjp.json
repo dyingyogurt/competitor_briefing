@@ -1,0 +1,17 @@
+{
+  "source": "taptap_apk",
+  "competitor_key": "bjp",
+  "generated_at": "2026-09-08 14:58:09",
+  "days_back": 30,
+  "nodes": [
+    {
+      "title": "版本更新 1.7.3.0 (44)",
+      "category": "版本更新",
+      "publish_date": "2026-08-19",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://www.taptap.cn/app/774226",
+      "summary": "已知问题修复。"
+    }
+  ]
+}
