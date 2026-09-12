@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-09-11 13:29:47",
+  "generated_at": "2026-09-12 13:18:13",
   "days_back": 30,
   "nodes": [
     {
       "title": "9月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-09-11",
+      "publish_date": "2026-09-12",
       "event_start": "2026-09-01 00:00:00",
       "event_end": "2026-10-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -35,36 +35,6 @@
       "weight": 56
     },
     {
-      "title": "9月10日23：15在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-10",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1789-000ed-053502.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日23：15成一次在线更新，您重启游戏客户端后即可生效。 \n\n   \n\n &nbsp;本次更新内容如下： \n\n 1.百家争鸣活动新增投票随机展示形式； \n\n 2.修复战役属性的战役方案界面显示的异常问题； \n\n 3.修复韩娥千古留音技能异常问题； \n\n 4.修复身份模式中收藏的身份模板显示异常问题；",
-      "weight": 31
-    },
-    {
-      "title": "9月10日16：50在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-10",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/00c-1789-000ec-036892.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日16：50成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复司马睿在对局开始时击杀其他角色后，巳耀舆技能还会询问该角色的问题；",
-      "weight": 31
-    },
-    {
-      "title": "9月10日15：00在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-10",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/001-1789-000eb-024287.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日15：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复每日问对活动的异常问题；",
-      "weight": 31
-    },
-    {
       "title": "9月10日05：00停服更新预告",
       "category": "公告",
       "publish_date": "2026-09-09",
@@ -75,14 +45,34 @@
       "weight": 26
     },
     {
-      "title": "9月4日18：50在线更新通知",
+      "title": "9月10日23：15在线更新通知",
       "category": "公告",
-      "publish_date": "2026-09-04",
+      "publish_date": "2026-09-10",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/002-1788-000e9-955799.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月4日18：50完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.优化【皮肤册】字体显示效果； \n\n 2.修复【荀灌】形象缺失的问题； \n\n 3.修复【偃师】至臻皮肤在击杀目标时未播放击杀特效的问题。",
-      "weight": 21
+      "source_url": "https://mjs.ztgame.com/news/000-1789-000ed-053502.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日23：15成一次在线更新，您重启游戏客户端后即可生效。 \n\n   \n\n &nbsp;本次更新内容如下： \n\n 1.百家争鸣活动新增投票随机展示形式； \n\n 2.修复战役属性的战役方案界面显示的异常问题； \n\n 3.修复韩娥千古留音技能异常问题； \n\n 4.修复身份模式中收藏的身份模板显示异常问题；",
+      "weight": 26
+    },
+    {
+      "title": "9月10日16：50在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-10",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/00c-1789-000ec-036892.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日16：50成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复司马睿在对局开始时击杀其他角色后，巳耀舆技能还会询问该角色的问题；",
+      "weight": 26
+    },
+    {
+      "title": "9月10日15：00在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-10",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/001-1789-000eb-024287.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日15：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复每日问对活动的异常问题；",
+      "weight": 26
     },
     {
       "title": "9月7日20：40在线更新通知",
@@ -93,16 +83,6 @@
       "source_url": "https://mjs.ztgame.com/news/000-1788-000ea-955850.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月7日20:40完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复【十日羽檄】完成全部任务后不显示后续活动的问题",
       "weight": 21
-    },
-    {
-      "title": "8月28日18：00在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-08-28",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1787-000e4-915336.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于8月28日18：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.小乔至臻皮肤逐风引鸢技能动效调整； \n\n 2.修复私聊后无法打开私聊窗口的问题； \n\n 3.修复系统设置抗锯齿质量无法修改的问题； \n\n 4.修复在个人信息界面将至臻皮肤逐风引鸢设置为皮肤展示不会动的问题；",
-      "weight": 18
     },
     {
       "title": "9月3日05：00停服更新预告",
@@ -132,6 +112,16 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/00a-1788-000e6-431083.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月3日18：15完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复武将半身图尺寸、位置异常的问题。",
+      "weight": 18
+    },
+    {
+      "title": "9月4日18：50在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-04",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/002-1788-000e9-955799.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月4日18：50完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.优化【皮肤册】字体显示效果； \n\n 2.修复【荀灌】形象缺失的问题； \n\n 3.修复【偃师】至臻皮肤在击杀目标时未播放击杀特效的问题。",
       "weight": 18
     },
     {
@@ -212,6 +202,16 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/00a-1787-000e3-842810.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于8月27日22：30完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n  本次更新内容如下：  \n\n 1.修复百家争鸣作品库至臻皮肤没有渐变效果的问题； \n\n 2.修复小乔至臻皮肤设置主界面背景不会动的问题； \n\n 3.百家争鸣文本输入违规规则的修改； \n\n 4.修复八王之乱商店不显示的问题； \n\n 5.修",
+      "weight": 16
+    },
+    {
+      "title": "8月28日18：00在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-08-28",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/000-1787-000e4-915336.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于8月28日18：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.小乔至臻皮肤逐风引鸢技能动效调整； \n\n 2.修复私聊后无法打开私聊窗口的问题； \n\n 3.修复系统设置抗锯齿质量无法修改的问题； \n\n 4.修复在个人信息界面将至臻皮肤逐风引鸢设置为皮肤展示不会动的问题；",
       "weight": 16
     }
   ]
