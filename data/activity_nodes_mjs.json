@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-09-12 13:18:13",
+  "generated_at": "2026-09-13 13:32:24",
   "days_back": 30,
   "nodes": [
     {
       "title": "9月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-09-12",
+      "publish_date": "2026-09-13",
       "event_start": "2026-09-01 00:00:00",
       "event_end": "2026-10-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -33,16 +33,6 @@
       "source_url": "https://mjs.ztgame.com/news/000-1787-000e0-628430.html",
       "summary": "《名将杀》创作者活动第十三期开启！ \n\n 发布视频或图文，完成「赚币激励任务」即可赚取150枚匠心币，轻松兑换包含活动限定道具在内的多种好礼！ \n\n 持续直播，或投稿视频和图文，还可瓜分10万元奖池与3000张丹青券！ \n\n &nbsp; \n\n  活动时间： 2026年8月25日-2026年9月23日 \n\n  活动参与地址：  https://mjs.ztgame.com/act/create/#",
       "weight": 56
-    },
-    {
-      "title": "9月10日05：00停服更新预告",
-      "category": "公告",
-      "publish_date": "2026-09-09",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1788-000e7-949971.html",
-      "summary": "将军们好： \n\n 以下为9月10日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 司马睿 \n\n &mdash;&mdash;5体力 3手牌上限 东晋 史诗 \n\n 上巳耀舆：登场，所有其他角色选择是否令你的装备上限+1，然后你获得并装备装备牌直到达到装备",
-      "weight": 26
     },
     {
       "title": "9月10日23：15在线更新通知",
@@ -82,6 +72,16 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/000-1788-000ea-955850.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月7日20:40完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复【十日羽檄】完成全部任务后不显示后续活动的问题",
+      "weight": 21
+    },
+    {
+      "title": "9月10日05：00停服更新预告",
+      "category": "公告",
+      "publish_date": "2026-09-09",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/000-1788-000e7-949971.html",
+      "summary": "将军们好： \n\n 以下为9月10日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 司马睿 \n\n &mdash;&mdash;5体力 3手牌上限 东晋 史诗 \n\n 上巳耀舆：登场，所有其他角色选择是否令你的装备上限+1，然后你获得并装备装备牌直到达到装备",
       "weight": 21
     },
     {
