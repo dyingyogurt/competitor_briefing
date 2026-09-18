@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-09-17 13:38:43",
+  "generated_at": "2026-09-18 13:26:52",
   "days_back": 30,
   "nodes": [
     {
       "title": "9月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-09-17",
+      "publish_date": "2026-09-18",
       "event_start": "2026-09-01 00:00:00",
       "event_end": "2026-10-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -35,13 +35,13 @@
       "weight": 56
     },
     {
-      "title": "9月17日05：00停服更新预告",
+      "title": "9月17日22：00在线更新通知",
       "category": "公告",
-      "publish_date": "2026-09-16",
+      "publish_date": "2026-09-17",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1789-000f0-554132.html",
-      "summary": "将军们好： \n\n 以下为9月17日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 魏华存 \n\n &mdash;&mdash;4体力 4手牌上限 西晋 史诗 \n\n 存思身神：当你从牌堆获得牌时，你可以将这些牌按原顺序放回牌堆顶，然后将自己的1个阶段永久改",
+      "source_url": "https://mjs.ztgame.com/news/006-1789-000f2-653778.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月17日22：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.修复十日羽檄、千机锦图活动任务无法完成的问题； \n\n 2.修复东方朔巧言善辩技能转化目标的诸葛连弩装备后，还会触发连弩效果的问题； \n\n 3.修复魏华存黄庭化仙技能添加的玉剑花色和点数会随机的问题； \n\n ",
       "weight": 31
     },
     {
@@ -51,18 +51,8 @@
       "event_start": null,
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/002-1789-000f1-616439.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日00：00成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 身份模式&ldquo;经典身份&rdquo;调整为&ldquo;鹬蚌相争&rdquo;，具体如下： \n\n - 主忠阵营：暴君、禁军、忠臣 \n\n - 反贼阵营：军师、反贼、反贼、反贼 \n\n - 其他阵营：渔翁",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日00：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 身份模式&ldquo;经典身份&rdquo;调整为&ldquo;鹬蚌相争&rdquo;，具体如下： \n\n - 主忠阵营：暴君、禁军、忠臣 \n\n - 反贼阵营：军师、反贼、反贼、反贼 \n\n - 其他阵营：渔翁",
       "weight": 31
-    },
-    {
-      "title": "第九赛季将于9月15日开启！",
-      "category": "公告",
-      "publish_date": "2026-09-14",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/003-1789-000ee-380981.html",
-      "summary": "将军们好： \n\n 《名将杀》第九赛季将于9月15日正式上线！新武将、新伙伴、新皮肤、新赛季身份模式与新势力对抗玩法即将登场！ \n\n   \n\n  【新增武将】  \n\n 王导（战令武将） \n\n &mdash;&mdash;4体力 5手牌上限 东晋 传说 \n\n 琅琊王氏：士族。每轮开始时，你查看士族牌堆顶的5张牌，并且选择获得其中2张牌。 \n\n 士族：游戏开始时，将牌堆顶的10张牌转化为士族牌并放入士族",
-      "weight": 26
     },
     {
       "title": "9月15日19：00在线更新通知",
@@ -75,54 +65,24 @@
       "weight": 26
     },
     {
-      "title": "9月10日23：15在线更新通知",
+      "title": "9月17日05：00停服更新预告",
       "category": "公告",
-      "publish_date": "2026-09-10",
+      "publish_date": "2026-09-16",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1789-000ed-053502.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日23：15成一次在线更新，您重启游戏客户端后即可生效。 \n\n   \n\n &nbsp;本次更新内容如下： \n\n 1.百家争鸣活动新增投票随机展示形式； \n\n 2.修复战役属性的战役方案界面显示的异常问题； \n\n 3.修复韩娥千古留音技能异常问题； \n\n 4.修复身份模式中收藏的身份模板显示异常问题；",
+      "source_url": "https://mjs.ztgame.com/news/000-1789-000f0-554132.html",
+      "summary": "将军们好： \n\n 以下为9月17日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 魏华存 \n\n &mdash;&mdash;4体力 4手牌上限 西晋 史诗 \n\n 存思身神：当你从牌堆获得牌时，你可以将这些牌按原顺序放回牌堆顶，然后将自己的1个阶段永久改",
+      "weight": 26
+    },
+    {
+      "title": "第九赛季将于9月15日开启！",
+      "category": "公告",
+      "publish_date": "2026-09-14",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/003-1789-000ee-380981.html",
+      "summary": "将军们好： \n\n 《名将杀》第九赛季将于9月15日正式上线！新武将、新伙伴、新皮肤、新赛季身份模式与新势力对抗玩法即将登场！ \n\n   \n\n  【新增武将】  \n\n 王导（战令武将） \n\n &mdash;&mdash;4体力 5手牌上限 东晋 传说 \n\n 琅琊王氏：士族。每轮开始时，你查看士族牌堆顶的5张牌，并且选择获得其中2张牌。 \n\n 士族：游戏开始时，将牌堆顶的10张牌转化为士族牌并放入士族",
       "weight": 21
-    },
-    {
-      "title": "9月10日16：50在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-10",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/00c-1789-000ec-036892.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日16：50成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复司马睿在对局开始时击杀其他角色后，巳耀舆技能还会询问该角色的问题；",
-      "weight": 21
-    },
-    {
-      "title": "9月10日15：00在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-10",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/001-1789-000eb-024287.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日15：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复每日问对活动的异常问题；",
-      "weight": 21
-    },
-    {
-      "title": "9月3日20：35在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-03",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/005-1788-000e8-955733.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月3日20：35完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.修复巅峰赛匹配模式下禁言未生效的问题 \n\n 2.修复偃师傀儡变赵姬发动迎归甘泉时，偃师本体技能也会被删除的问题 \n\n 3.修复金日磾和禁军同时在场时，技能触发顺序异常的问题 \n\n 4.修复将苑奇遇标题描述错误",
-      "weight": 18
-    },
-    {
-      "title": "9月3日18：15在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-03",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/00a-1788-000e6-431083.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月3日18：15完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复武将半身图尺寸、位置异常的问题。",
-      "weight": 18
     },
     {
       "title": "9月4日18：50在线更新通知",
@@ -155,14 +115,34 @@
       "weight": 18
     },
     {
-      "title": "8月21日19：30在线更新通知",
+      "title": "9月10日23：15在线更新通知",
       "category": "公告",
-      "publish_date": "2026-08-21",
+      "publish_date": "2026-09-10",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1787-000de-313639.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于8月21日19：30完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n  本次更新内容如下：  \n\n 1.修复傀儡子悬线引魄技能发动后的目标每次出牌的效果异常的问题 \n\n 2.修复韩非获得奉公如法技能对其他角色发动后，不期修古技能效果异常的问题 \n\n 3.修复偃师触发拆解机枢技能时再插入触发多个周勃的箫奏挽",
-      "weight": 16
+      "source_url": "https://mjs.ztgame.com/news/000-1789-000ed-053502.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日23：15成一次在线更新，您重启游戏客户端后即可生效。 \n\n   \n\n &nbsp;本次更新内容如下： \n\n 1.百家争鸣活动新增投票随机展示形式； \n\n 2.修复战役属性的战役方案界面显示的异常问题； \n\n 3.修复韩娥千古留音技能异常问题； \n\n 4.修复身份模式中收藏的身份模板显示异常问题；",
+      "weight": 18
+    },
+    {
+      "title": "9月10日16：50在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-10",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/00c-1789-000ec-036892.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日16：50成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复司马睿在对局开始时击杀其他角色后，巳耀舆技能还会询问该角色的问题；",
+      "weight": 18
+    },
+    {
+      "title": "9月10日15：00在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-10",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/001-1789-000eb-024287.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日15：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复每日问对活动的异常问题；",
+      "weight": 18
     },
     {
       "title": "8月24日18：04在线更新通知",
@@ -212,6 +192,26 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/002-1788-000e5-344798.html",
       "summary": "将军们好： \n\n 以下为9月3日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 潘安 \n\n &mdash;&mdash;4体力 5手牌上限 西晋 稀有 \n\n 掷果盈车：回合开始时，令所有有手牌的其他角色随机展示2张手牌，然后添加展示次数最多的2种牌各1",
+      "weight": 16
+    },
+    {
+      "title": "9月3日20：35在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-03",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/005-1788-000e8-955733.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月3日20：35完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.修复巅峰赛匹配模式下禁言未生效的问题 \n\n 2.修复偃师傀儡变赵姬发动迎归甘泉时，偃师本体技能也会被删除的问题 \n\n 3.修复金日磾和禁军同时在场时，技能触发顺序异常的问题 \n\n 4.修复将苑奇遇标题描述错误",
+      "weight": 16
+    },
+    {
+      "title": "9月3日18：15在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-03",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/00a-1788-000e6-431083.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月3日18：15完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复武将半身图尺寸、位置异常的问题。",
       "weight": 16
     }
   ]
