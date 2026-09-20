@@ -4450,5 +4450,95 @@
       "taptap_rating": 7.9,
       "taptap_review_count": 2203
     }
+  },
+  "2026-09-20": {
+    "yjc": {
+      "name": "三国杀一将成名",
+      "version": "6.4.1.1",
+      "ranks": {
+        "iOS 总畅销榜": null,
+        "iOS 总免费榜": null,
+        "iOS 游戏畅销榜": null,
+        "iOS 游戏免费榜": null
+      },
+      "app_store_rating": 2.63466,
+      "review_avg_rating": 4.75,
+      "review_count": 4,
+      "bilibili_sentiment": {
+        "positive": 89,
+        "negative": 63,
+        "neutral": 4,
+        "mixed": 10
+      },
+      "bilibili_comment_count": 29,
+      "taptap_rating": 3.3,
+      "taptap_review_count": 6161
+    },
+    "mjs": {
+      "name": "名将杀",
+      "version": "1.0.7",
+      "ranks": {
+        "iOS 总畅销榜": null,
+        "iOS 总免费榜": null,
+        "iOS 游戏畅销榜": null,
+        "iOS 游戏免费榜": null
+      },
+      "app_store_rating": 4.47602,
+      "review_avg_rating": 5.0,
+      "review_count": 4,
+      "bilibili_sentiment": {
+        "positive": 42,
+        "negative": 2,
+        "neutral": 87,
+        "mixed": 2
+      },
+      "bilibili_comment_count": 30,
+      "taptap_rating": 8.4,
+      "taptap_review_count": 7733
+    },
+    "yxs": {
+      "name": "英雄杀",
+      "version": "4.31.0",
+      "ranks": {
+        "iOS 总畅销榜": null,
+        "iOS 总免费榜": null,
+        "iOS 游戏畅销榜": null,
+        "iOS 游戏免费榜": null
+      },
+      "app_store_rating": 3.33681,
+      "review_avg_rating": 4.0,
+      "review_count": 4,
+      "bilibili_sentiment": {
+        "positive": 10,
+        "negative": 1,
+        "neutral": 37,
+        "mixed": 0
+      },
+      "bilibili_comment_count": 25,
+      "taptap_rating": 3.8,
+      "taptap_review_count": 2014
+    },
+    "bjp": {
+      "name": "百将牌",
+      "version": "1.8.0",
+      "ranks": {
+        "iOS 总畅销榜": null,
+        "iOS 总免费榜": null,
+        "iOS 游戏畅销榜": null,
+        "iOS 游戏免费榜": null
+      },
+      "app_store_rating": 4.39583,
+      "review_avg_rating": 3.75,
+      "review_count": 4,
+      "bilibili_sentiment": {
+        "positive": 1,
+        "negative": 24,
+        "neutral": 3,
+        "mixed": 0
+      },
+      "bilibili_comment_count": 6,
+      "taptap_rating": 7.9,
+      "taptap_review_count": 2210
+    }
   }
 }
