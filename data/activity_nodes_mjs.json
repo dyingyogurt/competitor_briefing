@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-09-20 13:35:29",
+  "generated_at": "2026-09-21 13:44:35",
   "days_back": 30,
   "nodes": [
     {
       "title": "9月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-09-20",
+      "publish_date": "2026-09-21",
       "event_start": "2026-09-01 00:00:00",
       "event_end": "2026-10-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -33,26 +33,6 @@
       "source_url": "https://mjs.ztgame.com/news/000-1787-000e0-628430.html",
       "summary": "《名将杀》创作者活动第十三期开启！ \n\n 发布视频或图文，完成「赚币激励任务」即可赚取150枚匠心币，轻松兑换包含活动限定道具在内的多种好礼！ \n\n 持续直播，或投稿视频和图文，还可瓜分10万元奖池与3000张丹青券！ \n\n &nbsp; \n\n  活动时间： 2026年8月25日-2026年9月23日 \n\n  活动参与地址：  https://mjs.ztgame.com/act/create/#",
       "weight": 56
-    },
-    {
-      "title": "9月17日22：00在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-17",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/006-1789-000f2-653778.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月17日22：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.修复十日羽檄、千机锦图活动任务无法完成的问题； \n\n 2.修复东方朔巧言善辩技能转化目标的诸葛连弩装备后，还会触发连弩效果的问题； \n\n 3.修复魏华存黄庭化仙技能添加的玉剑花色和点数会随机的问题； \n\n ",
-      "weight": 26
-    },
-    {
-      "title": "9月18日00：00在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-17",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/002-1789-000f1-616439.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日00：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 身份模式&ldquo;经典身份&rdquo;调整为&ldquo;鹬蚌相争&rdquo;，具体如下： \n\n - 主忠阵营：暴君、禁军、忠臣 \n\n - 反贼阵营：军师、反贼、反贼、反贼 \n\n - 其他阵营：渔翁",
-      "weight": 26
     },
     {
       "title": "9月18日14：15在线更新通知",
@@ -92,6 +72,26 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/000-1789-000f0-554132.html",
       "summary": "将军们好： \n\n 以下为9月17日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 魏华存 \n\n &mdash;&mdash;4体力 4手牌上限 西晋 史诗 \n\n 存思身神：当你从牌堆获得牌时，你可以将这些牌按原顺序放回牌堆顶，然后将自己的1个阶段永久改",
+      "weight": 21
+    },
+    {
+      "title": "9月17日22：00在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-17",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/006-1789-000f2-653778.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月17日22：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.修复十日羽檄、千机锦图活动任务无法完成的问题； \n\n 2.修复东方朔巧言善辩技能转化目标的诸葛连弩装备后，还会触发连弩效果的问题； \n\n 3.修复魏华存黄庭化仙技能添加的玉剑花色和点数会随机的问题； \n\n ",
+      "weight": 21
+    },
+    {
+      "title": "9月18日00：00在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-17",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/002-1789-000f1-616439.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日00：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 身份模式&ldquo;经典身份&rdquo;调整为&ldquo;鹬蚌相争&rdquo;，具体如下： \n\n - 主忠阵营：暴君、禁军、忠臣 \n\n - 反贼阵营：军师、反贼、反贼、反贼 \n\n - 其他阵营：渔翁",
       "weight": 21
     },
     {
