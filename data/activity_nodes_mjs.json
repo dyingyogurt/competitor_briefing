@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-09-21 13:44:35",
+  "generated_at": "2026-09-22 13:44:40",
   "days_back": 30,
   "nodes": [
     {
       "title": "9月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-09-21",
+      "publish_date": "2026-09-22",
       "event_start": "2026-09-01 00:00:00",
       "event_end": "2026-10-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -33,26 +33,6 @@
       "source_url": "https://mjs.ztgame.com/news/000-1787-000e0-628430.html",
       "summary": "《名将杀》创作者活动第十三期开启！ \n\n 发布视频或图文，完成「赚币激励任务」即可赚取150枚匠心币，轻松兑换包含活动限定道具在内的多种好礼！ \n\n 持续直播，或投稿视频和图文，还可瓜分10万元奖池与3000张丹青券！ \n\n &nbsp; \n\n  活动时间： 2026年8月25日-2026年9月23日 \n\n  活动参与地址：  https://mjs.ztgame.com/act/create/#",
       "weight": 56
-    },
-    {
-      "title": "9月18日14：15在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-18",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1789-000f3-712188.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日14：15完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复竞技身份八人场的暴君、渔翁身份的加分/减分异常的问题",
-      "weight": 26
-    },
-    {
-      "title": "第九赛季将于9月15日开启！",
-      "category": "公告",
-      "publish_date": "2026-09-14",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/003-1789-000ee-380981.html",
-      "summary": "将军们好： \n\n 《名将杀》第九赛季将于9月15日正式上线！新武将、新伙伴、新皮肤、新赛季身份模式与新势力对抗玩法即将登场！ \n\n   \n\n  【新增武将】  \n\n 王导（战令武将） \n\n &mdash;&mdash;4体力 5手牌上限 东晋 传说 \n\n 琅琊王氏：士族。每轮开始时，你查看士族牌堆顶的5张牌，并且选择获得其中2张牌。 \n\n 士族：游戏开始时，将牌堆顶的10张牌转化为士族牌并放入士族",
-      "weight": 21
     },
     {
       "title": "9月15日19：00在线更新通知",
@@ -95,14 +75,14 @@
       "weight": 21
     },
     {
-      "title": "9月7日20：40在线更新通知",
+      "title": "9月18日14：15在线更新通知",
       "category": "公告",
-      "publish_date": "2026-09-07",
+      "publish_date": "2026-09-18",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1788-000ea-955850.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月7日20:40完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复【十日羽檄】完成全部任务后不显示后续活动的问题",
-      "weight": 18
+      "source_url": "https://mjs.ztgame.com/news/000-1789-000f3-712188.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日14：15完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复竞技身份八人场的暴君、渔翁身份的加分/减分异常的问题",
+      "weight": 21
     },
     {
       "title": "9月10日05：00停服更新预告",
@@ -142,6 +122,16 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/001-1789-000eb-024287.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月10日15：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复每日问对活动的异常问题；",
+      "weight": 18
+    },
+    {
+      "title": "第九赛季将于9月15日开启！",
+      "category": "公告",
+      "publish_date": "2026-09-14",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/003-1789-000ee-380981.html",
+      "summary": "将军们好： \n\n 《名将杀》第九赛季将于9月15日正式上线！新武将、新伙伴、新皮肤、新赛季身份模式与新势力对抗玩法即将登场！ \n\n   \n\n  【新增武将】  \n\n 王导（战令武将） \n\n &mdash;&mdash;4体力 5手牌上限 东晋 传说 \n\n 琅琊王氏：士族。每轮开始时，你查看士族牌堆顶的5张牌，并且选择获得其中2张牌。 \n\n 士族：游戏开始时，将牌堆顶的10张牌转化为士族牌并放入士族",
       "weight": 18
     },
     {
@@ -212,6 +202,16 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/002-1788-000e9-955799.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月4日18：50完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.优化【皮肤册】字体显示效果； \n\n 2.修复【荀灌】形象缺失的问题； \n\n 3.修复【偃师】至臻皮肤在击杀目标时未播放击杀特效的问题。",
+      "weight": 16
+    },
+    {
+      "title": "9月7日20：40在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-07",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/000-1788-000ea-955850.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们已于9月7日20:40完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复【十日羽檄】完成全部任务后不显示后续活动的问题",
       "weight": 16
     }
   ]
