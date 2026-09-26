@@ -1,9 +1,19 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-09-25 13:40:29",
+  "generated_at": "2026-09-26 13:43:57",
   "days_back": 30,
   "nodes": [
+    {
+      "title": "9月签到送好礼",
+      "category": "活动",
+      "publish_date": "2026-09-26",
+      "event_start": "2026-09-01 00:00:00",
+      "event_end": "2026-10-01 23:59:59",
+      "source_url": "https://www.taptap.cn/app/737825",
+      "summary": "9月签到送好礼",
+      "weight": 71
+    },
     {
       "title": "创作者活动第十四期开启！",
       "category": "活动",
@@ -12,7 +22,7 @@
       "event_end": "2026-10-25 23:59:59",
       "source_url": "https://mjs.ztgame.com/news/000-1790-000f6-228376.html",
       "summary": "《名将杀》创作者活动第十四期开启！ \n\n 发布视频或图文，完成「赚币激励任务」即可赚取150枚匠心币，轻松兑换包含活动限定道具在内的多种好礼！ \n\n 持续直播，或投稿视频和图文，还可瓜分10万元奖池与3000张丹青券！ \n\n &nbsp; \n\n  活动时间： 2026年9月24日-2026年10月25日 \n\n  活动参与地址：   https://mjs.ztgame.com/act/create",
-      "weight": 71
+      "weight": 66
     },
     {
       "title": "名将杀对局征集活动限时开启！",
@@ -22,17 +32,7 @@
       "event_end": "2026-10-25 23:59:59",
       "source_url": "https://mjs.ztgame.com/news/008-1790-000f5-228234.html",
       "summary": "上官方电视的机会来啦！ \n\n 活动期间，在抖音、B 站任一平台，带上对应话题发布《名将杀》完整对局录像，就有机会登上名将杀官方社媒，展示你的对局高光名场面，赢取 50 元京东卡奖励！ \n\n 投稿符合指定条件的对局录像，更有机会解锁活动专属形象边框，对局出场格外亮眼！ \n\n &nbsp; \n\n 活动时间：2026年9月24日-10月25日23:59 \n\n &nbsp; \n\n PS：如果本次活动大家踊",
-      "weight": 71
-    },
-    {
-      "title": "9月签到送好礼",
-      "category": "活动",
-      "publish_date": "2026-09-25",
-      "event_start": "2026-09-01 00:00:00",
-      "event_end": "2026-10-01 23:59:59",
-      "source_url": "https://www.taptap.cn/app/737825",
-      "summary": "9月签到送好礼",
-      "weight": 71
+      "weight": 66
     },
     {
       "title": "9月24日05：00停服更新预告",
@@ -43,16 +43,6 @@
       "source_url": "https://mjs.ztgame.com/news/002-1790-000f4-166366.html",
       "summary": "将军们好： \n\n 以下为9月24日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 陶渊明 \n\n &mdash;&mdash;4体力 4手牌上限 东晋 史诗 \n\n 采菊东篱：当有角色造成伤害时，你可以添加1张菊到牌堆底，或获得1张菊。你的菊不计入手牌上限",
       "weight": 26
-    },
-    {
-      "title": "9月18日14：15在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-18",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1789-000f3-712188.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日14：15完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复竞技身份八人场的暴君、渔翁身份的加分/减分异常的问题",
-      "weight": 21
     },
     {
       "title": "第九赛季将于9月15日开启！",
@@ -105,14 +95,14 @@
       "weight": 18
     },
     {
-      "title": "8月27日22：30在线更新通知",
+      "title": "9月18日14：15在线更新通知",
       "category": "公告",
-      "publish_date": "2026-08-27",
+      "publish_date": "2026-09-18",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/00a-1787-000e3-842810.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于8月27日22：30完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n  本次更新内容如下：  \n\n 1.修复百家争鸣作品库至臻皮肤没有渐变效果的问题； \n\n 2.修复小乔至臻皮肤设置主界面背景不会动的问题； \n\n 3.百家争鸣文本输入违规规则的修改； \n\n 4.修复八王之乱商店不显示的问题； \n\n 5.修",
-      "weight": 16
+      "source_url": "https://mjs.ztgame.com/news/000-1789-000f3-712188.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日14：15完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复竞技身份八人场的暴君、渔翁身份的加分/减分异常的问题",
+      "weight": 18
     },
     {
       "title": "8月28日18：00在线更新通知",
