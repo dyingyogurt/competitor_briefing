@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-09-26 13:43:57",
+  "generated_at": "2026-09-27 14:03:30",
   "days_back": 30,
   "nodes": [
     {
       "title": "9月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-09-26",
+      "publish_date": "2026-09-27",
       "event_start": "2026-09-01 00:00:00",
       "event_end": "2026-10-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -42,7 +42,7 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/002-1790-000f4-166366.html",
       "summary": "将军们好： \n\n 以下为9月24日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 陶渊明 \n\n &mdash;&mdash;4体力 4手牌上限 东晋 史诗 \n\n 采菊东篱：当有角色造成伤害时，你可以添加1张菊到牌堆底，或获得1张菊。你的菊不计入手牌上限",
-      "weight": 26
+      "weight": 21
     },
     {
       "title": "第九赛季将于9月15日开启！",
@@ -103,16 +103,6 @@
       "source_url": "https://mjs.ztgame.com/news/000-1789-000f3-712188.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月18日14：15完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复竞技身份八人场的暴君、渔翁身份的加分/减分异常的问题",
       "weight": 18
-    },
-    {
-      "title": "8月28日18：00在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-08-28",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1787-000e4-915336.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于8月28日18：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.小乔至臻皮肤逐风引鸢技能动效调整； \n\n 2.修复私聊后无法打开私聊窗口的问题； \n\n 3.修复系统设置抗锯齿质量无法修改的问题； \n\n 4.修复在个人信息界面将至臻皮肤逐风引鸢设置为皮肤展示不会动的问题；",
-      "weight": 16
     },
     {
       "title": "9月3日05：00停服更新预告",
