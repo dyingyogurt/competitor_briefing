@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-10-05 14:29:02",
+  "generated_at": "2026-10-06 15:03:58",
   "days_back": 30,
   "nodes": [
     {
       "title": "10月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-10-05",
+      "publish_date": "2026-10-06",
       "event_start": "2026-10-01 00:00:00",
       "event_end": "2026-11-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -33,16 +33,6 @@
       "source_url": "https://mjs.ztgame.com/news/008-1790-000f5-228234.html",
       "summary": "上官方电视的机会来啦！ \n\n 活动期间，在抖音、B 站任一平台，带上对应话题发布《名将杀》完整对局录像，就有机会登上名将杀官方社媒，展示你的对局高光名场面，赢取 50 元京东卡奖励！ \n\n 投稿符合指定条件的对局录像，更有机会解锁活动专属形象边框，对局出场格外亮眼！ \n\n &nbsp; \n\n 活动时间：2026年9月24日-10月25日23:59 \n\n &nbsp; \n\n PS：如果本次活动大家踊",
       "weight": 58
-    },
-    {
-      "title": "9月26日15：40在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-09-28",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/002-1790-000f7-566353.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月26日15：40完成一次在线更新，您重启游戏客户端后即可生效。 \n\n   \n\n 本次更新内容如下：&nbsp; \n\n 1.修复在匹配成功后的选将界面领取战令奖励后显示异常的问题 \n\n 2.修复武刚车复制坐骑效果未生效的问题 \n\n 3.修复PVE局内武将详情界面显示战役属性操作按钮的问题",
-      "weight": 21
     },
     {
       "title": "10月1日05：00停服更新预告",
@@ -72,6 +62,16 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/002-1790-000f4-166366.html",
       "summary": "将军们好： \n\n 以下为9月24日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 陶渊明 \n\n &mdash;&mdash;4体力 4手牌上限 东晋 史诗 \n\n 采菊东篱：当有角色造成伤害时，你可以添加1张菊到牌堆底，或获得1张菊。你的菊不计入手牌上限",
+      "weight": 18
+    },
+    {
+      "title": "9月26日15：40在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-09-28",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/002-1790-000f7-566353.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于9月26日15：40完成一次在线更新，您重启游戏客户端后即可生效。 \n\n   \n\n 本次更新内容如下：&nbsp; \n\n 1.修复在匹配成功后的选将界面领取战令奖励后显示异常的问题 \n\n 2.修复武刚车复制坐骑效果未生效的问题 \n\n 3.修复PVE局内武将详情界面显示战役属性操作按钮的问题",
       "weight": 18
     },
     {
