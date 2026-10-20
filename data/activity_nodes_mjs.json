@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-10-19 13:33:21",
+  "generated_at": "2026-10-20 13:36:03",
   "days_back": 30,
   "nodes": [
     {
       "title": "10月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-10-19",
+      "publish_date": "2026-10-20",
       "event_start": "2026-10-01 00:00:00",
       "event_end": "2026-11-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -33,6 +33,16 @@
       "source_url": "https://mjs.ztgame.com/news/008-1790-000f5-228234.html",
       "summary": "上官方电视的机会来啦！ \n\n 活动期间，在抖音、B 站任一平台，带上对应话题发布《名将杀》完整对局录像，就有机会登上名将杀官方社媒，展示你的对局高光名场面，赢取 50 元京东卡奖励！ \n\n 投稿符合指定条件的对局录像，更有机会解锁活动专属形象边框，对局出场格外亮眼！ \n\n &nbsp; \n\n 活动时间：2026年9月24日-10月25日23:59 \n\n &nbsp; \n\n PS：如果本次活动大家踊",
       "weight": 56
+    },
+    {
+      "title": "10月19日18：20在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-10-19",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/00a-1792-00101-406257.html",
+      "summary": "将军们好： \n\n  \n感谢各位一直以来的支持与反馈，我们将10月19日18：20完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.修复周处忠烈果毅回合内触发获得弃牌堆牌的效果后，无法再触发打牌令其无法响应的问题； \n\n 2.修复周处有进无退触发异常的问题； \n\n 3.修复对局中使用偃师变身傀儡获得胜利后，录像显示的武将名错误的问题。",
+      "weight": 31
     },
     {
       "title": "10月15日05：00停服更新预告",
