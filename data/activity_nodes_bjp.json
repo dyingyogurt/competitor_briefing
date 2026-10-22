@@ -1,7 +1,7 @@
 {
   "source": "mixed",
   "competitor_key": "bjp",
-  "generated_at": "2026-10-21 13:37:28",
+  "generated_at": "2026-10-22 13:39:37",
   "days_back": 30,
   "nodes": [
     {
@@ -12,7 +12,7 @@
       "event_end": null,
       "source_url": "https://www.taptap.cn/app/774226",
       "summary": "游戏体验优化。",
-      "weight": 11
+      "weight": 8
     }
   ]
 }
