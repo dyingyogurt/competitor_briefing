@@ -1,9 +1,19 @@
 {
   "source": "mixed",
   "competitor_key": "bjp",
-  "generated_at": "2026-10-26 13:41:29",
+  "generated_at": "2026-10-27 13:51:19",
   "days_back": 30,
   "nodes": [
+    {
+      "title": "",
+      "category": "资讯",
+      "publish_date": "2026-10-27",
+      "event_start": "",
+      "event_end": "2026-11-05 00:00:00",
+      "source_url": "https://www.taptap.cn/app/774226",
+      "summary": "",
+      "weight": 28
+    },
     {
       "title": "版本更新 1.8.3.0 (46)",
       "category": "版本更新",
