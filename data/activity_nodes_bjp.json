@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "bjp",
-  "generated_at": "2026-10-28 14:29:44",
+  "generated_at": "2026-10-29 14:41:24",
   "days_back": 30,
   "nodes": [
     {
       "title": "",
       "category": "资讯",
-      "publish_date": "2026-10-28",
+      "publish_date": "2026-10-29",
       "event_start": "",
       "event_end": "2026-11-05 00:00:00",
       "source_url": "https://www.taptap.cn/app/774226",
@@ -22,7 +22,7 @@
       "event_end": null,
       "source_url": "https://www.taptap.cn/app/774226",
       "summary": "游戏体验优化。",
-      "weight": 8
+      "weight": 6
     }
   ]
 }
