@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-10-29 14:40:38",
+  "generated_at": "2026-10-30 14:41:11",
   "days_back": 30,
   "nodes": [
     {
       "title": "10月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-10-29",
+      "publish_date": "2026-10-30",
       "event_start": "2026-10-01 00:00:00",
       "event_end": "2026-11-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -22,7 +22,17 @@
       "event_end": "2026-11-25 23:59:59",
       "source_url": "https://mjs.ztgame.com/news/00c-1793-00104-010617.html",
       "summary": "《名将杀》创作者活动第十五期开启！ \n\n 全新创作者限定形象边框「垂翼星汉」上线！ \n\n &nbsp; \n\n 发布视频或图文，完成「赚币激励任务」即可赚取150枚匠心币，轻松兑换包含全新活动限定形象边框「垂翼星汉」在内的多种好礼！ \n\n 持续直播，或投稿视频和图文，还可瓜分10万元奖池与3000张丹青券！ \n\n &nbsp; \n\n  活动时间： 2026年10月26日-2026年11月25日 \n\n",
-      "weight": 66
+      "weight": 61
+    },
+    {
+      "title": "斗地主连胜挑战赛主播招募开启！最高赢5,000元现金",
+      "category": "活动",
+      "publish_date": "2026-10-29",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/000-1793-00108-264500.html",
+      "summary": "他连胜，我也连胜！  \n\n 《名将杀》联动《新三国》斗地主连胜挑战赛开启主播招募！开播冲连胜，争夺 12,500元现金奖池 。第一名可获得 5,000元 现金奖励，快来报名挑战你的最高连胜！ \n\n 赛程安排 \n\n  报名时间：10月29日&mdash;10月31日  \n\n  比赛日期：11月2日（周一）&mdash;11月8日（周日），共7个比赛日。  \n\n  每日开放：8:00&mdash;次日",
+      "weight": 46
     },
     {
       "title": "三国沉浮 参与答题赢免费六武将！",
@@ -35,6 +45,16 @@
       "weight": 46
     },
     {
+      "title": "10月30日03：00停服更新预告",
+      "category": "公告",
+      "publish_date": "2026-10-30",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/005-1793-00109-333232.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将10月30日03：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下：&nbsp; \n\n 1.修复乌角鲨二技能获得杀效果异常的问题 \n\n 2.修复武侯讲武中武将试炼曹操、刘备显示异常的问题",
+      "weight": 31
+    },
+    {
       "title": "10月29日05：00停服更新预告",
       "category": "公告",
       "publish_date": "2026-10-28",
@@ -42,17 +62,7 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/000-1793-00105-184324.html",
       "summary": "列位诸公： \n\n 以下为10月29日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 温峤 \n\n &mdash;&mdash;4体力 5手牌上限 东晋 普通 \n\n 温公却扇：出牌阶段限2次，你可以令一名其他角色与你同时进行选择；你选择从牌堆中翻出1张杀或",
-      "weight": 31
-    },
-    {
-      "title": "名将杀X三国联动开启！",
-      "category": "新闻",
-      "publish_date": "2026-10-28",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/003-1793-00106-196660.html",
-      "summary": "",
-      "weight": 23
+      "weight": 26
     },
     {
       "title": "创作者活动第十四期开启！",
@@ -63,36 +73,6 @@
       "source_url": "https://mjs.ztgame.com/news/000-1790-000f6-228376.html",
       "summary": "《名将杀》创作者活动第十四期开启！ \n\n 发布视频或图文，完成「赚币激励任务」即可赚取150枚匠心币，轻松兑换包含活动限定道具在内的多种好礼！ \n\n 持续直播，或投稿视频和图文，还可瓜分10万元奖池与3000张丹青券！ \n\n &nbsp; \n\n  活动时间： 2026年9月24日-2026年10月25日 \n\n  活动参与地址：   https://mjs.ztgame.com/act/create",
       "weight": 21
-    },
-    {
-      "title": "名将杀对局征集活动限时开启！",
-      "category": "活动",
-      "publish_date": "2026-09-24",
-      "event_start": "2026-09-24 00:00:00",
-      "event_end": "2026-10-25 23:59:59",
-      "source_url": "https://mjs.ztgame.com/news/008-1790-000f5-228234.html",
-      "summary": "上官方电视的机会来啦！ \n\n 活动期间，在抖音、B 站任一平台，带上对应话题发布《名将杀》完整对局录像，就有机会登上名将杀官方社媒，展示你的对局高光名场面，赢取 50 元京东卡奖励！ \n\n 投稿符合指定条件的对局录像，更有机会解锁活动专属形象边框，对局出场格外亮眼！ \n\n &nbsp; \n\n 活动时间：2026年9月24日-10月25日23:59 \n\n &nbsp; \n\n PS：如果本次活动大家踊",
-      "weight": 21
-    },
-    {
-      "title": "10月15日18：30在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-10-15",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/001-1792-00100-055084.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于10月15日18：30进行一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新将对武将&ldquo;王羲之&rdquo;进行调整： \n\n 王羲之（削弱） \n\n  兰亭集序  \n\n 修改前：限定，当其他角色打出牌时，你增加此牌对应&ldquo;笔画&rdquo;，直到你的下个回合开始。 \n\n 修改后：限定",
-      "weight": 18
-    },
-    {
-      "title": "10月15日12：00在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-10-15",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1792-000ff-054809.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于10月15日12：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复王羲之的笔画标记描述错误的问题",
-      "weight": 18
     },
     {
       "title": "10月19日18：20在线更新通知",
@@ -125,24 +105,14 @@
       "weight": 18
     },
     {
-      "title": "10月1日05：00停服更新预告",
-      "category": "公告",
-      "publish_date": "2026-09-30",
+      "title": "名将杀X三国联动开启！",
+      "category": "新闻",
+      "publish_date": "2026-10-28",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1790-000f9-759375.html",
-      "summary": "将军们好： \n\n 以下为10月1日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 左思 \n\n &mdash;&mdash;4体力 4手牌上限 西晋 史诗 \n\n 洛阳纸贵：每个回合限3次，当你打出牌后，你可以令所有其他角色选择弃置任意张牌，弃置牌总点数最",
-      "weight": 16
-    },
-    {
-      "title": "百家争鸣新增规则说明",
-      "category": "公告",
-      "publish_date": "2026-09-30",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/008-1790-000f8-752254.html",
-      "summary": "将军们好： \n\n 百家争鸣活动第一轮投票将于10月7日23:59结束。为确保本次活动更加公平公正，我们决定本轮投票结果不作为最终优胜依据。官方将从第一轮票数前100名的作品中，挑选出更适合落地到游戏中的20个优秀作品，开展第二轮投票比拼。 \n\n 第二轮投票将于10月22日在游戏内上线专属投票界面。玩家可通过邮件领取2026年8月27日-2026年10月7日第一轮活动期间，所获得的所有选票。使用选票",
-      "weight": 16
+      "source_url": "https://mjs.ztgame.com/news/003-1793-00106-196660.html",
+      "summary": "",
+      "weight": 18
     },
     {
       "title": "10月2日18：00在线更新通知",
@@ -192,6 +162,26 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/004-1791-000fe-974508.html",
       "summary": "将军们好： \n\n 以下为10月15日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 周处 （10月15日05:00更新）  \n\n &mdash;&mdash;6体力 3手牌上限 西晋 史诗 \n\n 除三害：登场，你令两名其他角色分别获得技能&ldquo;",
+      "weight": 16
+    },
+    {
+      "title": "10月15日18：30在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-10-15",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/001-1792-00100-055084.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于10月15日18：30进行一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新将对武将&ldquo;王羲之&rdquo;进行调整： \n\n 王羲之（削弱） \n\n  兰亭集序  \n\n 修改前：限定，当其他角色打出牌时，你增加此牌对应&ldquo;笔画&rdquo;，直到你的下个回合开始。 \n\n 修改后：限定",
+      "weight": 16
+    },
+    {
+      "title": "10月15日12：00在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-10-15",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/000-1792-000ff-054809.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于10月15日12：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复王羲之的笔画标记描述错误的问题",
       "weight": 16
     }
   ]
