@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-11-04 15:08:18",
+  "generated_at": "2026-11-05 15:37:09",
   "days_back": 30,
   "nodes": [
     {
       "title": "11月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-11-04",
+      "publish_date": "2026-11-05",
       "event_start": "2026-11-01 00:00:00",
       "event_end": "2026-12-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -23,6 +23,16 @@
       "source_url": "https://mjs.ztgame.com/news/00c-1793-00104-010617.html",
       "summary": "《名将杀》创作者活动第十五期开启！ \n\n 全新创作者限定形象边框「垂翼星汉」上线！ \n\n &nbsp; \n\n 发布视频或图文，完成「赚币激励任务」即可赚取150枚匠心币，轻松兑换包含全新活动限定形象边框「垂翼星汉」在内的多种好礼！ \n\n 持续直播，或投稿视频和图文，还可瓜分10万元奖池与3000张丹青券！ \n\n &nbsp; \n\n  活动时间： 2026年10月26日-2026年11月25日 \n\n",
       "weight": 58
+    },
+    {
+      "title": "丹青共绘（第二期）开启！快来投票吧！",
+      "category": "活动",
+      "publish_date": "2026-11-04",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/https://mjs.ztgame.com/act/create/#/skins/2",
+      "summary": "https://mjs.ztgame.com/act/create/#/skins/2",
+      "weight": 46
     },
     {
       "title": "斗地主连胜挑战赛主播招募开启！最高赢5,000元现金",
@@ -45,13 +55,23 @@
       "weight": 36
     },
     {
-      "title": "11月3日17：20在线更新通知",
+      "title": "11月5日05：00停服更新预告",
       "category": "公告",
-      "publish_date": "2026-11-03",
+      "publish_date": "2026-11-04",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/005-1793-0010c-697771.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们于11月3日17：20完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1..修复卡牌久旱卜卦弹窗上描述错误的问题； \n\n 2.修复部分活动资源加载异常的问题。",
+      "source_url": "https://mjs.ztgame.com/news/004-1793-0010d-785009.html",
+      "summary": "将军好： \n\n 以下为11月5日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 李矩 \n\n &mdash;&mdash;6体力 3手牌上限 西晋 稀有 \n\n 坞主：当有削弱牌进入弃牌堆时，你可以受到1点伤害，获得并增强这些削弱牌。 \n\n 散牛设伏：受伤",
+      "weight": 31
+    },
+    {
+      "title": "11月5日12：10在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-11-05",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/004-1793-0010f-859568.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们于11月5日12：10完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下：&nbsp; \n\n 修复李矩散牛设伏技能后半段打出削弱/增强牌时效果未正确生效的问题",
       "weight": 31
     },
     {
@@ -65,14 +85,14 @@
       "weight": 26
     },
     {
-      "title": "10月29日05：00停服更新预告",
+      "title": "11月3日17：20在线更新通知",
       "category": "公告",
-      "publish_date": "2026-10-28",
+      "publish_date": "2026-11-03",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1793-00105-184324.html",
-      "summary": "列位诸公： \n\n 以下为10月29日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 温峤 \n\n &mdash;&mdash;4体力 5手牌上限 东晋 普通 \n\n 温公却扇：出牌阶段限2次，你可以令一名其他角色与你同时进行选择；你选择从牌堆中翻出1张杀或",
-      "weight": 21
+      "source_url": "https://mjs.ztgame.com/news/005-1793-0010c-697771.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们于11月3日17：20完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1..修复卡牌久旱卜卦弹窗上描述错误的问题； \n\n 2.修复部分活动资源加载异常的问题。",
+      "weight": 26
     },
     {
       "title": "10月30日20：45在线更新通知",
@@ -95,24 +115,14 @@
       "weight": 21
     },
     {
-      "title": "10月22日05：00停服更新预告",
+      "title": "10月29日05：00停服更新预告",
       "category": "公告",
-      "publish_date": "2026-10-21",
+      "publish_date": "2026-10-28",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/002-1792-00103-585489.html",
-      "summary": "将军们好： \n\n 以下为10月22日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 石崇 \n\n &mdash;&mdash;4体力 4手牌上限 西晋 稀有 \n\n 劫商致富：每名角色限1次，杀伤，你可以随机获得目标一半的牌并增加等量手牌上限，然后你每个摸",
+      "source_url": "https://mjs.ztgame.com/news/000-1793-00105-184324.html",
+      "summary": "列位诸公： \n\n 以下为10月29日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 温峤 \n\n &mdash;&mdash;4体力 5手牌上限 东晋 普通 \n\n 温公却扇：出牌阶段限2次，你可以令一名其他角色与你同时进行选择；你选择从牌堆中翻出1张杀或",
       "weight": 18
-    },
-    {
-      "title": "10月8日05：00更新预告",
-      "category": "公告",
-      "publish_date": "2026-10-07",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/003-1791-000fa-353945.html",
-      "summary": "将军们好： \n\n 以下为10月8日更新内容，请查收哈~ \n\n   \n\n  【新增武将】  \n\n 陶侃 \n\n &mdash;&mdash;6体力 3手牌上限 东晋 史诗 \n\n 陶公战舰：登场，添加&ldquo;艨艟&rdquo;、&ldquo;斗舰&rdquo;和&ldquo;楼船&rdquo;3张战船至你的手牌。每轮结束时，你可以获得弃牌堆中本轮被弃置的战船。 \n\n 艨艟-装备牌-&clubs;2",
-      "weight": 16
     },
     {
       "title": "10月8日23：10在线更新通知",
@@ -185,6 +195,16 @@
       "weight": 16
     },
     {
+      "title": "10月22日05：00停服更新预告",
+      "category": "公告",
+      "publish_date": "2026-10-21",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/002-1792-00103-585489.html",
+      "summary": "将军们好： \n\n 以下为10月22日停服更新内容，请查收哈~停服时间为上午05：00-07：00。感谢您对《名将杀》的持续支持，抱歉影响将军的游戏体验，停服结束后我们会邮件给将军们发放补偿。 \n\n   \n\n  【新增武将】  \n\n 石崇 \n\n &mdash;&mdash;4体力 4手牌上限 西晋 稀有 \n\n 劫商致富：每名角色限1次，杀伤，你可以随机获得目标一半的牌并增加等量手牌上限，然后你每个摸",
+      "weight": 16
+    },
+    {
       "title": "名将杀X三国联动开启！",
       "category": "新闻",
       "publish_date": "2026-10-28",
@@ -192,7 +212,7 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/https://mjs.ztgame.com/act/sglinkage/",
       "summary": "https://mjs.ztgame.com/act/sglinkage/",
-      "weight": 14
+      "weight": 11
     }
   ]
 }
