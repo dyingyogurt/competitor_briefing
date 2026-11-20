@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "bjp",
-  "generated_at": "2026-11-19 16:15:57",
+  "generated_at": "2026-11-20 15:57:42",
   "days_back": 30,
   "nodes": [
     {
       "title": "",
       "category": "活动",
-      "publish_date": "2026-11-19",
+      "publish_date": "2026-11-20",
       "event_start": "2026-11-16 21:30:00",
       "event_end": "2026-11-26 12:00:00",
       "source_url": "https://www.taptap.cn/app/774226",
@@ -22,7 +22,7 @@
       "event_end": null,
       "source_url": "https://www.taptap.cn/app/774226",
       "summary": "三分钟一局，五五开研发的超爽技能打牌。全新玩法「双将模式」正式上线！  【版本更新】 -全新S3赛季「风云际会」正式开启！ -S3赛季烽火令上新。 -S3赛季卡册开启，全新皮肤「黄忠-临渊履冰」上线。 -全新玩法「双将」玩法正式上线！ -「特邀武将」玩法上线，使用特邀武将可获得额外对局效果 -全新城池即将开启。  【全新名将】 -全新名将「司马懿」上线限时招募，概率提升！ -全新烽火令武将「张角」",
-      "weight": 21
+      "weight": 16
     }
   ]
 }
