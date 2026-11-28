@@ -1,13 +1,13 @@
 {
   "source": "mixed",
   "competitor_key": "mjs",
-  "generated_at": "2026-11-27 17:20:38",
+  "generated_at": "2026-11-28 16:36:50",
   "days_back": 30,
   "nodes": [
     {
       "title": "11月签到送好礼",
       "category": "活动",
-      "publish_date": "2026-11-27",
+      "publish_date": "2026-11-28",
       "event_start": "2026-11-01 00:00:00",
       "event_end": "2026-12-01 23:59:59",
       "source_url": "https://www.taptap.cn/app/737825",
@@ -25,16 +25,6 @@
       "weight": 31
     },
     {
-      "title": "11月26日21：45在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-11-26",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/000-1795-0011e-701600.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们于11月26日21：45完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下：&nbsp; \n\n 1.修复庞煖五国纵师发动后没有加到出杀次数的问题； \n\n 2.修复虎牢关模式华雄阵亡后吕布登场，AI灵智伙伴直接结束出牌的问题； \n\n 3.修复项燕武将训练房模式破秦锋锐发动获得出牌阶段后房间异常的",
-      "weight": 31
-    },
-    {
       "title": "11月26日05：00停服更新预告",
       "category": "公告",
       "publish_date": "2026-11-25",
@@ -45,14 +35,14 @@
       "weight": 26
     },
     {
-      "title": "11月20日20：30在线更新通知",
+      "title": "11月26日21：45在线更新通知",
       "category": "公告",
-      "publish_date": "2026-11-20",
+      "publish_date": "2026-11-26",
       "event_start": null,
       "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/003-1795-0011b-425782.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，游戏已于11月20日20：30完成一次在线更新，在您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.自选身份房间内的推荐玩法&ldquo;楚汉相争&rdquo;替换为&ldquo;龙虎傲苍穹&rdquo;； \n\n 2.修复龚行天罚中，贾南风卜卦弹窗时缺少半身形象的问题。",
-      "weight": 21
+      "source_url": "https://mjs.ztgame.com/news/000-1795-0011e-701600.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们于11月26日21：45完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下：&nbsp; \n\n 1.修复庞煖五国纵师发动后没有加到出杀次数的问题； \n\n 2.修复虎牢关模式华雄阵亡后吕布登场，AI灵智伙伴直接结束出牌的问题； \n\n 3.修复项燕武将训练房模式破秦锋锐发动获得出牌阶段后房间异常的",
+      "weight": 26
     },
     {
       "title": "11月23日19：40在线更新通知",
@@ -63,16 +53,6 @@
       "source_url": "https://mjs.ztgame.com/news/000-1795-0011c-436244.html",
       "summary": "将军们好： \n\n 感谢各位一直以来的支持与反馈，我们于11月23日19：40完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.修复巅峰赛模式对局中旁观时可以查看到其他角色的身份技能的问题 \n\n 2.修复巅峰赛模式阵亡离开对局会判定异常逃跑的问题 \n\n 3.修复天工造物活动界面打开异常的问题",
       "weight": 21
-    },
-    {
-      "title": "11月13日15：45在线更新通知",
-      "category": "公告",
-      "publish_date": "2026-11-13",
-      "event_start": null,
-      "event_end": null,
-      "source_url": "https://mjs.ztgame.com/news/002-1794-00115-557613.html",
-      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们于11月13日15：45完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n &nbsp;1.修复龚行天罚模式中对敌方目标出杀时被转移到友方后会触发惩罚机制的异常问题 \n\n 2.修复庾亮颍川庾氏技能出杀时转换士族牌后牌堆显示未实时刷新的问题",
-      "weight": 18
     },
     {
       "title": "第11赛季将于11月15日开启！",
@@ -112,6 +92,16 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/008-1795-00119-085198.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们将于11月19日21：00完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.对萧思话的&ldquo;仙人啸树&rdquo;技能进行调整； \n\n 修改前：当你打出牌后，若牌堆顶的牌与此牌的花色、点数均不同，你可以将此牌放回牌堆顶，或者交换牌堆顶与牌堆底的牌。 \n\n 修改后：每回合每",
+      "weight": 18
+    },
+    {
+      "title": "11月20日20：30在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-11-20",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/003-1795-0011b-425782.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，游戏已于11月20日20：30完成一次在线更新，在您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 1.自选身份房间内的推荐玩法&ldquo;楚汉相争&rdquo;替换为&ldquo;龙虎傲苍穹&rdquo;； \n\n 2.修复龚行天罚中，贾南风卜卦弹窗时缺少半身形象的问题。",
       "weight": 18
     },
     {
@@ -202,6 +192,16 @@
       "event_end": null,
       "source_url": "https://mjs.ztgame.com/news/000-1794-00113-464154.html",
       "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们于11月12日12：20完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n 修复伙伴九尾、饕餮技能效果异常的问题",
+      "weight": 16
+    },
+    {
+      "title": "11月13日15：45在线更新通知",
+      "category": "公告",
+      "publish_date": "2026-11-13",
+      "event_start": null,
+      "event_end": null,
+      "source_url": "https://mjs.ztgame.com/news/002-1794-00115-557613.html",
+      "summary": "将军们好：&nbsp; \n\n 感谢各位一直以来的支持与反馈，我们于11月13日15：45完成一次在线更新，您重启游戏客户端后即可生效。&nbsp; \n\n   \n\n 本次更新内容如下： \n\n &nbsp;1.修复龚行天罚模式中对敌方目标出杀时被转移到友方后会触发惩罚机制的异常问题 \n\n 2.修复庾亮颍川庾氏技能出杀时转换士族牌后牌堆显示未实时刷新的问题",
       "weight": 16
     },
     {
